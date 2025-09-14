@@ -16,17 +16,30 @@ void ShiftyApp::run() {
     renderer = SDL_CreateRenderer(window, nullptr);
     SDL_SetRenderVSync(renderer, SDL_RENDERER_VSYNC_ADAPTIVE);
 
+    workspaceRoot.push_back(std::make_unique<Panel>(Panel::Type::FULL));
+    auto &root = workspaceRoot[0];
+
     auto horizontalLayout = std::make_unique<Panel>(Panel::Type::HORIZONTAL);
 
-    auto hone = std::make_unique<Panel>(Panel::Type::FULL);
-    auto htwo = std::make_unique<Panel>(Panel::Type::FULL);
+    auto hone = std::make_unique<Panel>(Panel::Type::VERTICAL);
+    auto htwo = std::make_unique<Panel>(Panel::Type::VERTICAL);
     auto hthree = std::make_unique<Panel>(Panel::Type::VERTICAL);
 
     auto vone = std::make_unique<Panel>(Panel::Type::FULL);
     auto vtwo = std::make_unique<Panel>(Panel::Type::FULL);
+    auto vthree = std::make_unique<Panel>(Panel::Type::FULL);
+    auto vfour = std::make_unique<Panel>(Panel::Type::FULL);
+    auto vfive = std::make_unique<Panel>(Panel::Type::FULL);
+    auto vsix = std::make_unique<Panel>(Panel::Type::FULL);
 
-    hthree->addChild(std::move(vone));
-    hthree->addChild(std::move(vtwo));
+    hone->addChild(std::move(vone));
+    hone->addChild(std::move(vtwo));
+
+    htwo->addChild(std::move(vthree));
+    htwo->addChild(std::move(vfour));
+
+    hthree->addChild(std::move(vfive));
+    hthree->addChild(std::move(vsix));
 
     horizontalLayout->addChild(std::move(hone));
     horizontalLayout->addChild(std::move(htwo));
@@ -42,6 +55,9 @@ void ShiftyApp::run() {
         update();
         render();
     }
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
 }
 
 void ShiftyApp::update() {
@@ -123,7 +139,7 @@ void ShiftyApp::render() {
     SDL_GetRenderViewport(renderer, &iscreen);
 
     SDL_FRect fscreen = {0, 0, (float) iscreen.w, (float) iscreen.h};
-    drawPanel(fscreen, root);
+    drawPanel(fscreen, workspaceRoot[currentWorkspace]);
 
     SDL_RenderPresent(renderer);
 }

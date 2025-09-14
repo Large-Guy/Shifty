@@ -10,7 +10,8 @@ private:
     SDL_Window *window;
     SDL_Renderer *renderer;
     bool running;
-    std::unique_ptr<Panel> root = std::make_unique<Panel>(Panel::Type::FULL);
+    std::vector<std::unique_ptr<Panel> > workspaceRoot = {};
+    int currentWorkspace = 0;
     Text text = {};
 
 public:
