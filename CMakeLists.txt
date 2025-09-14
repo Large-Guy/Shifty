@@ -4,7 +4,7 @@ project(Shifty)
 set(CMAKE_CXX_STANDARD 23)
 
 add_executable(Shifty
-        src/main.cpp
+        src/Main.cpp
         src/ShiftyApp.cpp
         src/ShiftyApp.h
         src/Layout.cpp
