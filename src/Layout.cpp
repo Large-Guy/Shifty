@@ -4,8 +4,12 @@
 #include <ostream>
 #include <stdexcept>
 
+size_t Panel::nextId = 0;
+std::unordered_map<size_t, Panel *> Panel::idMap = {};
+
 Panel::Panel(const Type type) {
     this->type = type;
+    this->id = nextId++;
 }
 
 void Panel::addChild(std::unique_ptr<Panel> panel) {
@@ -14,7 +18,6 @@ void Panel::addChild(std::unique_ptr<Panel> panel) {
     }
 
     panel->parent = this;
-    panel->id = children.size();
     children.push_back(std::move(panel));
 }
 

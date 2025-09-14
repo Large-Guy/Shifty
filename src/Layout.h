@@ -1,9 +1,18 @@
 #ifndef SHIFTY_LAYOUT_H
 #define SHIFTY_LAYOUT_H
 #include <memory>
+#include <unordered_map>
 #include <vector>
 
+/**
+ * @class Panel
+ * @brief Handles layouts of open views/panels.
+ */
 class Panel {
+private:
+    static size_t nextId;
+    static std::unordered_map<size_t, Panel *> idMap;
+
 public:
     enum class Type {
         FULL,

@@ -3,6 +3,7 @@
 #include <SDL3/SDL.h>
 
 #include "Layout.h"
+#include "Text.h"
 
 class ShiftyApp {
 private:
@@ -10,6 +11,7 @@ private:
     SDL_Renderer *renderer;
     bool running;
     std::unique_ptr<Panel> root = std::make_unique<Panel>(Panel::Type::FULL);
+    Text text = {};
 
 public:
     ShiftyApp();
@@ -20,9 +22,9 @@ public:
 
     void update();
 
-    void drawPanel(SDL_FRect screen, const std::unique_ptr<Panel> &panel, int depth = 0) const;
+    void drawPanel(SDL_FRect screen, const std::unique_ptr<Panel> &panel, int depth = 0);
 
-    void render() const;
+    void render();
 };
 
 #endif //SHIFTY_SHIFTYAPP_H
