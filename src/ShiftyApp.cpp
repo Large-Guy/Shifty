@@ -1,0 +1,122 @@
+#include "ShiftyApp.h"
+
+#include <cmath>
+#include <iostream>
+#include <ostream>
+#include <random>
+
+ShiftyApp::ShiftyApp() {
+}
+
+ShiftyApp::~ShiftyApp() {
+}
+
+void ShiftyApp::run() {
+    window = SDL_CreateWindow("Shifty", 1080, 720, SDL_WINDOW_RESIZABLE);
+    renderer = SDL_CreateRenderer(window, nullptr);
+    SDL_SetRenderVSync(renderer, SDL_RENDERER_VSYNC_ADAPTIVE);
+
+    auto horizontalLayout = std::make_unique<Panel>(Panel::Type::HORIZONTAL);
+
+    auto hone = std::make_unique<Panel>(Panel::Type::FULL);
+    auto htwo = std::make_unique<Panel>(Panel::Type::FULL);
+    auto hthree = std::make_unique<Panel>(Panel::Type::VERTICAL);
+
+    auto vone = std::make_unique<Panel>(Panel::Type::FULL);
+    auto vtwo = std::make_unique<Panel>(Panel::Type::FULL);
+
+    hthree->addChild(std::move(vone));
+    hthree->addChild(std::move(vtwo));
+
+    horizontalLayout->addChild(std::move(hone));
+    horizontalLayout->addChild(std::move(htwo));
+    horizontalLayout->addChild(std::move(hthree));
+
+    root->addChild(std::move(horizontalLayout));
+
+    root->computeLayout();
+
+    while (running) {
+        update();
+        render();
+    }
+}
+
+void ShiftyApp::update() {
+    SDL_Event e;
+    while (SDL_PollEvent(&e)) {
+        switch (e.type) {
+            case SDL_EVENT_QUIT:
+                running = false;
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+void ShiftyApp::drawPanel(SDL_FRect screen, const std::unique_ptr<Panel> &panel, int depth) const {
+    std::mt19937 rng(panel->id + depth * 10);
+    std::uniform_real_distribution<double> dist(0., M_PI * 2.);
+    const SDL_FRect rect = {panel->x * screen.w, panel->y * screen.h, panel->w * screen.w, panel->h * screen.h};
+
+    const auto angle = dist(rng);
+    auto h = std::fmod(angle, M_PI * 2.);
+    auto s = 1.;
+    auto v = 1.;
+
+    auto c = v * s;
+    auto x = c * (1. - std::abs(std::fmod(h, M_PI) - M_PI / 2.));
+    auto m = v - c;
+
+    double r = 0., g = 0., b = 0.;
+
+    double degtorad = M_PI / 180.;
+
+    if (angle < 60 * degtorad) {
+        r = c;
+        g = x;
+        b = 0;
+    } else if (angle < 120 * degtorad) {
+        r = x;
+        g = c;
+        b = 0;
+    } else if (angle < 180 * degtorad) {
+        r = 0;
+        g = c;
+        b = x;
+    } else if (angle < 240 * degtorad) {
+        r = 0;
+        g = x;
+        b = c;
+    } else if (angle < 300 * degtorad) {
+        r = x;
+        g = 0;
+        b = c;
+    } else {
+        r = c;
+        g = 0;
+        b = x;
+    }
+
+    SDL_SetRenderDrawColor(renderer, static_cast<Uint8>(r * 255), static_cast<Uint8>(g * 255),
+                           static_cast<Uint8>(b * 255), 255);
+    SDL_RenderRect(renderer, &rect);
+
+    for (auto &child: panel->children) {
+        drawPanel(screen, child, depth + 1);
+    }
+}
+
+void ShiftyApp::render() const {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+
+    SDL_Rect iscreen = {};
+    SDL_GetRenderViewport(renderer, &iscreen);
+
+    SDL_FRect fscreen = {0, 0, (float) iscreen.w, (float) iscreen.h};
+    drawPanel(fscreen, root);
+
+    SDL_RenderPresent(renderer);
+}

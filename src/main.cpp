@@ -1,5 +1,9 @@
 #include <iostream>
+#include <SDL3/SDL.h>
+
+#include "ShiftyApp.h"
 
 int main() {
-	std::cout << "Hello, World!" << std::endl;
+    auto app = ShiftyApp();
+    app.run();
 }
