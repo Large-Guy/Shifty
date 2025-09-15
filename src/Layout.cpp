@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 size_t Panel::nextId = 0;
-std::unordered_map<size_t, Panel *> Panel::idMap = {};
+std::unordered_map<size_t, Panel*> Panel::idMap = {};
 
 Panel::Panel(const Type type) {
     this->type = type;
@@ -31,30 +31,78 @@ void Panel::computeLayout() const {
             throw std::runtime_error("Full layout can only have one child");
         }
         if (!children.empty()) {
-            children[0]->x = this->x;
-            children[0]->y = this->y;
-            children[0]->w = this->w;
-            children[0]->h = this->h;
+            children[0]->renderX = this->renderX;
+            children[0]->renderY = this->renderY;
+            children[0]->renderWidth = this->renderWidth;
+            children[0]->renderHeight = this->renderHeight;
         }
     } else if (type == Type::VERTICAL) {
+        float offset = 0.f;
+        float remainder = this->renderHeight;
+        int autoCount = 0;
+        for (const auto& child: children) {
+            switch (child->heightMode) {
+                case Mode::PERCENT: {
+                    remainder -= child->height * this->renderHeight;
+                    break;
+                }
+                case Mode::DISABLE:
+                    autoCount++;
+                    break;
+            }
+        }
         for (int i = 0; i < children.size(); ++i) {
-            const auto &child = children[i];
-            child->x = this->x;
-            child->y = this->y + static_cast<float>(i) * (this->h / static_cast<float>(children.size()));
-            child->w = this->w;
-            child->h = this->h / static_cast<float>(children.size());
+            const auto& child = children[i];
+            child->renderX = this->renderX;
+            child->renderY = this->renderY + offset;
+            child->renderWidth = this->renderWidth;
+            switch (child->heightMode) {
+                case Mode::PERCENT: {
+                    child->renderHeight = this->renderHeight * child->height;
+                    break;
+                }
+                case Mode::DISABLE: {
+                    child->renderHeight = remainder / static_cast<float>(autoCount);
+                    break;
+                }
+            }
+            offset += child->renderHeight;
         }
     } else if (type == Type::HORIZONTAL) {
+        float offset = 0.f;
+        float remainder = this->renderWidth;
+        int autoCount = 0;
+        for (const auto& child: children) {
+            switch (child->widthMode) {
+                case Mode::PERCENT: {
+                    remainder -= child->width * this->renderWidth;
+                    break;
+                }
+                case Mode::DISABLE:
+                    autoCount++;
+                    break;
+            }
+        }
         for (int i = 0; i < children.size(); ++i) {
-            const auto &child = children[i];
-            child->x = this->x + static_cast<float>(i) * (this->w / static_cast<float>(children.size()));
-            child->y = this->y;
-            child->w = this->w / static_cast<float>(children.size());
-            child->h = this->h;
+            const auto& child = children[i];
+            child->renderX = this->renderX + offset;
+            child->renderY = this->renderY;
+            child->renderHeight = this->renderHeight;
+            switch (child->widthMode) {
+                case Mode::PERCENT: {
+                    child->renderWidth = this->renderWidth * child->width;
+                    break;
+                }
+                case Mode::DISABLE: {
+                    child->renderWidth = remainder / static_cast<float>(autoCount);
+                    break; //Ignore
+                }
+            }
+            offset += child->renderWidth;
         }
     }
 
-    for (auto &child: children) {
+    for (auto& child: children) {
         child->computeLayout();
     }
 }

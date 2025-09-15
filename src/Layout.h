@@ -1,5 +1,6 @@
 #ifndef SHIFTY_LAYOUT_H
 #define SHIFTY_LAYOUT_H
+
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -11,7 +12,7 @@
 class Panel {
 private:
     static size_t nextId;
-    static std::unordered_map<size_t, Panel *> idMap;
+    static std::unordered_map<size_t, Panel*> idMap;
 
 public:
     enum class Type {
@@ -20,7 +21,12 @@ public:
         HORIZONTAL
     };
 
-    bool operator==(const Panel &other) const {
+    enum class Mode {
+        DISABLE,
+        PERCENT,
+    };
+
+    bool operator==(const Panel& other) const {
         return this->id == other.id;
     }
 
@@ -28,9 +34,14 @@ public:
 
     Type type = Type::FULL;
 
-    float x = 0.f, y = 0.f, w = 1.f, h = 1.f;
+    Mode widthMode = Mode::DISABLE;
+    float width = 0;
+    Mode heightMode = Mode::DISABLE;
+    float height = 0;
 
-    Panel *parent = nullptr;
+    float renderX = 0.f, renderY = 0.f, renderWidth = 1.f, renderHeight = 1.f;
+
+    Panel* parent = nullptr;
     std::vector<std::unique_ptr<Panel> > children = {};
 
     explicit Panel(Type type);
