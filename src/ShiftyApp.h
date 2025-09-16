@@ -4,15 +4,17 @@
 
 #include "Layout.h"
 #include "Text.h"
+#include "View.h"
 
 class ShiftyApp {
 private:
     SDL_Window *window;
     SDL_Renderer *renderer;
     bool running;
-    std::vector<std::unique_ptr<Panel> > workspaceRoot = {};
+    std::vector<std::shared_ptr<Panel> > workspaceRoot = {};
     int currentWorkspace = 0;
     Text text = {nullptr};
+    std::vector<View> views = {};
 
 public:
     ShiftyApp();
@@ -23,7 +25,7 @@ public:
 
     void update();
 
-    void drawPanel(SDL_FRect screen, const std::unique_ptr<Panel> &panel, int depth = 0);
+    void drawPanel(SDL_FRect screen, const std::shared_ptr<Panel> &panel, int depth = 0);
 
     void render();
 };

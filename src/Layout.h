@@ -12,7 +12,7 @@
 class Panel {
 private:
     static size_t nextId;
-    static std::unordered_map<size_t, Panel*> idMap;
+    static std::unordered_map<size_t, Panel *> idMap;
 
 public:
     enum class Type {
@@ -26,7 +26,7 @@ public:
         PERCENT,
     };
 
-    bool operator==(const Panel& other) const {
+    bool operator==(const Panel &other) const {
         return this->id == other.id;
     }
 
@@ -41,14 +41,14 @@ public:
 
     float renderX = 0.f, renderY = 0.f, renderWidth = 1.f, renderHeight = 1.f;
 
-    Panel* parent = nullptr;
-    std::vector<std::unique_ptr<Panel> > children = {};
+    Panel *parent = nullptr;
+    std::vector<std::shared_ptr<Panel> > children = {};
 
     explicit Panel(Type type);
 
-    void addChild(std::unique_ptr<Panel> panel);
+    void addChild(const std::shared_ptr<Panel> &panel);
 
-    void removeChild(std::unique_ptr<Panel> panel);
+    void removeChild(const std::shared_ptr<Panel> &panel);
 
     void computeLayout() const;
 };

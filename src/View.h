@@ -7,13 +7,13 @@
 
 class View {
     SDL_Renderer *renderer;
-    Panel *panel;
+    std::shared_ptr<Panel> panel;
     SDL_Texture *texture;
 
 public:
-    View(SDL_Renderer *renderer);
+    View(SDL_Renderer *renderer, const std::shared_ptr<Panel> &panel = nullptr);
 
-    void setPanel(Panel *panel);
+    void setPanel(const std::shared_ptr<Panel> &panel);
 
     void render();
 };
