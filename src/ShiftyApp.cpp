@@ -24,8 +24,10 @@ void ShiftyApp::run() {
 
     SDL_SetRenderVSync(renderer, SDL_RENDERER_VSYNC_ADAPTIVE);
 
+    text = {renderer};
+
     workspaceRoot.push_back(std::make_unique<Panel>(Panel::Type::FULL));
-    auto& root = workspaceRoot[0];
+    auto &root = workspaceRoot[0];
 
     auto horizontalLayout = std::make_unique<Panel>(Panel::Type::HORIZONTAL);
 
@@ -81,11 +83,13 @@ void ShiftyApp::update() {
     }
 }
 
-void ShiftyApp::drawPanel(SDL_FRect screen, const std::unique_ptr<Panel>& panel, int depth) {
+void ShiftyApp::drawPanel(SDL_FRect screen, const std::unique_ptr<Panel> &panel, int depth) {
     std::mt19937 rng(panel->id + depth * 10);
     std::uniform_real_distribution<double> dist(0., M_PI * 2.);
-    const SDL_FRect rect = {panel->renderX * screen.w, panel->renderY * screen.h, panel->renderWidth * screen.w,
-                            panel->renderHeight * screen.h};
+    const SDL_FRect rect = {
+        panel->renderX * screen.w, panel->renderY * screen.h, panel->renderWidth * screen.w,
+        panel->renderHeight * screen.h
+    };
 
     const auto angle = dist(rng);
     auto h = std::fmod(angle, M_PI * 2.);
@@ -130,9 +134,9 @@ void ShiftyApp::drawPanel(SDL_FRect screen, const std::unique_ptr<Panel>& panel,
                            static_cast<Uint8>(b * 255), 255);
     SDL_RenderRect(renderer, &rect);
 
-    text.renderText(renderer, "res/fonts/hack-regular.ttf", 16, std::to_string(panel->id), rect.x + depth * 16, rect.y);
+    text.renderText("res/fonts/hack-regular.ttf", 16, std::to_string(panel->id), rect.x + depth * 16, rect.y);
 
-    for (auto& child: panel->children) {
+    for (auto &child: panel->children) {
         drawPanel(screen, child, depth + 1);
     }
 }

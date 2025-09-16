@@ -10,7 +10,9 @@ add_executable(Shifty
         src/Layout.cpp
         src/Layout.h
         src/Text.cpp
-        src/Text.h)
+        src/Text.h
+        src/View.cpp
+        src/View.h)
 
 set(CMAKE_FRAMEWORK_PATH "${CMAKE_FRAMEWORK_PATH};~/Library/Frameworks") # Or /Library/Frameworks
 

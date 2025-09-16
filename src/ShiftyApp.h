@@ -12,7 +12,7 @@ private:
     bool running;
     std::vector<std::unique_ptr<Panel> > workspaceRoot = {};
     int currentWorkspace = 0;
-    Text text = {};
+    Text text = {nullptr};
 
 public:
     ShiftyApp();
