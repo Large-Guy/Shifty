@@ -154,7 +154,7 @@ void ShiftyApp::render() {
         view.render();
     }
 
-    SDL_FRect fscreen = {0, 0, (float) iscreen.w, (float) iscreen.h};
+    SDL_FRect fscreen = {0, 0, static_cast<float>(iscreen.w), static_cast<float>(iscreen.h)};
     drawPanel(fscreen, workspaceRoot[currentWorkspace]);
 
     SDL_RenderPresent(renderer);
