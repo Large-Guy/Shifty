@@ -15,10 +15,12 @@ add_executable(Shifty
         src/View.h)
 
 set(CMAKE_FRAMEWORK_PATH "${CMAKE_FRAMEWORK_PATH};~/Library/Frameworks") # Or /Library/Frameworks
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
 find_package(SDL3_image REQUIRED SDL3_image-shared)
 find_package(SDL3_ttf REQUIRED SDL3_ttf-shared)
+find_package(CEF REQUIRED)
 target_link_libraries(Shifty PRIVATE SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf)
 
 add_custom_command(TARGET Shifty POST_BUILD
