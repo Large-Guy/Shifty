@@ -11,7 +11,7 @@ private:
     SDL_Window *window;
     SDL_Renderer *renderer;
     bool running;
-    std::vector<std::shared_ptr<Panel> > workspaceRoot = {};
+    std::vector<std::shared_ptr<Layout> > workspaceRoot = {};
     int currentWorkspace = 0;
     Text text = {nullptr};
     std::vector<View> views = {};
@@ -25,7 +25,7 @@ public:
 
     void update();
 
-    void drawPanel(SDL_FRect screen, const std::shared_ptr<Panel> &panel, int depth = 0);
+    void drawPanel(SDL_FRect screen, const std::shared_ptr<Layout> &panel, int depth = 0);
 
     void render();
 };

@@ -26,21 +26,21 @@ void ShiftyApp::run() {
 
     text = {renderer};
 
-    workspaceRoot.push_back(std::make_unique<Panel>(Panel::Type::FULL));
+    workspaceRoot.push_back(std::make_unique<Layout>(Layout::Type::FULL));
     auto &root = workspaceRoot[0];
 
-    auto horizontalLayout = std::make_shared<Panel>(Panel::Type::HORIZONTAL);
+    auto horizontalLayout = std::make_shared<Layout>(Layout::Type::HORIZONTAL);
 
-    auto hone = std::make_shared<Panel>(Panel::Type::VERTICAL);
-    auto htwo = std::make_shared<Panel>(Panel::Type::VERTICAL);
-    auto hthree = std::make_shared<Panel>(Panel::Type::VERTICAL);
+    auto hone = std::make_shared<Layout>(Layout::Type::VERTICAL);
+    auto htwo = std::make_shared<Layout>(Layout::Type::VERTICAL);
+    auto hthree = std::make_shared<Layout>(Layout::Type::VERTICAL);
 
-    auto vone = std::make_shared<Panel>(Panel::Type::FULL);
-    auto vtwo = std::make_shared<Panel>(Panel::Type::FULL);
-    auto vthree = std::make_shared<Panel>(Panel::Type::FULL);
-    auto vfour = std::make_shared<Panel>(Panel::Type::FULL);
-    auto vfive = std::make_shared<Panel>(Panel::Type::FULL);
-    auto vsix = std::make_shared<Panel>(Panel::Type::FULL);
+    auto vone = std::make_shared<Layout>(Layout::Type::FULL);
+    auto vtwo = std::make_shared<Layout>(Layout::Type::FULL);
+    auto vthree = std::make_shared<Layout>(Layout::Type::FULL);
+    auto vfour = std::make_shared<Layout>(Layout::Type::FULL);
+    auto vfive = std::make_shared<Layout>(Layout::Type::FULL);
+    auto vsix = std::make_shared<Layout>(Layout::Type::FULL);
 
     hone->addChild(vone);
     hone->addChild(vtwo);
@@ -85,7 +85,7 @@ void ShiftyApp::update() {
     }
 }
 
-void ShiftyApp::drawPanel(SDL_FRect screen, const std::shared_ptr<Panel> &panel, int depth) {
+void ShiftyApp::drawPanel(SDL_FRect screen, const std::shared_ptr<Layout> &panel, int depth) {
     std::mt19937 rng(panel->id + depth * 10);
     std::uniform_real_distribution<double> dist(0., M_PI * 2.);
     const SDL_FRect rect = {

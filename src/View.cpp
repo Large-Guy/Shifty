@@ -2,13 +2,13 @@
 
 #include <utility>
 
-View::View(SDL_Renderer *renderer, const std::shared_ptr<Panel> &panel) {
+View::View(SDL_Renderer *renderer, const std::shared_ptr<Layout> &panel) {
     this->renderer = renderer;
     this->panel = panel;
     this->texture = nullptr;
 }
 
-void View::setPanel(const std::shared_ptr<Panel> &panel) {
+void View::setPanel(const std::shared_ptr<Layout> &panel) {
     this->panel = panel;
 }
 

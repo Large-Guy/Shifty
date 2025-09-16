@@ -6,13 +6,13 @@
 #include <vector>
 
 /**
- * @class Panel
+ * @class Layout
  * @brief Handles layouts of open views/panels.
  */
-class Panel {
+class Layout {
 private:
     static size_t nextId;
-    static std::unordered_map<size_t, Panel *> idMap;
+    static std::unordered_map<size_t, Layout *> idMap;
 
 public:
     enum class Type {
@@ -26,7 +26,7 @@ public:
         PERCENT,
     };
 
-    bool operator==(const Panel &other) const {
+    bool operator==(const Layout &other) const {
         return this->id == other.id;
     }
 
@@ -41,14 +41,14 @@ public:
 
     float renderX = 0.f, renderY = 0.f, renderWidth = 1.f, renderHeight = 1.f;
 
-    Panel *parent = nullptr;
-    std::vector<std::shared_ptr<Panel> > children = {};
+    Layout *parent = nullptr;
+    std::vector<std::shared_ptr<Layout> > children = {};
 
-    explicit Panel(Type type);
+    explicit Layout(Type type);
 
-    void addChild(const std::shared_ptr<Panel> &panel);
+    void addChild(const std::shared_ptr<Layout> &panel);
 
-    void removeChild(const std::shared_ptr<Panel> &panel);
+    void removeChild(const std::shared_ptr<Layout> &panel);
 
     void computeLayout() const;
 };

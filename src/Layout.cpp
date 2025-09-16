@@ -4,15 +4,15 @@
 #include <ostream>
 #include <stdexcept>
 
-size_t Panel::nextId = 0;
-std::unordered_map<size_t, Panel *> Panel::idMap = {};
+size_t Layout::nextId = 0;
+std::unordered_map<size_t, Layout *> Layout::idMap = {};
 
-Panel::Panel(const Type type) {
+Layout::Layout(const Type type) {
     this->type = type;
     this->id = nextId++;
 }
 
-void Panel::addChild(const std::shared_ptr<Panel> &panel) {
+void Layout::addChild(const std::shared_ptr<Layout> &panel) {
     if (panel->parent) {
         panel->parent->removeChild(panel);
     }
@@ -21,11 +21,11 @@ void Panel::addChild(const std::shared_ptr<Panel> &panel) {
     children.push_back(panel);
 }
 
-void Panel::removeChild(const std::shared_ptr<Panel> &panel) {
+void Layout::removeChild(const std::shared_ptr<Layout> &panel) {
     std::erase(children, panel);
 }
 
-void Panel::computeLayout() const {
+void Layout::computeLayout() const {
     if (type == Type::FULL) {
         if (children.size() > 1) {
             throw std::runtime_error("Full layout can only have one child");
