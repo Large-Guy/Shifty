@@ -4,15 +4,17 @@
 #include <ostream>
 #include <stdexcept>
 
+using namespace Shifty;
+
 size_t Layout::nextId = 0;
-std::unordered_map<size_t, Layout *> Layout::idMap = {};
+std::unordered_map<size_t, Layout*> Layout::idMap = {};
 
 Layout::Layout(const Type type) {
     this->type = type;
     this->id = nextId++;
 }
 
-void Layout::addChild(const std::shared_ptr<Layout> &panel) {
+void Layout::addChild(const std::shared_ptr<Layout>& panel) {
     if (panel->parent) {
         panel->parent->removeChild(panel);
     }
@@ -21,7 +23,7 @@ void Layout::addChild(const std::shared_ptr<Layout> &panel) {
     children.push_back(panel);
 }
 
-void Layout::removeChild(const std::shared_ptr<Layout> &panel) {
+void Layout::removeChild(const std::shared_ptr<Layout>& panel) {
     std::erase(children, panel);
 }
 
@@ -40,7 +42,7 @@ void Layout::computeLayout() const {
         float offset = 0.f;
         float remainder = this->renderHeight;
         int autoCount = 0;
-        for (const auto &child: children) {
+        for (const auto& child: children) {
             switch (child->heightMode) {
                 case Mode::PERCENT: {
                     remainder -= child->height * this->renderHeight;
@@ -52,7 +54,7 @@ void Layout::computeLayout() const {
             }
         }
         for (int i = 0; i < children.size(); ++i) {
-            const auto &child = children[i];
+            const auto& child = children[i];
             child->renderX = this->renderX;
             child->renderY = this->renderY + offset;
             child->renderWidth = this->renderWidth;
@@ -72,7 +74,7 @@ void Layout::computeLayout() const {
         float offset = 0.f;
         float remainder = this->renderWidth;
         int autoCount = 0;
-        for (const auto &child: children) {
+        for (const auto& child: children) {
             switch (child->widthMode) {
                 case Mode::PERCENT: {
                     remainder -= child->width * this->renderWidth;
@@ -84,7 +86,7 @@ void Layout::computeLayout() const {
             }
         }
         for (int i = 0; i < children.size(); ++i) {
-            const auto &child = children[i];
+            const auto& child = children[i];
             child->renderX = this->renderX + offset;
             child->renderY = this->renderY;
             child->renderHeight = this->renderHeight;
@@ -102,7 +104,7 @@ void Layout::computeLayout() const {
         }
     }
 
-    for (auto &child: children) {
+    for (auto& child: children) {
         child->computeLayout();
     }
 }

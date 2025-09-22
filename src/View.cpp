@@ -2,13 +2,15 @@
 
 #include <utility>
 
-View::View(SDL_Renderer *renderer, const std::shared_ptr<Layout> &panel) {
+using namespace Shifty;
+
+View::View(SDL_Renderer* renderer, const std::shared_ptr<Layout>& panel) {
     this->renderer = renderer;
     this->panel = panel;
     this->texture = nullptr;
 }
 
-void View::setPanel(const std::shared_ptr<Layout> &panel) {
+void View::setPanel(const std::shared_ptr<Layout>& panel) {
     this->panel = panel;
 }
 
@@ -47,8 +49,8 @@ void View::render() {
 
 
     const SDL_FRect dest = {
-        panel->renderX, panel->renderY, panel->renderWidth * static_cast<float>(fscreen.w),
-        panel->renderHeight * static_cast<float>(fscreen.h)
+            panel->renderX, panel->renderY, panel->renderWidth * static_cast<float>(fscreen.w),
+            panel->renderHeight * static_cast<float>(fscreen.h)
     };
     SDL_RenderTexture(renderer, texture, nullptr, &dest);
 }

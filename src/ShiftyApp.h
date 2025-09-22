@@ -1,33 +1,40 @@
 #ifndef SHIFTY_SHIFTYAPP_H
 #define SHIFTY_SHIFTYAPP_H
+
 #include <SDL3/SDL.h>
 
 #include "Layout.h"
 #include "Text.h"
 #include "View.h"
+#include "InputHandler.h"
 
-class ShiftyApp {
-private:
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    bool running;
-    std::vector<std::shared_ptr<Layout> > workspaceRoot = {};
-    int currentWorkspace = 0;
-    Text text = {nullptr};
-    std::vector<View> views = {};
+namespace Shifty {
 
-public:
-    ShiftyApp();
+    class ShiftyApp {
+    private:
+        SDL_Window* window;
+        SDL_Renderer* renderer;
+        InputHandler inputHandler;
+        bool running;
+        std::vector<std::shared_ptr<Layout> > workspaceRoot = {};
+        int currentWorkspace = 0;
+        Text text = {nullptr};
+        std::vector<View> views = {};
 
-    ~ShiftyApp();
+    public:
+        ShiftyApp();
 
-    void run();
+        ~ShiftyApp();
 
-    void update();
+        void run();
 
-    void drawPanel(SDL_FRect screen, const std::shared_ptr<Layout> &panel, int depth = 0);
+        void update();
 
-    void render();
-};
+        void drawPanel(SDL_FRect screen, const std::shared_ptr<Layout>& panel, int depth = 0);
+
+        void render();
+    };
+
+}
 
 #endif //SHIFTY_SHIFTYAPP_H
