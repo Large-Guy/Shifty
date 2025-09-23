@@ -22,6 +22,9 @@ add_executable(Shifty
         src/Tween.h
         src/ECS/Entity.cpp
         src/ECS/Entity.h
+        src/EventBus.cpp
+        src/EventBus.h
+        src/Events.h
 )
 
 set(CMAKE_FRAMEWORK_PATH "${CMAKE_FRAMEWORK_PATH};~/Library/Frameworks") # Or /Library/Frameworks

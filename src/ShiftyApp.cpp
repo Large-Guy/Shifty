@@ -8,12 +8,6 @@
 using namespace Shifty;
 
 ShiftyApp::ShiftyApp() {
-}
-
-ShiftyApp::~ShiftyApp() {
-}
-
-void ShiftyApp::run() {
     int w = 1080, h = 720;
     window = SDL_CreateWindow("Shifty", 1080, 720, SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
     //Calculate DPI scale factor
@@ -29,7 +23,7 @@ void ShiftyApp::run() {
     text = {renderer};
 
     workspaceRoot.push_back(std::make_unique<Layout>(Layout::Type::FULL));
-    auto& root = workspaceRoot[0];
+    auto &root = workspaceRoot[0];
 
     auto horizontalLayout = std::make_shared<Layout>(Layout::Type::HORIZONTAL);
 
@@ -64,14 +58,14 @@ void ShiftyApp::run() {
     views.emplace_back(renderer, vfive);
 
     running = true;
+}
 
-    while (running) {
-        update();
-        render();
-    }
-
+ShiftyApp::~ShiftyApp() {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+}
+
+void ShiftyApp::run() {
 }
 
 void ShiftyApp::update() {
@@ -89,12 +83,12 @@ void ShiftyApp::update() {
     }
 }
 
-void ShiftyApp::drawPanel(SDL_FRect screen, const std::shared_ptr<Layout>& panel, int depth) {
+void ShiftyApp::drawPanel(SDL_FRect screen, const std::shared_ptr<Layout> &panel, int depth) {
     std::mt19937 rng(panel->id + depth * 10);
     std::uniform_real_distribution<double> dist(0., M_PI * 2.);
     const SDL_FRect rect = {
-            panel->renderX * screen.w, panel->renderY * screen.h, panel->renderWidth * screen.w,
-            panel->renderHeight * screen.h
+        panel->renderX * screen.w, panel->renderY * screen.h, panel->renderWidth * screen.w,
+        panel->renderHeight * screen.h
     };
 
     const auto angle = dist(rng);
@@ -142,7 +136,7 @@ void ShiftyApp::drawPanel(SDL_FRect screen, const std::shared_ptr<Layout>& panel
 
     text.renderText("res/fonts/hack-regular.ttf", 16, std::to_string(panel->id), rect.x + depth * 16, rect.y);
 
-    for (auto& child: panel->children) {
+    for (auto &child: panel->children) {
         drawPanel(screen, child, depth + 1);
     }
 }
@@ -154,7 +148,7 @@ void ShiftyApp::render() {
     SDL_Rect iscreen = {};
     SDL_GetRenderViewport(renderer, &iscreen);
 
-    for (auto& view: views) {
+    for (auto &view: views) {
         view.render();
     }
 

@@ -1,14 +1,15 @@
 #include <SDL3/SDL.h>
 
 #include "ECS/Entity.h"
+#include "EventBus.h"
+#include "Events.h"
 
 #include "ShiftyApp.h"
 #include <iostream>
 
-struct Vector2 {
-    float x;
-    float y;
-};
+#include "Events.h"
+
+using namespace Shifty;
 
 int main(int argc, char *argv[]) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -19,27 +20,23 @@ int main(int argc, char *argv[]) {
         throw std::runtime_error("TTF_Init failed");
     }
 
-    auto app = Shifty::ShiftyApp();
-    //app.run();
+    EventBus::subscribe<OnReady>([](const OnReady &e) {
+        ECS::Entity entity = ECS::Entity::create();
+        entity.add<ShiftyApp>();
+    });
 
-    using namespace Shifty::ECS;
+    EventBus::subscribe<OnUpdate>([](const OnUpdate &e) {
+        ECS::Entity::each<ShiftyApp>([](ShiftyApp &app) {
+            std::cout << "Update" << std::endl;
+        });
+    });
 
-    Entity entity = Entity::create();
+    EventBus::emit(OnReady{});
 
-    entity.add(Component::get<Vector2>());
-
-    auto *vector2 = static_cast<Vector2 *>(entity.get(Component::get<Vector2>()));
-    vector2->x = 10.0f;
-    vector2->y = 20.0f;
-
-    entity.add(Component::get<float>());
-    auto *floatComponent = static_cast<float *>(entity.get(Component::get<float>()));
-    *floatComponent = 10.0f;
-
-    if (!entity.has(Component::get<Vector2>())) {
-        std::cout << "Entity doesn't Vector2" << std::endl;
-    } else {
-        auto *vector2 = static_cast<Vector2 *>(entity.get(Component::get<Vector2>()));
-        std::cout << "Entity does have Vector2: (" << vector2->x << ", " << vector2->y << ")" << std::endl;
+    while (true) {
+        EventBus::emit(OnUpdate{
+            0.016f
+        });
+        EventBus::emit(OnRender{});
     }
 }

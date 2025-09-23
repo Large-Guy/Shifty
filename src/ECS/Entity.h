@@ -88,7 +88,7 @@ namespace Shifty::ECS {
             Edge(Archetype *add, Archetype *remove);
         };
 
-        using Map = std::unordered_map<ArchetypeID, Record>;
+        using Map = std::unordered_map<Archetype *, Record>;
 
         static std::unordered_map<Type, Archetype, TypeHash> archetypeIndex;
         static std::unordered_map<Component, Map, ComponentHash> componentIndex;
@@ -132,6 +132,37 @@ namespace Shifty::ECS {
         void *get(Component component) const;
 
         void add(Component component, void *instance = nullptr);
+
+        template<typename T>
+        bool has() const {
+            return has(Component::get<T>());
+        }
+
+        template<typename T>
+        T *get() const {
+            return static_cast<T *>(get(Component::get<T>()));
+        }
+
+        template<typename T>
+        void add() {
+            add(Component::get<T>());
+        }
+
+        template<typename T>
+        void add(T component) {
+            add(Component::get<T>(), &component);
+        }
+
+        template<typename T>
+        static void each(std::function<void(T &)> callback) {
+            Archetype::Map &map = Archetype::componentIndex[Component::get<T>()];
+            for (auto &element: map) {
+                auto &column = element.first->components[element.second.column];
+                for (size_t i = 0; i < column.count; ++i) {
+                    callback(*static_cast<T *>(column[i]));
+                }
+            }
+        }
     };
 } // ECS
 // Shifty

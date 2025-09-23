@@ -72,7 +72,7 @@ namespace Shifty::ECS {
         this->type = type;
         for (int i = 0; i < type.size(); ++i) {
             components.emplace_back(type[i]);
-            componentIndex[type[i]][this->id].column = i;
+            componentIndex[type[i]][this].column = i;
         }
     }
 
@@ -125,9 +125,9 @@ namespace Shifty::ECS {
         size_t newRow = next->add();
         auto remIter = entityIndex.find(id);
         for (auto &component: current->type) {
-            auto &record = Archetype::componentIndex[component][current->id];
+            auto &record = Archetype::componentIndex[component][current];
             auto &column = current->components[record.column];
-            auto &nextRecord = Archetype::componentIndex[component][next->id];
+            auto &nextRecord = Archetype::componentIndex[component][next];
             auto &nextColumn = next->components[nextRecord.column];
 
             column.component.move(nextColumn[row], column[newRow]);
@@ -155,7 +155,7 @@ namespace Shifty::ECS {
         }
         auto *archetype = entityIndex.at(id).archetype;
         auto &archetypeSet = Archetype::componentIndex[component];
-        return archetypeSet.contains(archetype->id);
+        return archetypeSet.contains(archetype);
     }
 
     void *Entity::get(Component component) const {
@@ -163,11 +163,11 @@ namespace Shifty::ECS {
         auto *archetype = record.archetype;
 
         auto &set = Archetype::componentIndex[component];
-        if (!set.contains(archetype->id)) {
+        if (!set.contains(archetype)) {
             return nullptr;
         }
 
-        auto &archRecord = set[archetype->id];
+        auto &archRecord = set[archetype];
         return archetype->components[archRecord.column][record.row];
     }
 
