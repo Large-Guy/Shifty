@@ -9,12 +9,10 @@
 #include "InputHandler.h"
 
 namespace Shifty {
-
     class ShiftyApp {
     private:
         SDL_Window* window;
         SDL_Renderer* renderer;
-        InputHandler inputHandler;
         bool running;
         std::vector<std::shared_ptr<Layout> > workspaceRoot = {};
         int currentWorkspace = 0;
@@ -34,7 +32,6 @@ namespace Shifty {
 
         void render();
     };
-
 }
 
 #endif //SHIFTY_SHIFTYAPP_H

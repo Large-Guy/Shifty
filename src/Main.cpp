@@ -5,13 +5,14 @@
 #include "Events.h"
 
 #include "ShiftyApp.h"
+#include <SDL3/SDL.h>
 #include <iostream>
 
 #include "Events.h"
 
 using namespace Shifty;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         throw std::runtime_error("SDL_Init failed");
     }
@@ -20,14 +21,41 @@ int main(int argc, char *argv[]) {
         throw std::runtime_error("TTF_Init failed");
     }
 
-    EventBus::subscribe<OnReady>([](const OnReady &e) {
+    ECS::Entity world = ECS::Entity::create();
+    world.add<InputHandler>();
+
+    EventBus::subscribe<OnReady>([](const OnReady& e) {
         ECS::Entity entity = ECS::Entity::create();
         entity.add<ShiftyApp>();
     });
 
-    EventBus::subscribe<OnUpdate>([](const OnUpdate &e) {
-        ECS::Entity::each<ShiftyApp>([](ShiftyApp &app) {
-            std::cout << "Update" << std::endl;
+    EventBus::subscribe<OnUpdate>([&](const OnUpdate& event) {
+        SDL_Event e;
+        while (SDL_PollEvent(&e)) {
+            switch (e.type) {
+                case SDL_EVENT_QUIT:
+                    exit(0);
+                    break;
+                default:
+                    break;
+            }
+
+            if (!world.has<InputHandler>())
+                throw std::runtime_error("Input handler does not exist");
+
+            world.get<InputHandler>().feed(&e);
+        }
+    });
+
+    EventBus::subscribe<OnUpdate>([](const OnUpdate& e) {
+        ECS::Entity::each<ShiftyApp>([](ShiftyApp& app) {
+            app.update();
+        });
+    });
+
+    EventBus::subscribe<OnRender>([](const OnRender& e) {
+        ECS::Entity::each<ShiftyApp>([](ShiftyApp& app) {
+            app.render();
         });
     });
 
