@@ -5,12 +5,12 @@
 #include "ShiftyApp.h"
 #include <iostream>
 
-float test(float a) {
-    std::cout << "Test ran" << std::endl;
-    return a * 2;
-}
+struct Vector2 {
+    float x;
+    float y;
+};
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         throw std::runtime_error("SDL_Init failed");
     }
@@ -26,12 +26,20 @@ int main(int argc, char* argv[]) {
 
     Entity entity = Entity::create();
 
-    entity.add(1);
-    entity.add(2);
+    entity.add(Component::get<Vector2>());
 
-    if (!entity.has(1)) {
-        std::cout << "Entity doesn't have 1" << std::endl;
+    auto *vector2 = static_cast<Vector2 *>(entity.get(Component::get<Vector2>()));
+    vector2->x = 10.0f;
+    vector2->y = 20.0f;
+
+    entity.add(Component::get<float>());
+    auto *floatComponent = static_cast<float *>(entity.get(Component::get<float>()));
+    *floatComponent = 10.0f;
+
+    if (!entity.has(Component::get<Vector2>())) {
+        std::cout << "Entity doesn't Vector2" << std::endl;
     } else {
-        std::cout << "Entity does have 1" << std::endl;
+        auto *vector2 = static_cast<Vector2 *>(entity.get(Component::get<Vector2>()));
+        std::cout << "Entity does have Vector2: (" << vector2->x << ", " << vector2->y << ")" << std::endl;
     }
 }

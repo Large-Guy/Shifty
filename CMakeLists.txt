@@ -24,29 +24,7 @@ add_executable(Shifty
         src/ECS/Entity.h
 )
 
-# Set CEF paths (adjust paths as needed)
-set(CEF_ROOT "${CMAKE_SOURCE_DIR}/third_party/cef")
-
 set(CMAKE_FRAMEWORK_PATH "${CMAKE_FRAMEWORK_PATH};~/Library/Frameworks") # Or /Library/Frameworks
-
-
-list(APPEND CMAKE_MODULE_PATH "${CEF_ROOT}/cmake")
-
-set(CMAKE_PREFIX_PATH "${CEF_ROOT}")
-
-find_package(CEF REQUIRED)
-message(STATUS "CEF_BINARY_DIR: ${CEF_BINARY_DIR}")
-message(STATUS "CEF_LIBCEF_DLL_WRAPPER_PATH: ${CEF_LIBCEF_DLL_WRAPPER_PATH}")
-message(STATUS "CEF_ROOT: ${CEF_ROOT}")
-message(STATUS "CEF_TARGET: ${CEF_TARGET}")
-
-get_property(ALL_TARGETS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY IMPORTED_TARGETS)
-message(STATUS "Available targets: ${ALL_TARGETS}")
-
-include("${CEF_ROOT}/cmake/cef_macros.cmake")
-include("${CEF_ROOT}/cmake/cef_variables.cmake")
-
-add_subdirectory("${CEF_ROOT}/libcef_dll" libcef_dll)
 
 find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
 find_package(SDL3_image REQUIRED SDL3_image-shared)
@@ -56,11 +34,9 @@ target_link_libraries(Shifty PRIVATE
         SDL3::SDL3
         SDL3_image::SDL3_image
         SDL3_ttf::SDL3_ttf
-        libcef_dll_wrapper
 )
 
 target_include_directories(Shifty PRIVATE
-        ${CEF_ROOT}
 )
 
 add_custom_command(TARGET Shifty POST_BUILD

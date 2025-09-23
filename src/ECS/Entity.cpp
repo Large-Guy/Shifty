@@ -1,57 +1,100 @@
 #include "Entity.h"
 
+#include <stdexcept>
+#include <utility>
+
 
 namespace Shifty::ECS {
     std::unordered_map<Type, Archetype, TypeHash> Archetype::archetypeIndex = {};
-    std::unordered_map<ComponentID, Archetype::Map> Archetype::componentIndex = {};
+    std::unordered_map<Component, Archetype::Map, ComponentHash> Archetype::componentIndex = {};
 
     std::unordered_map<EntityID, Entity::Record> Entity::entityIndex = {};
     EntityID Entity::count = 0;
 
-    void* Archetype::Column::operator[](size_t index) const {
-        return (void*) ((char*) elements + (size * index));
+    Component::Component(ComponentID id, size_t size, std::function<void(void *)> constructor,
+                         std::function<void(void *)> destructor,
+                         std::function<void(void *, void *)> copy, std::function<void(void *, void *)> move) {
+        this->id = id;
+        this->size = size;
+        this->constructor = std::move(constructor);
+        this->destructor = std::move(destructor);
+        this->copy = std::move(copy);
+        this->move = std::move(move);
     }
 
-    void Archetype::Column::add() {
-
+    bool Component::operator==(const Component &other) const {
+        return this->id == other.id;
     }
 
-    Archetype::Edge::Edge(Archetype* add, Archetype* remove) : add(add),
+    Archetype::Column::Column(Component component) {
+        this->component = std::move(component);
+        this->elements = nullptr;
+        this->count = 0;
+        this->capacity = 0;
+    }
+
+
+    void *Archetype::Column::operator[](size_t index) const {
+        return (static_cast<char *>(elements) + component.size * index);
+    }
+
+    void *Archetype::Column::add() {
+        count++;
+        if (count > capacity) {
+            if (capacity == 0)
+                capacity = 1;
+            capacity *= 2;
+            if (elements == nullptr)
+                elements = malloc(capacity * component.size);
+            else
+                elements = realloc(elements, capacity * component.size);
+        }
+        void *root = static_cast<char *>(elements) + (component.size * count - component.size);
+        component.constructor(root);
+        return root;
+    }
+
+    void *Archetype::Column::add(void *instance) {
+        void *dest = add();
+        component.copy(dest, instance);
+        return dest;
+    }
+
+    Archetype::Edge::Edge(Archetype *add, Archetype *remove) : add(add),
                                                                remove(remove) {
     }
 
-    Archetype::Archetype(const Type& type) {
+    Archetype::Archetype(const Type &type) {
         if (archetypeIndex.contains(type)) {
             throw std::runtime_error("Cannot create two archetypes of the same type!");
         }
         this->id = archetypeIndex.size();
         this->type = type;
         for (int i = 0; i < type.size(); ++i) {
-            components.push_back({});
-            componentIndex[type[i]][id].column = i;
+            components.emplace_back(type[i]);
+            componentIndex[type[i]][this->id].column = i;
         }
     }
 
-    Archetype::Edge& Archetype::getEdge(ComponentID component) {
+    Archetype::Edge &Archetype::getEdge(const Component &component) {
         if (edges.contains(component)) {
             return edges.at(component);
-        } else {
-            Archetype* add = nullptr;
-            Archetype* remove = nullptr;
-            Type addType = type;
-            addType.push_back(component);
-
-            add = &archetypeIndex.insert({addType, {addType}}).first->second;
-
-            Type removeType = type;
-            auto item = std::find(removeType.begin(), removeType.end(), component);
-            if (item != removeType.end()) {
-                removeType.erase(item);
-
-                remove = &archetypeIndex.insert({removeType, {removeType}}).first->second;
-            }
-            return edges.insert({component, {add, remove}}).first->second;
         }
+        Archetype *add = nullptr;
+        Archetype *remove = nullptr;
+        Type addType = type;
+        addType.push_back(component);
+
+        add = &archetypeIndex.insert({addType, {addType}}).first->second;
+
+        Type removeType = type;
+        auto item = std::find(removeType.begin(), removeType.end(), component);
+        if (item != removeType.end()) {
+            removeType.erase(item);
+
+            remove = &archetypeIndex.insert({removeType, {removeType}}).first->second;
+        }
+        return edges.insert({component, {add, remove}}).first->second;
     }
 
     void Archetype::remove(size_t row) {
@@ -59,7 +102,7 @@ namespace Shifty::ECS {
     }
 
     size_t Archetype::add() {
-        for (auto& column: components) {
+        for (auto &column: components) {
             column.add();
         }
         size_t row = 0;
@@ -68,7 +111,7 @@ namespace Shifty::ECS {
         return row;
     }
 
-    Archetype* Archetype::getArchetype(const Type& type) {
+    Archetype *Archetype::getArchetype(const Type &type) {
         if (archetypeIndex.contains(type)) {
             return &archetypeIndex.at(type);
         }
@@ -78,10 +121,18 @@ namespace Shifty::ECS {
         return &archetypeIndex.at(type);
     }
 
-    void Entity::move(Archetype* current, size_t row, Archetype* next) {
-        current->remove(row);
+    void Entity::move(Archetype *current, size_t row, Archetype *next) {
         size_t newRow = next->add();
         auto remIter = entityIndex.find(id);
+        for (auto &component: current->type) {
+            auto &record = Archetype::componentIndex[component][current->id];
+            auto &column = current->components[record.column];
+            auto &nextRecord = Archetype::componentIndex[component][next->id];
+            auto &nextColumn = next->components[nextRecord.column];
+
+            column.component.move(nextColumn[row], column[newRow]);
+        }
+        current->remove(row);
         entityIndex.erase(remIter);
         entityIndex.insert({id, {next, newRow}});
     }
@@ -92,37 +143,37 @@ namespace Shifty::ECS {
 
     Entity Entity::create() {
         EntityID id = ++count;
-        auto* archetype = Archetype::getArchetype({});
+        auto *archetype = Archetype::getArchetype({});
         auto record = Record{archetype, 0};
         entityIndex.insert({id, record});
         return {id};
     }
 
-    bool Entity::has(ComponentID component) const {
+    bool Entity::has(Component component) const {
         if (!entityIndex.contains(id)) {
             throw std::runtime_error("Entity does not exist!");
         }
-        auto* archetype = entityIndex.at(id).archetype;
-        auto& archetypeSet = Archetype::componentIndex[component];
+        auto *archetype = entityIndex.at(id).archetype;
+        auto &archetypeSet = Archetype::componentIndex[component];
         return archetypeSet.contains(archetype->id);
     }
 
-    void* Entity::get(ComponentID component) const {
-        auto& record = entityIndex.at(id);
-        auto* archetype = record.archetype;
+    void *Entity::get(Component component) const {
+        auto &record = entityIndex.at(id);
+        auto *archetype = record.archetype;
 
-        auto& set = Archetype::componentIndex[component];
+        auto &set = Archetype::componentIndex[component];
         if (!set.contains(archetype->id)) {
             return nullptr;
         }
 
-        auto& archRecord = set[archetype->id];
+        auto &archRecord = set[archetype->id];
         return archetype->components[archRecord.column][record.row];
     }
 
-    void Entity::add(Shifty::ECS::ComponentID component) {
-        auto& record = entityIndex.at(id);
-        auto* archetype = record.archetype;
+    void Entity::add(Component component, void *instance) {
+        auto &record = entityIndex.at(id);
+        auto *archetype = record.archetype;
 
         auto archetypeNext = archetype->getEdge(component).add;
         move(archetype, record.row, archetypeNext);
