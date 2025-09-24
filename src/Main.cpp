@@ -8,11 +8,12 @@
 #include <SDL3/SDL.h>
 #include <iostream>
 
+#include "CommandPalette.h"
 #include "Events.h"
 
 using namespace Shifty;
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         throw std::runtime_error("SDL_Init failed");
     }
@@ -23,19 +24,21 @@ int main(int argc, char* argv[]) {
 
     ECS::Entity world = ECS::Entity::create();
     world.add<InputHandler>();
+    world.add<ShiftyApp>();
 
-    EventBus::subscribe<OnReady>([](const OnReady& e) {
-        ECS::Entity entity = ECS::Entity::create();
-        entity.add<ShiftyApp>();
+    EventBus::subscribe<OnReady>([](const OnReady &e) {
+        ECS::Entity root = ECS::Entity::create();
+        root.add<Layout>();
+        root.add<View>();
+        root.add<CommandPalette>();
     });
 
-    EventBus::subscribe<OnUpdate>([&](const OnUpdate& event) {
+    EventBus::subscribe<OnUpdate>([&](const OnUpdate &event) {
         SDL_Event e;
         while (SDL_PollEvent(&e)) {
             switch (e.type) {
                 case SDL_EVENT_QUIT:
-                    exit(0);
-                    break;
+                    world.get<ShiftyApp>().running = false;
                 default:
                     break;
             }
@@ -47,21 +50,22 @@ int main(int argc, char* argv[]) {
         }
     });
 
-    EventBus::subscribe<OnUpdate>([](const OnUpdate& e) {
-        ECS::Entity::each<ShiftyApp>([](ShiftyApp& app) {
-            app.update();
+    EventBus::subscribe<OnRender>([](const OnRender &e) {
+        ECS::Entity::each<ShiftyApp>([](ShiftyApp &app) {
+            SDL_RenderClear(app.renderer);
+            SDL_RenderPresent(app.renderer);
         });
-    });
 
-    EventBus::subscribe<OnRender>([](const OnRender& e) {
-        ECS::Entity::each<ShiftyApp>([](ShiftyApp& app) {
-            app.render();
+        ECS::Entity::each<CommandPalette>([](ECS::Entity entity, CommandPalette &view) {
+            if (view.open) {
+                auto &layout = entity.get<Layout>();
+            }
         });
     });
 
     EventBus::emit(OnReady{});
 
-    while (true) {
+    while (world.get<ShiftyApp>().running) {
         EventBus::emit(OnUpdate{
             0.016f
         });

@@ -6,20 +6,9 @@
 #include "Layout.h"
 
 namespace Shifty {
-
-    class View {
-        SDL_Renderer* renderer;
-        std::shared_ptr<Layout> panel;
-        SDL_Texture* texture;
-
-    public:
-        View(SDL_Renderer* renderer, const std::shared_ptr<Layout>& panel = nullptr);
-
-        void setPanel(const std::shared_ptr<Layout>& panel);
-
-        void render();
+    struct View {
+        SDL_Texture *texture;
     };
-
 }
 
 

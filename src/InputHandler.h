@@ -7,14 +7,15 @@
 #include <SDL3/SDL.h>
 
 namespace Shifty {
-
+    //TODO: THIS NEEDS TO BE INTEGRATED WITH THE EVENT BUS!!!
     class InputHandler {
     private:
         class EventHandler {
         private:
-            std::vector<std::function<void()>> handlers = {};
+            std::vector<std::function<void()> > handlers = {};
+
         public:
-            void connect(const std::function<void()>& handler);
+            void connect(const std::function<void()> &handler);
 
             void trigger();
         };
@@ -26,16 +27,16 @@ namespace Shifty {
 
         std::unordered_map<SDL_Keycode, bool> keyStates = {};
         std::unordered_map<SDL_Keycode, KeyEventHandler> keyEvents = {};
-    public:
-        void onPressed(SDL_Keycode keycode, const std::function<void()>& handler);
 
-        void onReleased(SDL_Keycode keycode, const std::function<void()>& handler);
+    public:
+        void onPressed(SDL_Keycode keycode, const std::function<void()> &handler);
+
+        void onReleased(SDL_Keycode keycode, const std::function<void()> &handler);
 
         bool isPressed(SDL_Keycode keycode);
 
-        void feed(SDL_Event* event);
+        void feed(SDL_Event *event);
     };
-
 }
 
 

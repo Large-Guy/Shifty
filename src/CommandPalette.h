@@ -6,24 +6,10 @@
 #include "Layout.h"
 
 namespace Shifty {
-
-    class CommandPalette {
-    private:
-        bool isOpen = false;
-        SDL_Renderer* renderer = nullptr;
+    struct CommandPalette {
+        bool open = false;
         float openTime = 0;
-    public:
-        Layout layout;
-
-        void open();
-
-        void close();
-
-        void update();
-
-        void render();
     };
-
 }
 
 #endif //SHIFTY_COMMANDPALETTE_H
