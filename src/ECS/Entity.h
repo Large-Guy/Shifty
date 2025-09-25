@@ -87,6 +87,43 @@ public:
         }
     }
 
+    template<typename... Args, typename Func>
+    static void multiEach(Func callback) {
+        std::vector<Component> components = {Component::get<Args>()...};
+
+        Archetype::Map& map = Archetype::componentIndex[components[0]];
+        std::unordered_map<Component, Archetype::Column, ComponentHash> columns;
+        for (auto& element: map) {
+            auto& column = element.first->components[element.second.column];
+            bool containsAll = true;
+            for (auto component: components) {
+                auto contains = Archetype::componentIndex[component].contains(element.first);
+                if (!contains) {
+                    containsAll = false;
+                    break;
+                }
+                columns.insert({
+                    component, element.first->components[Archetype::componentIndex[component][element.first].
+                        column]
+                });
+            }
+
+            if (!containsAll)
+                continue;
+
+            for (size_t i = 0; i < column.count; ++i) {
+                Entity entity = column.owners[i];
+
+                int index = 0;
+                auto getComponent = [&]() {
+                    return columns[components[index++]][i];
+                };
+
+                callback(*static_cast<Args*>(getComponent())...);
+            }
+        }
+    }
+
     template<typename T>
     static void each(std::function<void(Entity entity, T&)> callback) {
         Archetype::Map& map = Archetype::componentIndex[Component::get<T>()];

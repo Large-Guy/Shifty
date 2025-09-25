@@ -15,6 +15,7 @@
 #include "Components/View.h"
 #include "Systems/AppCreate.h"
 #include "Systems/AppUpdate.h"
+#include "Systems/ColorRectDraw.h"
 #include "Systems/DrawCreate.h"
 #include "Systems/DrawRender.h"
 #include "Systems/OnStart.h"
@@ -46,6 +47,8 @@ int main(int argc, char* argv[]) {
 
     DrawCreate drawCreate{};
     DrawRender drawRender{};
+
+    ColorRectDraw colorRectDraw{}; //Debugging purposes
 
     OnStart onStart{};
 

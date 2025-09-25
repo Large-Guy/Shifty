@@ -10,7 +10,7 @@ struct Draw {
     struct Command {
         int priority = 0;
 
-        virtual void execute(SDL_Renderer *renderer) = 0;
+        virtual void execute(SDL_Renderer* renderer) = 0;
 
         Command(int priority);
 
@@ -18,10 +18,13 @@ struct Draw {
     };
 
     std::vector<std::shared_ptr<Command> > commands;
-    SDL_Renderer *renderer;
+    SDL_Renderer* renderer;
 
-    void pushCommand(const std::shared_ptr<Command> &command);
+    void pushCommand(const std::shared_ptr<Command>& command);
 };
 
+struct OnDraw {
+    Draw& draw;
+};
 
 #endif //SHIFTY_DRAW_H

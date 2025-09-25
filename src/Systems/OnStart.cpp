@@ -10,4 +10,8 @@ void OnStart::process(const OnReady&) {
     world.add<InputHandler>();
     world.add<App>();
     world.add<Draw>();
+
+    Entity testRect = Entity::create();
+    testRect.add<SDL_FRect>({0, 0, 100, 100});
+    testRect.add<SDL_Color>({255, 255, 255});
 }

@@ -5,6 +5,10 @@
 std::unordered_map<Type, Archetype*, TypeHash> Archetype::archetypeIndex = {};
 std::unordered_map<Component, Archetype::Map, ComponentHash> Archetype::componentIndex = {};
 
+Archetype::Column::Column() {
+    throw std::runtime_error("Columns shouldn't be created this way!");
+}
+
 Archetype::Column::Column(Component component) {
     this->component = std::move(component);
     this->elements = nullptr;
