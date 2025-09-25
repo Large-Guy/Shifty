@@ -3,8 +3,8 @@
 #include "../ECS/System.h"
 #include "../Events.h"
 
-class DrawRender : System<OnRender> {
-    void process(const OnRender &) override;
+class DrawRender final : System<OnRender> {
+    void process(const OnRender&) override;
 };
 
 

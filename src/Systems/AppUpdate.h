@@ -7,9 +7,8 @@
 #include "../Events.h"
 #include "../ECS/System.h"
 
-class AppUpdate : System<OnUpdate> {
-public:
-    void process(const OnUpdate &_update) override;
+class AppUpdate final : System<OnUpdate> {
+    void process(const OnUpdate& _update) override;
 };
 
 #endif //SHIFTY_APPUPDATE_H

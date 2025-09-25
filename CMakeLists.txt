@@ -43,6 +43,8 @@ add_executable(Shifty
         src/Systems/DrawCreate.h
         src/Systems/DrawRender.cpp
         src/Systems/DrawRender.h
+        src/Systems/OnStart.cpp
+        src/Systems/OnStart.h
 )
 
 set(CMAKE_FRAMEWORK_PATH "${CMAKE_FRAMEWORK_PATH};~/Library/Frameworks") # Or /Library/Frameworks

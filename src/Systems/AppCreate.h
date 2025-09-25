@@ -5,8 +5,8 @@
 #include "../ECS/System.h"
 
 
-class AppCreate : System<OnComponentCreate<App> > {
-    void process(const OnComponentCreate<App> &) override;
+class AppCreate final : System<OnComponentCreate<App> > {
+    void process(const OnComponentCreate<App>&) override;
 };
 
 

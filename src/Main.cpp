@@ -17,6 +17,7 @@
 #include "Systems/AppUpdate.h"
 #include "Systems/DrawCreate.h"
 #include "Systems/DrawRender.h"
+#include "Systems/OnStart.h"
 
 struct ClearCommand : public Draw::Command {
     SDL_Color color;
@@ -25,13 +26,13 @@ struct ClearCommand : public Draw::Command {
         this->color = color;
     }
 
-    void execute(SDL_Renderer *renderer) override {
+    void execute(SDL_Renderer* renderer) override {
         SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
         SDL_RenderClear(renderer);
     }
 };
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         throw std::runtime_error("SDL_Init failed");
     }
@@ -46,33 +47,7 @@ int main(int argc, char *argv[]) {
     DrawCreate drawCreate{};
     DrawRender drawRender{};
 
-    EventBus::subscribe<OnReady>([](const OnReady &e) {
-        Entity world = Entity::create();
-        world.add<InputHandler>();
-        world.add<App>();
-        world.add<Draw>();
-
-        /*
-        Entity root = Entity::create();
-        root.add<Layout>();
-        root.add<View>();
-        root.add<CommandPalette>();
-        */
-    });
-
-    EventBus::subscribe<OnRender>([](const OnRender &e) {
-        Entity::each<CommandPalette>([](Entity entity, CommandPalette &view) {
-            if (view.open) {
-                auto &layout = entity.get<Layout>();
-            }
-        });
-
-        Entity::each<Draw>([](Entity entity, Draw &draw) {
-            draw.pushCommand(std::make_shared<ClearCommand>(SDL_Color{255, 0, 0, 255}, 0));
-
-            draw.pushCommand(std::make_shared<ClearCommand>(SDL_Color{0, 255, 0}, 100));
-        });
-    });
+    OnStart onStart{};
 
     EventBus::emit(OnReady{});
 

@@ -15,15 +15,23 @@ to keep your experience as distraction free as possible.
 
 ---
 
-## Benefits
+## Why use Shifty?
 
-- More keyboard usage → More productivity! ✨
-- No UI → No time getting distracted or searching for themes!
-- Websites feel like native applications!
+### DON'T!
 
 ---
 > ⚠️ **Warning: Very Early Alpha**
 > This is a very early version of shifty, in fact it's unusable. Plans are to
 > eventually use Ladybird's Web Engine, allowing
-> for greater optimization.
+> for greater optimization and control.
 ---
+
+### Why use it in the Future?
+
+- **More keyboard usage** → More productivity! ✨
+- **Extremely Minimal UI** → No time getting distracted or searching for themes!
+- **Doesn't feel like a web browser** → No UI makes websites feel like native applications!
+
+## Goals
+
+- **NO MOUSE** → No mouse should be required to explore the web
