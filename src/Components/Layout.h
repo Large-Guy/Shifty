@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "ECS/Entity.h"
+#include "../ECS/Entity.h"
 
 namespace Shifty {
     /**

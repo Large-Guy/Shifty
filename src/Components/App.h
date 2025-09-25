@@ -4,19 +4,19 @@
 #include <SDL3/SDL.h>
 
 #include "Layout.h"
-#include "Text.h"
+#include "../Text.h"
 #include "View.h"
 #include "InputHandler.h"
 
 namespace Shifty {
-    struct ShiftyApp {
+    struct App {
         SDL_Window *window;
         SDL_Renderer *renderer;
         bool running = true;
 
-        ShiftyApp();
+        App();
 
-        ~ShiftyApp();
+        ~App();
     };
 }
 

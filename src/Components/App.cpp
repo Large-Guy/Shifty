@@ -1,4 +1,4 @@
-#include "ShiftyApp.h"
+#include "App.h"
 
 #include <cmath>
 #include <iostream>
@@ -7,7 +7,7 @@
 
 using namespace Shifty;
 
-ShiftyApp::ShiftyApp() {
+App::App() {
     int w = 1080, h = 720;
     window = SDL_CreateWindow("Shifty", 1080, 720, SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
     //Calculate DPI scale factor
@@ -21,7 +21,7 @@ ShiftyApp::ShiftyApp() {
     SDL_SetRenderVSync(renderer, SDL_RENDERER_VSYNC_ADAPTIVE);
 }
 
-ShiftyApp::~ShiftyApp() {
+App::~App() {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 }

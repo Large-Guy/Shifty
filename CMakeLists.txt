@@ -6,18 +6,18 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_executable(Shifty
         src/Main.cpp
-        src/ShiftyApp.cpp
-        src/ShiftyApp.h
-        src/Layout.cpp
-        src/Layout.h
+        src/Components/App.cpp
+        src/Components/App.h
+        src/Components/Layout.cpp
+        src/Components/Layout.h
         src/Text.cpp
         src/Text.h
-        src/View.cpp
-        src/View.h
-        src/InputHandler.cpp
-        src/InputHandler.h
-        src/CommandPalette.cpp
-        src/CommandPalette.h
+        src/Components/View.cpp
+        src/Components/View.h
+        src/Components/InputHandler.cpp
+        src/Components/InputHandler.h
+        src/Components/CommandPalette.cpp
+        src/Components/CommandPalette.h
         src/Tween.cpp
         src/Tween.h
         src/ECS/Entity.cpp
@@ -25,6 +25,8 @@ add_executable(Shifty
         src/EventBus.cpp
         src/EventBus.h
         src/Events.h
+        src/Systems/AppUpdate.cpp
+        src/Systems/AppUpdate.h
 )
 
 set(CMAKE_FRAMEWORK_PATH "${CMAKE_FRAMEWORK_PATH};~/Library/Frameworks") # Or /Library/Frameworks
