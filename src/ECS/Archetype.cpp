@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-std::unordered_map<Type, Archetype *, TypeHash> Archetype::archetypeIndex = {};
+std::unordered_map<Type, Archetype*, TypeHash> Archetype::archetypeIndex = {};
 std::unordered_map<Component, Archetype::Map, ComponentHash> Archetype::componentIndex = {};
 
 Archetype::Column::Column(Component component) {
@@ -13,11 +13,11 @@ Archetype::Column::Column(Component component) {
 }
 
 
-void *Archetype::Column::operator[](size_t index) const {
-    return (static_cast<char *>(elements) + component.size * index);
+void* Archetype::Column::operator[](size_t index) const {
+    return (static_cast<char*>(elements) + component.size * index);
 }
 
-void *Archetype::Column::add(EntityID owner) {
+void* Archetype::Column::add(EntityID owner) {
     count++;
     if (count > capacity) {
         if (capacity == 0)
@@ -28,23 +28,23 @@ void *Archetype::Column::add(EntityID owner) {
         else
             elements = realloc(elements, capacity * component.size);
     }
-    void *root = static_cast<char *>(elements) + (component.size * count - component.size);
+    void* root = static_cast<char*>(elements) + (component.size * count - component.size);
     component.constructor(root);
     owners.push_back(owner);
     return root;
 }
 
-void *Archetype::Column::add(EntityID owner, void *instance) {
-    void *dest = add(owner);
+void* Archetype::Column::add(EntityID owner, void* instance) {
+    void* dest = add(owner);
     component.copy(dest, instance);
     return dest;
 }
 
-Archetype::Edge::Edge(Archetype *add, Archetype *remove) : add(add),
+Archetype::Edge::Edge(Archetype* add, Archetype* remove) : add(add),
                                                            remove(remove) {
 }
 
-Archetype::Archetype(const Type &type) {
+Archetype::Archetype(const Type& type) {
     if (archetypeIndex.contains(type)) {
         throw std::runtime_error("Cannot create two archetypes of the same type!");
     }
@@ -57,23 +57,27 @@ Archetype::Archetype(const Type &type) {
     archetypeIndex.insert({this->type, this});
 }
 
-Archetype::Edge &Archetype::getEdge(const Component &component) {
+Archetype::Edge& Archetype::getEdge(const Component& component) {
     if (edges.contains(component)) {
         return edges.at(component);
     }
-    Archetype *add = nullptr;
-    Archetype *remove = nullptr;
-    Type addType = type;
-    addType.push_back(component);
+    Archetype* add = nullptr;
+    Archetype* remove = nullptr;
 
-    add = archetypeIndex.insert({addType, new Archetype{addType}}).first->second;
+    Type addType = type;
+    auto addItem = std::find(addType.begin(), addType.end(), component);
+    if (addItem == addType.end()) {
+        addType.push_back(component);
+
+        add = archetypeIndex.insert({addType, getArchetype(addType)}).first->second;
+    }
 
     Type removeType = type;
-    auto item = std::find(removeType.begin(), removeType.end(), component);
-    if (item != removeType.end()) {
-        removeType.erase(item);
+    auto removeItem = std::find(removeType.begin(), removeType.end(), component);
+    if (removeItem != removeType.end()) {
+        removeType.erase(removeItem);
 
-        remove = archetypeIndex.insert({removeType, new Archetype{removeType}}).first->second;
+        remove = archetypeIndex.insert({removeType, getArchetype(removeType)}).first->second;
     }
     return edges.insert({component, {add, remove}}).first->second;
 }
@@ -83,7 +87,7 @@ void Archetype::remove(size_t row) {
 }
 
 size_t Archetype::add(EntityID owner) {
-    for (auto &column: components) {
+    for (auto& column: components) {
         column.add(owner);
     }
     size_t row = 0;
@@ -92,7 +96,7 @@ size_t Archetype::add(EntityID owner) {
     return row;
 }
 
-Archetype *Archetype::getArchetype(const Type &type) {
+Archetype* Archetype::getArchetype(const Type& type) {
     if (archetypeIndex.contains(type)) {
         return archetypeIndex.at(type);
     }
