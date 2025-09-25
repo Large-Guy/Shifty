@@ -6,58 +6,54 @@
 #include <vector>
 #include <SDL3_ttf/SDL_ttf.h>
 
-namespace Shifty {
-
 /**
  * @class Text
  * @brief Handles caching and rendering text elements, as well as dealing with DPI scaling
  */
-    class Text {
-        struct FontRegistry {
-            std::unordered_map<float, TTF_Font*> sizes;
+class Text {
+    struct FontRegistry {
+        std::unordered_map<float, TTF_Font *> sizes;
 
-            ~FontRegistry();
-        };
-
-        struct TextElement {
-            SDL_Texture* texture;
-
-            ~TextElement();
-        };
-
-        struct TextRegistry {
-            std::string text;
-            TTF_Font* font;
-
-            bool operator==(const TextRegistry& other) const {
-                return text == other.text && font == other.font;
-            }
-
-            size_t hash() const {
-                return std::hash<std::string>()(text) ^ std::hash<TTF_Font*>()(font);
-            }
-        };
-
-        struct TextRegistryHash {
-            size_t operator()(const TextRegistry& text) const {
-                return text.hash();
-            }
-        };
-
-        SDL_Renderer* renderer = nullptr;
-
-        std::unordered_map<std::string, FontRegistry> fontRegistry = {};
-        std::unordered_map<TextRegistry, TextElement, TextRegistryHash> textCache = {};
-
-    public:
-        Text(SDL_Renderer* renderer);
-
-        void loadFont(const std::string& path, float size);
-
-        void
-        renderText(const std::string& font, float size, const std::string& text, float x, float y);
+        ~FontRegistry();
     };
 
-}
+    struct TextElement {
+        SDL_Texture *texture;
+
+        ~TextElement();
+    };
+
+    struct TextRegistry {
+        std::string text;
+        TTF_Font *font;
+
+        bool operator==(const TextRegistry &other) const {
+            return text == other.text && font == other.font;
+        }
+
+        size_t hash() const {
+            return std::hash<std::string>()(text) ^ std::hash<TTF_Font *>()(font);
+        }
+    };
+
+    struct TextRegistryHash {
+        size_t operator()(const TextRegistry &text) const {
+            return text.hash();
+        }
+    };
+
+    SDL_Renderer *renderer = nullptr;
+
+    std::unordered_map<std::string, FontRegistry> fontRegistry = {};
+    std::unordered_map<TextRegistry, TextElement, TextRegistryHash> textCache = {};
+
+public:
+    Text(SDL_Renderer *renderer);
+
+    void loadFont(const std::string &path, float size);
+
+    void
+    renderText(const std::string &font, float size, const std::string &text, float x, float y);
+};
 
 #endif //SHIFTY_TEXT_H

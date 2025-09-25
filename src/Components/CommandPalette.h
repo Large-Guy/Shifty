@@ -5,11 +5,9 @@
 #include <SDL3/SDL.h>
 #include "Layout.h"
 
-namespace Shifty {
-    struct CommandPalette {
-        bool open = false;
-        float openTime = 0;
-    };
-}
+struct CommandPalette {
+    bool open = false;
+    float openTime = 0;
+};
 
 #endif //SHIFTY_COMMANDPALETTE_H

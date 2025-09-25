@@ -2,4 +2,3 @@
 
 #include <utility>
 
-using namespace Shifty;

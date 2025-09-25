@@ -3,13 +3,9 @@
 
 #include <SDL3/SDL_render.h>
 
-#include "Layout.h"
-
-namespace Shifty {
-    struct View {
-        SDL_Texture *texture;
-    };
-}
+struct View {
+    SDL_Texture *texture;
+};
 
 
 #endif //SHIFTY_VIEW_H

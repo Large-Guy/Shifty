@@ -7,11 +7,9 @@
 #include "../Events.h"
 #include "../ECS/Entity.h"
 
-namespace Shifty {
-    class AppUpdate : ECS::System<OnUpdate> {
-    public:
-        void process(const OnUpdate& _update);
-    };
-} // Shifty
+class AppUpdate : System<OnUpdate> {
+public:
+    void process(const OnUpdate &_update);
+};
 
 #endif //SHIFTY_APPUPDATE_H

@@ -7,30 +7,28 @@
 
 #include "../ECS/Entity.h"
 
-namespace Shifty {
-    /**
-     * @class Layout
-     * @brief Handles layouts of open views/panels.
-     */
-    struct Layout {
-        enum class Type {
-            FULL,
-            VERTICAL,
-            HORIZONTAL
-        };
-
-        enum class Mode {
-            DISABLE,
-            PERCENT,
-        };
-
-        Type type = Type::FULL;
-
-        Mode widthMode = Mode::DISABLE;
-        float width = 0;
-        Mode heightMode = Mode::DISABLE;
-        float height = 0;
+/**
+ * @class Layout
+ * @brief Handles layouts of open views/panels.
+ */
+struct Layout {
+    enum class Type {
+        FULL,
+        VERTICAL,
+        HORIZONTAL
     };
-}
+
+    enum class Mode {
+        DISABLE,
+        PERCENT,
+    };
+
+    Type type = Type::FULL;
+
+    Mode widthMode = Mode::DISABLE;
+    float width = 0;
+    Mode heightMode = Mode::DISABLE;
+    float height = 0;
+};
 
 #endif //SHIFTY_LAYOUT_H

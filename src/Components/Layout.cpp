@@ -4,8 +4,6 @@
 #include <ostream>
 #include <stdexcept>
 
-using namespace Shifty;
-
 /* This is complicated so I'm saving it for later
 void Layout::computeLayout() const {
     if (type == Type::FULL) {

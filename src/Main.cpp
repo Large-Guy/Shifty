@@ -5,16 +5,13 @@
 #include "Events.h"
 
 #include "Components/App.h"
-#include <SDL3/SDL.h>
 #include <iostream>
 
 #include "Components/CommandPalette.h"
 #include "Events.h"
 #include "Systems/AppUpdate.h"
 
-using namespace Shifty;
-
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         throw std::runtime_error("SDL_Init failed");
     }
@@ -23,29 +20,28 @@ int main(int argc, char* argv[]) {
         throw std::runtime_error("TTF_Init failed");
     }
 
-    ECS::Entity world = ECS::Entity::create();
+    Entity world = Entity::create();
     world.add<InputHandler>();
     world.add<App>();
 
     AppUpdate appUpdate{};
 
-    EventBus::subscribe<OnReady>([](const OnReady& e) {
-        ECS::Entity root = ECS::Entity::create();
+    EventBus::subscribe<OnReady>([](const OnReady &e) {
+        Entity root = Entity::create();
         root.add<Layout>();
         root.add<View>();
         root.add<CommandPalette>();
     });
 
-
-    EventBus::subscribe<OnRender>([](const OnRender& e) {
-        ECS::Entity::each<App>([](App& app) {
+    EventBus::subscribe<OnRender>([](const OnRender &e) {
+        Entity::each<App>([](App &app) {
             SDL_RenderClear(app.renderer);
             SDL_RenderPresent(app.renderer);
         });
 
-        ECS::Entity::each<CommandPalette>([](ECS::Entity entity, CommandPalette& view) {
+        Entity::each<CommandPalette>([](Entity entity, CommandPalette &view) {
             if (view.open) {
-                auto& layout = entity.get<Layout>();
+                auto &layout = entity.get<Layout>();
             }
         });
     });

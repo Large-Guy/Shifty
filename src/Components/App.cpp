@@ -5,8 +5,6 @@
 #include <ostream>
 #include <random>
 
-using namespace Shifty;
-
 App::App() {
     int w = 1080, h = 720;
     window = SDL_CreateWindow("Shifty", 1080, 720, SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);

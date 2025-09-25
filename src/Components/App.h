@@ -8,16 +8,13 @@
 #include "View.h"
 #include "InputHandler.h"
 
-namespace Shifty {
-    struct App {
-        SDL_Window *window;
-        SDL_Renderer *renderer;
-        bool running = true;
+struct App {
+    SDL_Window *window;
+    bool running = true;
 
-        App();
+    App();
 
-        ~App();
-    };
-}
+    ~App();
+};
 
 #endif //SHIFTY_SHIFTYAPP_H
