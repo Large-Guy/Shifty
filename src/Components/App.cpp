@@ -1,8 +1,6 @@
 #include "App.h"
 
-#include <cmath>
 #include <iostream>
-#include <ostream>
 #include <random>
 
 App::App() {
