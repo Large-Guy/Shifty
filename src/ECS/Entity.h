@@ -9,9 +9,15 @@
 
 #include "Component.h"
 #include "Archetype.h"
+#include "../EventBus.h"
 
 using EntityID = uint32_t;
 
+template<typename T>
+struct OnComponentCreate {
+    EntityID entity;
+    T &component;
+};
 
 class Entity {
     struct Record {
@@ -35,7 +41,7 @@ public:
 
     void *get(Component component) const;
 
-    void add(Component component, void *instance = nullptr);
+    void *add(Component component, void *instance = nullptr);
 
     template<typename T>
     bool has() const {
@@ -48,13 +54,19 @@ public:
     }
 
     template<typename T>
-    void add() {
-        add(Component::get<T>());
+    T &add() {
+        T *component = static_cast<T *>(add(Component::get<T>()));
+        OnComponentCreate<T> event{id, *component};
+        EventBus::emit(event);
+        return *component;
     }
 
     template<typename T>
-    void add(T component) {
-        add(Component::get<T>(), &component);
+    T &add(T instance) {
+        T *component = static_cast<T *>(add(Component::get<T>(), &instance));
+        OnComponentCreate<T> event{id, *component};
+        EventBus::emit(event);
+        return *component;
     }
 
     template<typename T>

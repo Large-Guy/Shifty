@@ -5,11 +5,11 @@
 #ifndef SHIFTY_APPUPDATE_H
 #define SHIFTY_APPUPDATE_H
 #include "../Events.h"
-#include "../ECS/Entity.h"
+#include "../ECS/System.h"
 
 class AppUpdate : System<OnUpdate> {
 public:
-    void process(const OnUpdate &_update);
+    void process(const OnUpdate &_update) override;
 };
 
 #endif //SHIFTY_APPUPDATE_H

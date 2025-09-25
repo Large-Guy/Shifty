@@ -4,15 +4,18 @@
 
 #include "AppUpdate.h"
 
-#include <algorithm>
+#include <stdexcept>
+
 
 #include "../Components/App.h"
+#include "../ECS/Entity.h"
+#include "../Components/InputHandler.h"
 
 #include <SDL3/SDL.h>
 
 void AppUpdate::process(const OnUpdate &_update) {
     SDL_Event e;
-    ECS::Entity app = ECS::Entity::find<App>();
+    Entity app = Entity::find<App>();
     while (SDL_PollEvent(&e)) {
         switch (e.type) {
             case SDL_EVENT_QUIT:

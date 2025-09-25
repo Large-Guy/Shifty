@@ -37,6 +37,12 @@ add_executable(Shifty
         src/ECS/Archetype.h
         src/ECS/System.cpp
         src/ECS/System.h
+        src/Systems/AppCreate.cpp
+        src/Systems/AppCreate.h
+        src/Systems/DrawCreate.cpp
+        src/Systems/DrawCreate.h
+        src/Systems/DrawRender.cpp
+        src/Systems/DrawRender.h
 )
 
 set(CMAKE_FRAMEWORK_PATH "${CMAKE_FRAMEWORK_PATH};~/Library/Frameworks") # Or /Library/Frameworks

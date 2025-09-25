@@ -1,14 +1,26 @@
 #ifndef SHIFTY_DRAW_H
 #define SHIFTY_DRAW_H
 
+#include <memory>
+#include <queue>
+#include <vector>
 #include <SDL3/SDL.h>
 
 struct Draw {
+    struct Command {
+        int priority = 0;
+
+        virtual void execute(SDL_Renderer *renderer) = 0;
+
+        Command(int priority);
+
+        virtual ~Command() = default;
+    };
+
+    std::vector<std::shared_ptr<Command> > commands;
     SDL_Renderer *renderer;
 
-    Draw();
-
-    ~Draw();
+    void pushCommand(const std::shared_ptr<Command> &command);
 };
 
 

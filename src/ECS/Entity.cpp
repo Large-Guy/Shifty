@@ -57,10 +57,18 @@ void *Entity::get(Component component) const {
     return archetype->components[archRecord.column][record.row];
 }
 
-void Entity::add(Component component, void *instance) {
+void *Entity::add(Component component, void *instance) {
     auto &record = entityIndex.at(id);
     auto *archetype = record.archetype;
 
     auto *archetypeNext = archetype->getEdge(component).add;
     move(archetype, record.row, archetypeNext);
+
+    if (instance == nullptr)
+        return get(component);
+
+    void *dest = get(component);
+    component.copy(dest, instance);
+
+    return dest;
 }

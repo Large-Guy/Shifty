@@ -6,10 +6,6 @@
 struct App {
     SDL_Window *window;
     bool running = true;
-
-    App();
-
-    ~App();
 };
 
 #endif //SHIFTY_SHIFTYAPP_H
