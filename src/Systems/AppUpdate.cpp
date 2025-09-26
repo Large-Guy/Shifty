@@ -13,7 +13,9 @@
 
 #include <SDL3/SDL.h>
 
-void AppUpdate::process(const OnUpdate &_update) {
+#include "RenderTransformsCompute.h"
+
+void AppUpdate::process(const OnUpdate& _update) {
     SDL_Event e;
     Entity app = Entity::find<App>();
     while (SDL_PollEvent(&e)) {
@@ -29,4 +31,9 @@ void AppUpdate::process(const OnUpdate &_update) {
 
         app.get<InputHandler>().feed(&e);
     }
+
+    int screenWidth, screenHeight;
+    SDL_GetWindowSize(app.get<App>().window, &screenWidth, &screenHeight);
+
+    EventBus::emit<OnLayout>({static_cast<float>(screenWidth), static_cast<float>(screenHeight)});
 }

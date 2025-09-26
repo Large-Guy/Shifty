@@ -6,9 +6,8 @@
 
 #include "../ECS/Entity.h"
 
-RectCommand::RectCommand(int priority, SDL_FRect& rect, SDL_Color& color) : Draw::Command(priority) {
-    this->rect = rect;
-    this->color = color;
+RectCommand::RectCommand(int priority, SDL_FRect& rect, SDL_Color& color) : rect(rect), color(color),
+                                                                            Command(priority) {
 }
 
 

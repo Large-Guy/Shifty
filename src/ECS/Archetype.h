@@ -26,6 +26,8 @@ struct Archetype {
         void* add(EntityID owner);
 
         void* add(EntityID owner, void* instance);
+
+        void remove(size_t index);
     };
 
     struct Record {

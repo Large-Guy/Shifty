@@ -47,6 +47,16 @@ add_executable(Shifty
         src/Systems/OnStart.h
         src/Systems/ColorRectDraw.cpp
         src/Systems/ColorRectDraw.h
+        src/Components/Transform.cpp
+        src/Components/Transform.h
+        src/Systems/ViewDraw.cpp
+        src/Systems/ViewDraw.h
+        src/Components/RenderTransform.cpp
+        src/Components/RenderTransform.h
+        src/Systems/RenderTransformsCompute.cpp
+        src/Systems/RenderTransformsCompute.h
+        src/Components/Parent.cpp
+        src/Components/Parent.h
 )
 
 set(CMAKE_FRAMEWORK_PATH "${CMAKE_FRAMEWORK_PATH};~/Library/Frameworks") # Or /Library/Frameworks
@@ -62,6 +72,7 @@ target_link_libraries(Shifty PRIVATE
 )
 
 target_include_directories(Shifty PRIVATE
+        ${CMAKE_SOURCE_DIR}/src
 )
 
 add_custom_command(TARGET Shifty POST_BUILD

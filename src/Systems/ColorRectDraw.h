@@ -4,8 +4,8 @@
 #include "../ECS/System.h"
 
 struct RectCommand : public Draw::Command {
-    SDL_FRect rect;
-    SDL_Color color;
+    SDL_FRect& rect;
+    SDL_Color& color;
 
     RectCommand(int priority, SDL_FRect& rect, SDL_Color& color);
 

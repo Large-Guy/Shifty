@@ -77,11 +77,17 @@ public:
     }
 
     template<typename T>
-    static void each(std::function<void(T&)> callback) {
+    static void each(std::function<void(T&)> callback, std::function<bool(T&)> filter = nullptr) {
         Archetype::Map& map = Archetype::componentIndex[Component::get<T>()];
         for (auto& element: map) {
             auto& column = element.first->components[element.second.column];
             for (size_t i = 0; i < column.count; ++i) {
+                Entity entity = column.owners[i];
+                if (entity.id == 0)
+                    continue;
+
+                if (filter && !filter(*static_cast<T*>(column[i])))
+                    continue;
                 callback(*static_cast<T*>(column[i]));
             }
         }
@@ -114,23 +120,89 @@ public:
             for (size_t i = 0; i < column.count; ++i) {
                 Entity entity = column.owners[i];
 
+                if (entity.id == 0)
+                    continue;
+
                 int index = 0;
                 auto getComponent = [&]() {
                     return columns[components[index++]][i];
                 };
 
-                callback(*static_cast<Args*>(getComponent())...);
+                if constexpr (std::is_invocable_v<Func, Entity, decltype(*static_cast<Args*>(getComponent()))...>) {
+                    // Function takes (Entity, Component)
+                    callback(entity, *static_cast<Args*>(getComponent())...);
+                } else if constexpr (std::is_invocable_v<Func, decltype(*static_cast<Args*>(getComponent()))...>) {
+                    // Function takes just (Component)
+                    callback(*static_cast<Args*>(getComponent())...);
+                }
+            }
+        }
+    }
+
+    template<typename... Args, typename Func, typename Filter>
+    static void multiEach(Func callback, Filter filter) {
+        std::vector<Component> components = {Component::get<Args>()...};
+
+        Archetype::Map& map = Archetype::componentIndex[components[0]];
+        std::unordered_map<Component, Archetype::Column, ComponentHash> columns;
+        for (auto& element: map) {
+            auto& column = element.first->components[element.second.column];
+            bool containsAll = true;
+            for (auto component: components) {
+                auto contains = Archetype::componentIndex[component].contains(element.first);
+                if (!contains) {
+                    containsAll = false;
+                    break;
+                }
+                columns.insert({
+                    component, element.first->components[Archetype::componentIndex[component][element.first].
+                        column]
+                });
+            }
+
+            if (!containsAll)
+                continue;
+
+            for (size_t i = 0; i < column.count; ++i) {
+                Entity entity = column.owners[i];
+
+                if (entity.id == 0)
+                    continue;
+
+                int index = 0;
+                auto getComponent = [&]() {
+                    return columns[components[index++]][i];
+                };
+
+                if (!filter(entity, *static_cast<Args*>(getComponent())...))
+                    continue;
+
+                index = 0;
+
+                if constexpr (std::is_invocable_v<Func, Entity, decltype(*static_cast<Args*>(getComponent()))...>) {
+                    // Function takes (Entity, Component)
+                    callback(entity, *static_cast<Args*>(getComponent())...);
+                } else if constexpr (std::is_invocable_v<Func, decltype(*static_cast<Args*>(getComponent()))...>) {
+                    // Function takes just (Component)
+                    callback(*static_cast<Args*>(getComponent())...);
+                }
             }
         }
     }
 
     template<typename T>
-    static void each(std::function<void(Entity entity, T&)> callback) {
+    static void each(std::function<void(Entity entity, T&)> callback, std::function<bool(T&)> filter = nullptr) {
         Archetype::Map& map = Archetype::componentIndex[Component::get<T>()];
         for (auto& element: map) {
             auto& column = element.first->components[element.second.column];
             for (size_t i = 0; i < column.count; ++i) {
-                callback(Entity(column.owners[i]), *static_cast<T*>(column[i]));
+                Entity entity = column.owners[i];
+                if (entity.id == 0)
+                    continue;
+
+                if (filter && !filter(*static_cast<T*>(column[i])))
+                    continue;
+                callback(entity, *static_cast<T*>(column[i]));
             }
         }
     }

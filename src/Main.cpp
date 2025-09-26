@@ -19,6 +19,8 @@
 #include "Systems/DrawCreate.h"
 #include "Systems/DrawRender.h"
 #include "Systems/OnStart.h"
+#include "Systems/RenderTransformsCompute.h"
+#include "Systems/ViewDraw.h"
 
 struct ClearCommand : public Draw::Command {
     SDL_Color color;
@@ -48,7 +50,10 @@ int main(int argc, char* argv[]) {
     DrawCreate drawCreate{};
     DrawRender drawRender{};
 
-    ColorRectDraw colorRectDraw{}; //Debugging purposes
+    //ColorRectDraw colorRectDraw{}; //Debugging purposes
+
+    ViewDraw viewDraw{};
+    RenderTransformsCompute renderTransformsCompute{};
 
     OnStart onStart{};
 

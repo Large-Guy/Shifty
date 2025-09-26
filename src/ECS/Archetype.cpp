@@ -44,6 +44,11 @@ void* Archetype::Column::add(EntityID owner, void* instance) {
     return dest;
 }
 
+void Archetype::Column::remove(size_t index) {
+    owners[index] = 0; //AKA null entity
+}
+
+
 Archetype::Edge::Edge(Archetype* add, Archetype* remove) : add(add),
                                                            remove(remove) {
 }
@@ -87,7 +92,9 @@ Archetype::Edge& Archetype::getEdge(const Component& component) {
 }
 
 void Archetype::remove(size_t row) {
-    //This will eventually mark the row as unused and then the next component to be added with fill in that row
+    for (int i = 0; i < components.size(); ++i) {
+        components[i].remove(row);
+    }
 }
 
 size_t Archetype::add(EntityID owner) {
