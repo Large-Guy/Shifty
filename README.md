@@ -35,3 +35,19 @@ to keep your experience as distraction free as possible.
 ## Goals
 
 - **NO MOUSE** → No mouse should be required to explore the web
+
+## Contributor Info
+
+If you do want to help with development, there are a few odd decisions I made about this project's architecture, but I
+think they are beneficial and keep the project a lot cleaner.
+
+### 1. ECS
+
+This software is structured using an ECS. Which is more common in video games, but I think it can help
+with software architecture as well.
+
+### 2. Event Buses
+
+All application operations happen through events. This is most visible
+in [TextEditSystems.h](src/Systems/TextEditSystems.h). Each ECS System only handles ONE event.
+This keeps things simple and modular.
