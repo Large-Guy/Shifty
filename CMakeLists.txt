@@ -55,6 +55,22 @@ add_executable(Shifty
         src/Components/RenderTransform.h
         src/Systems/RenderTransformsCompute.cpp
         src/Systems/RenderTransformsCompute.h
+        src/Systems/CommandPaletteUpdate.cpp
+        src/Systems/CommandPaletteUpdate.h
+        src/Components/Animation.cpp
+        src/Components/Animation.h
+        src/Systems/AnimationUpdate.cpp
+        src/Systems/AnimationUpdate.h
+        src/Systems/CommandPaletteKeydown.cpp
+        src/Systems/CommandPaletteKeydown.h
+        src/GlobalConfig.cpp
+        src/GlobalConfig.h
+        src/Components/TextEdit.cpp
+        src/Components/TextEdit.h
+        src/Systems/TextEditSystems.cpp
+        src/Systems/TextEditSystems.h
+        src/Components/Focus.cpp
+        src/Components/Focus.h
 )
 
 set(CMAKE_FRAMEWORK_PATH "${CMAKE_FRAMEWORK_PATH};~/Library/Frameworks") # Or /Library/Frameworks

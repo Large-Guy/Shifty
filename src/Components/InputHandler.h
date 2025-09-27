@@ -6,15 +6,19 @@
 #include <functional>
 #include <SDL3/SDL.h>
 
-struct OnKeyPress {
+struct OnKeyPress
+{
     SDL_Keycode key;
 };
 
-struct OnKeyRelease {
+struct OnKeyRelease
+{
     SDL_Keycode key;
 };
 
-struct InputHandler {
+struct InputHandler
+{
+    bool textInput;
     std::unordered_map<SDL_Keycode, bool> keyStates = {};
 
     bool isPressed(SDL_Keycode keycode);

@@ -1,0 +1,10 @@
+#ifndef SHIFTY_TEXTEDITSYSTEMS_H
+#define SHIFTY_TEXTEDITSYSTEMS_H
+
+
+class TextEditSystems
+{
+};
+
+
+#endif //SHIFTY_TEXTEDITSYSTEMS_H

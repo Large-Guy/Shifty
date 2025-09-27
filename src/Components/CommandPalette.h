@@ -7,7 +7,8 @@
 
 struct CommandPalette
 {
-    bool open = false;
+    uint64_t lastShiftPressed = 0.0f;
+    bool open;
 };
 
 #endif //SHIFTY_COMMANDPALETTE_H

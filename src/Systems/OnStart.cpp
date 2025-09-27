@@ -1,4 +1,6 @@
 #include "OnStart.h"
+
+#include "Components/Animation.h"
 #include "ECS/Entity.h"
 #include "Components/InputHandler.h"
 #include "Components/App.h"
@@ -26,4 +28,5 @@ void OnStart::process(const OnReady&)
     root.add<Layout>({.type = Layout::Type::VERTICAL});
     root.add<RenderTransform>();
     root.add<CommandPalette>();
+    root.add<Animation>();
 }
