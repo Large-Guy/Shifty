@@ -27,6 +27,8 @@ void InputHandler::feed(const SDL_Event* event)
         keyStates[event->key.key] = false;
         EventBus::emit(OnKeyRelease{event->key.key});
         break;
+    case SDL_EVENT_TEXT_INPUT:
+        EventBus::emit(TextInput{event->text.text});
     default:
 
 

@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <vector>
 #include <functional>
+#include <string>
 #include <SDL3/SDL.h>
 
 struct OnKeyPress
@@ -14,6 +15,11 @@ struct OnKeyPress
 struct OnKeyRelease
 {
     SDL_Keycode key;
+};
+
+struct TextInput
+{
+    const std::string& input;
 };
 
 struct InputHandler
