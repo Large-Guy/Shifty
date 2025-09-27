@@ -7,12 +7,15 @@
 std::unordered_map<EntityID, Entity::Record> Entity::entityIndex = {};
 EntityID Entity::count = 0;
 
-void Entity::move(Archetype* current, size_t row, Archetype* next) {
+void Entity::move(Archetype* current, size_t row, Archetype* next)
+{
     size_t newRow = next->add(id);
     auto remIter = entityIndex.find(id);
-    for (auto& component : current->type) {
+    for (auto& component : current->type)
+    {
         auto contains = std::find(next->type.begin(), next->type.end(), component);
-        if (contains == next->type.end()) {
+        if (contains == next->type.end())
+        {
             continue;
         }
         auto& record = Archetype::componentIndex[component][current];
@@ -27,11 +30,29 @@ void Entity::move(Archetype* current, size_t row, Archetype* next) {
     entityIndex.insert({id, {next, newRow}});
 }
 
-Entity::Entity(EntityID id) {
+Entity::Entity(EntityID id)
+{
     this->id = id;
 }
 
-Entity Entity::create() {
+bool Entity::operator==(const Entity& other) const
+{
+    return this->id == other.id;
+}
+
+bool Entity::operator==(const EntityID other) const
+{
+    return this->id == other;
+}
+
+bool Entity::operator==(std::nullptr_t other) const
+{
+    return this->id == 0;
+}
+
+
+Entity Entity::create()
+{
     EntityID id = ++count;
     auto* archetype = Archetype::getArchetype({});
     auto record = Record{archetype, 0};
@@ -39,8 +60,10 @@ Entity Entity::create() {
     return {id};
 }
 
-bool Entity::has(Component component) const {
-    if (!entityIndex.contains(id)) {
+bool Entity::has(Component component) const
+{
+    if (!entityIndex.contains(id))
+    {
         throw std::runtime_error("Entity does not exist!");
     }
     auto* archetype = entityIndex.at(id).archetype;
@@ -48,12 +71,14 @@ bool Entity::has(Component component) const {
     return archetypeSet.contains(archetype);
 }
 
-void* Entity::get(Component component) const {
+void* Entity::get(Component component) const
+{
     auto& record = entityIndex.at(id);
     auto* archetype = record.archetype;
 
     auto& set = Archetype::componentIndex[component];
-    if (!set.contains(archetype)) {
+    if (!set.contains(archetype))
+    {
         return nullptr;
     }
 
@@ -61,7 +86,8 @@ void* Entity::get(Component component) const {
     return archetype->components[archRecord.column][record.row];
 }
 
-void* Entity::add(Component component, void* instance) {
+void* Entity::add(Component component, void* instance)
+{
     auto& record = entityIndex.at(id);
     auto* archetype = record.archetype;
 
@@ -77,7 +103,8 @@ void* Entity::add(Component component, void* instance) {
     return dest;
 }
 
-void Entity::remove(Component component) {
+void Entity::remove(Component component)
+{
     auto& record = entityIndex.at(id);
     auto* archetype = record.archetype;
 

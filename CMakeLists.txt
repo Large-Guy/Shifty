@@ -55,8 +55,6 @@ add_executable(Shifty
         src/Components/RenderTransform.h
         src/Systems/RenderTransformsCompute.cpp
         src/Systems/RenderTransformsCompute.h
-        src/Components/Parent.cpp
-        src/Components/Parent.h
 )
 
 set(CMAKE_FRAMEWORK_PATH "${CMAKE_FRAMEWORK_PATH};~/Library/Frameworks") # Or /Library/Frameworks

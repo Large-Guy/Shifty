@@ -88,5 +88,26 @@ void Layout::computeLayout() const {
 }
 */
 
-void Layout::addChild() {
+void Layout::addChild(const Entity to, const Entity add)
+{
+    if (!to.has<Layout>())
+        throw std::runtime_error("Parent entity is missing layout component");
+    if (!add.has<Layout>())
+        throw std::runtime_error("Child entity is missing layout component!");
+    Layout& layout = to.get<Layout>();
+    Layout& other = add.get<Layout>();
+    if (other.parent != nullptr)
+    {
+        removeChild(other.parent, add);
+    }
+    other.parent = to;
+    layout.children.push_back(add);
+}
+
+void Layout::removeChild(const Entity from, const Entity remove)
+{
+    if (!from.has<Layout>())
+        throw std::runtime_error("Parent entity is missing layout component");
+    if (remove.has<Layout>())
+        throw std::runtime_error("Child entity is missing layout component!");
 }

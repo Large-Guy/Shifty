@@ -2,18 +2,21 @@
 #define SHIFTY_TRANSFORM_H
 
 
-struct Transform {
-    enum class Mode {
+struct Transform
+{
+    enum class Mode
+    {
+        Auto,
         Pixel,
         Percent
     };
 
-    Mode xMode = Mode::Percent;
-    Mode yMode = Mode::Percent;
-    float x, y;
-    Mode wMode = Mode::Percent;
-    Mode hMode = Mode::Percent;
-    float w, h;
+    Mode xMode = Mode::Auto;
+    Mode yMode = Mode::Auto;
+    float x = 0.0f, y = 0.0f;
+    Mode wMode = Mode::Auto;
+    Mode hMode = Mode::Auto;
+    float w = 1.0f, h = 1.0f;
 };
 
 

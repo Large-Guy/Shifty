@@ -8,8 +8,11 @@
  * @class Layout
  * @brief Handles layouts of open views/panels.
  */
-struct Layout {
-    enum class Type {
+struct Layout
+{
+    enum class Type
+    {
+        FREE,
         FULL,
         VERTICAL,
         HORIZONTAL
@@ -18,11 +21,11 @@ struct Layout {
     Type type = Type::FULL;
 
     Entity parent = Entity();
-    std::vector<Entity> entities = {};
+    std::vector<Entity> children = {};
 
-    void addChild();
+    static void addChild(Entity to, Entity add);
 
-    void removeChild();
+    static void removeChild(Entity from, Entity remove);
 };
 
 #endif //SHIFTY_LAYOUT_H

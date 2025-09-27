@@ -15,15 +15,18 @@
 
 #include "RenderTransformsCompute.h"
 
-void AppUpdate::process(const OnUpdate& _update) {
+void AppUpdate::process(const OnUpdate& _update)
+{
     SDL_Event e;
     Entity app = Entity::find<App>();
-    while (SDL_PollEvent(&e)) {
-        switch (e.type) {
-            case SDL_EVENT_QUIT:
-                app.get<App>().running = false;
-            default:
-                break;
+    while (SDL_PollEvent(&e))
+    {
+        switch (e.type)
+        {
+        case SDL_EVENT_QUIT:
+            app.get<App>().running = false;
+        default:
+            break;
         }
 
         if (!app.has<InputHandler>())
@@ -35,5 +38,5 @@ void AppUpdate::process(const OnUpdate& _update) {
     int screenWidth, screenHeight;
     SDL_GetWindowSize(app.get<App>().window, &screenWidth, &screenHeight);
 
-    EventBus::emit<OnLayout>({static_cast<float>(screenWidth), static_cast<float>(screenHeight)});
+    EventBus::emit<OnLayout>({0, 0, static_cast<float>(screenWidth), static_cast<float>(screenHeight)});
 }

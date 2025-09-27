@@ -2,11 +2,13 @@
 #define SHIFTY_VIEWDRAW_H
 #include "Components/Draw.h"
 #include "Components/Draw.h"
+#include "Components/Draw.h"
 #include "Components/RenderTransform.h"
 #include "Components/View.h"
 #include "ECS/System.h"
 
-struct ViewDrawCommand : public Draw::Command {
+struct ViewDrawCommand : public Draw::Command
+{
     View& view;
     RenderTransform& renderTransform;
 
@@ -15,7 +17,17 @@ struct ViewDrawCommand : public Draw::Command {
     void execute(SDL_Renderer* renderer) override;
 };
 
-class ViewDraw final : System<OnDraw> {
+struct DebugRenderTransform : public Draw::Command
+{
+    RenderTransform& renderTransform;
+
+    DebugRenderTransform(RenderTransform& renderTransform);
+
+    void execute(SDL_Renderer* renderer) override;
+};
+
+class ViewDraw final : System<OnDraw>
+{
     void process(const OnDraw&) override;
 };
 
