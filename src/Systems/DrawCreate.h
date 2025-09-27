@@ -5,7 +5,7 @@
 #include "../ECS/System.h"
 
 
-class DrawCreate final : System<OnComponentCreate<Draw> > {
+class DrawCreate final : System<OnComponentCreate<Draw>> {
     void process(const OnComponentCreate<Draw>&) override;
 };
 

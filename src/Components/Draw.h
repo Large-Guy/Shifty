@@ -17,7 +17,7 @@ struct Draw {
         virtual ~Command() = default;
     };
 
-    std::vector<std::shared_ptr<Command> > commands;
+    std::vector<std::shared_ptr<Command>> commands;
     SDL_Renderer* renderer;
 
     void pushCommand(const std::shared_ptr<Command>& command);

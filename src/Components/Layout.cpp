@@ -87,3 +87,6 @@ void Layout::computeLayout() const {
     }
 }
 */
+
+void Layout::addChild() {
+}

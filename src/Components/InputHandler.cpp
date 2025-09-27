@@ -6,7 +6,7 @@ bool InputHandler::isPressed(SDL_Keycode keycode) {
     return keyStates[keycode];
 }
 
-void InputHandler::feed(const SDL_Event *event) {
+void InputHandler::feed(const SDL_Event* event) {
     switch (event->type) {
         case SDL_EVENT_KEY_DOWN:
             keyStates[event->key.key] = true;

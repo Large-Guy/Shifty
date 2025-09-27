@@ -10,7 +10,7 @@ void DrawRender::process(const OnRender&) {
         //Flush
         SDL_SetRenderDrawColor(draw.renderer, 0, 0, 0, 255);
         SDL_RenderClear(draw.renderer);
-        for (const auto& command: draw.commands) {
+        for (const auto& command : draw.commands) {
             command->execute(draw.renderer);
         }
 

@@ -10,7 +10,7 @@ EntityID Entity::count = 0;
 void Entity::move(Archetype* current, size_t row, Archetype* next) {
     size_t newRow = next->add(id);
     auto remIter = entityIndex.find(id);
-    for (auto& component: current->type) {
+    for (auto& component : current->type) {
         auto contains = std::find(next->type.begin(), next->type.end(), component);
         if (contains == next->type.end()) {
             continue;

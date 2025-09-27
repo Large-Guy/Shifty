@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <functional>
+#include <string>
 
 using ComponentID = uint32_t;
 

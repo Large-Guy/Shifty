@@ -4,7 +4,7 @@
 #include <SDL3/SDL.h>
 
 struct App {
-    SDL_Window *window;
+    SDL_Window* window;
     bool running = true;
 };
 

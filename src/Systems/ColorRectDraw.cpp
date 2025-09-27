@@ -19,6 +19,6 @@ void RectCommand::execute(SDL_Renderer* renderer) {
 
 void ColorRectDraw::process(const OnDraw& onDraw) {
     Entity::multiEach<SDL_FRect, SDL_Color>([onDraw](SDL_FRect& rect, SDL_Color& color) {
-        onDraw.draw.pushCommand(std::make_shared<RectCommand>(1, rect, color));
+        onDraw.draw.pushCommand(std::make_shared < RectCommand > (1, rect, color));
     });
 }

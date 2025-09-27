@@ -30,10 +30,9 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background:
-            linear-gradient(217deg, #201e23, transparent 99.71%),
-            linear-gradient(127deg, #08090b, transparent 98.71%),
-            linear-gradient(336deg, #11171e, transparent 99.71%);
+    background: linear-gradient(217deg, #201e23, transparent 99.71%),
+    linear-gradient(127deg, #08090b, transparent 98.71%),
+    linear-gradient(336deg, #11171e, transparent 99.71%);
     z-index: -1;
 }
 
@@ -78,14 +77,14 @@ h3 {
     font-family: 'Hack';
     font-size: 20px;
     color: #eeeeee;
-    
+
     background: repeating-linear-gradient(65deg, #0a82f7 0%, #4f61dc 25%, #7163f8 50%, #4f61dc 75%, #0a82f7 100%);
     background-size: 400% auto;
     background-position: 0%, 50%;
-    
+
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    
+
     animation: shimmer 2s linear infinite;
 }
 
@@ -93,7 +92,7 @@ h3 {
     0% {
         background-position: 0% 50%;
     }
-    
+
     100% {
         background-position: 200% 50%;
     }

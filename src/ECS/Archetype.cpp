@@ -98,7 +98,7 @@ void Archetype::remove(size_t row) {
 }
 
 size_t Archetype::add(EntityID owner) {
-    for (auto& column: components) {
+    for (auto& column : components) {
         column.add(owner);
     }
     size_t row = 0;

@@ -79,7 +79,7 @@ public:
     template<typename T>
     static void each(std::function<void(T&)> callback, std::function<bool(T&)> filter = nullptr) {
         Archetype::Map& map = Archetype::componentIndex[Component::get<T>()];
-        for (auto& element: map) {
+        for (auto& element : map) {
             auto& column = element.first->components[element.second.column];
             for (size_t i = 0; i < column.count; ++i) {
                 Entity entity = column.owners[i];
@@ -99,10 +99,10 @@ public:
 
         Archetype::Map& map = Archetype::componentIndex[components[0]];
         std::unordered_map<Component, Archetype::Column, ComponentHash> columns;
-        for (auto& element: map) {
+        for (auto& element : map) {
             auto& column = element.first->components[element.second.column];
             bool containsAll = true;
-            for (auto component: components) {
+            for (auto component : components) {
                 auto contains = Archetype::componentIndex[component].contains(element.first);
                 if (!contains) {
                     containsAll = false;
@@ -145,10 +145,10 @@ public:
 
         Archetype::Map& map = Archetype::componentIndex[components[0]];
         std::unordered_map<Component, Archetype::Column, ComponentHash> columns;
-        for (auto& element: map) {
+        for (auto& element : map) {
             auto& column = element.first->components[element.second.column];
             bool containsAll = true;
-            for (auto component: components) {
+            for (auto component : components) {
                 auto contains = Archetype::componentIndex[component].contains(element.first);
                 if (!contains) {
                     containsAll = false;
@@ -193,7 +193,7 @@ public:
     template<typename T>
     static void each(std::function<void(Entity entity, T&)> callback, std::function<bool(T&)> filter = nullptr) {
         Archetype::Map& map = Archetype::componentIndex[Component::get<T>()];
-        for (auto& element: map) {
+        for (auto& element : map) {
             auto& column = element.first->components[element.second.column];
             for (size_t i = 0; i < column.count; ++i) {
                 Entity entity = column.owners[i];

@@ -19,7 +19,7 @@ struct InputHandler {
 
     bool isPressed(SDL_Keycode keycode);
 
-    void feed(const SDL_Event *event);
+    void feed(const SDL_Event* event);
 };
 
 

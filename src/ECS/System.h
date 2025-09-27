@@ -9,7 +9,7 @@
 template<typename T>
 class System {
 public:
-    virtual void process(const T &) {
+    virtual void process(const T&) {
     }
 
     System() {

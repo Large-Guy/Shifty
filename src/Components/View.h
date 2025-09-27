@@ -4,7 +4,7 @@
 #include <SDL3/SDL_render.h>
 
 struct View {
-    SDL_Texture *texture;
+    SDL_Texture* texture;
 };
 
 

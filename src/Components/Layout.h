@@ -19,6 +19,10 @@ struct Layout {
 
     Entity parent = Entity();
     std::vector<Entity> entities = {};
+
+    void addChild();
+
+    void removeChild();
 };
 
 #endif //SHIFTY_LAYOUT_H

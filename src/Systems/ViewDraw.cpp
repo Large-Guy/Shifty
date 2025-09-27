@@ -19,7 +19,6 @@ void ViewDrawCommand::execute(SDL_Renderer* renderer) {
 
 void ViewDraw::process(const OnDraw& draw) {
     Entity::multiEach<RenderTransform, View>([draw](RenderTransform& transform, View& view) {
-        draw.draw.pushCommand(std::make_shared<ViewDrawCommand>(transform, view));
+        draw.draw.pushCommand(std::make_shared < ViewDrawCommand > (transform, view));
     });
 }
-

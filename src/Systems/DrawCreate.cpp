@@ -4,16 +4,16 @@
 
 #include "../Components/App.h"
 
-void DrawCreate::process(const OnComponentCreate<Draw> &component) {
+void DrawCreate::process(const OnComponentCreate<Draw>& component) {
     Entity entity = component.entity;
-    Draw &draw = component.component;
+    Draw& draw = component.component;
     draw.commands = {};
 
     if (!entity.has<App>()) {
         throw std::runtime_error("Entity does not have App!");
     }
 
-    App &app = entity.get<App>();
+    App& app = entity.get<App>();
 
     int w, h;
     SDL_GetWindowSize(app.window, &w, &h);
