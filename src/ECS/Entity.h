@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <functional>
+#include <stdexcept>
 
 #include "Component.h"
 #include "Archetype.h"
@@ -117,6 +118,7 @@ public:
         std::unordered_map<Component, Archetype::Column, ComponentHash> columns;
         for (auto& element : map)
         {
+            columns.clear();
             auto& column = element.first->components[element.second.column];
             bool containsAll = true;
             for (auto component : components)
@@ -245,10 +247,54 @@ public:
     }
 
     template <typename T>
-    static Entity find()
+    static Entity findEntity()
     {
         const Archetype::Map& map = Archetype::componentIndex[Component::get<T>()];
-        return {map.begin()->first->components[map.begin()->second.column].owners[0]};
+        for (auto& element : map)
+        {
+            auto& column = element.first->components[element.second.column];
+            for (size_t i = 0; i < column.count; ++i)
+            {
+                if (column.owners[i] == 0)
+                    continue;
+                return column.owners[i];
+            }
+        }
+        return {0};
+    }
+
+    template <typename T>
+    static T& find()
+    {
+        const Archetype::Map& map = Archetype::componentIndex[Component::get<T>()];
+        for (auto& element : map)
+        {
+            auto& column = element.first->components[element.second.column];
+            for (size_t i = 0; i < column.count; ++i)
+            {
+                if (column.owners[i] == 0)
+                    continue;
+                return *static_cast<T*>(column[i]);
+            }
+        }
+        throw std::runtime_error("Entity not found with component");
+    }
+
+    template <typename T>
+    static bool exists()
+    {
+        const Archetype::Map& map = Archetype::componentIndex[Component::get<T>()];
+        for (auto& element : map)
+        {
+            auto& column = element.first->components[element.second.column];
+            for (size_t i = 0; i < column.count; ++i)
+            {
+                if (column.owners[i] == 0)
+                    continue;
+                return true;
+            }
+        }
+        return false;
     }
 };
 

@@ -74,12 +74,13 @@ int main(int argc, char* argv[])
     TextDraw textDraw{};
     EditInput editInput{};
     EditKeydown editKeydown{};
+    EditDraw editDraw{};
 
     OnStart onStart{};
 
     EventBus::emit(OnReady{});
 
-    while (Entity::find<App>().get<App>().running)
+    while (Entity::findEntity<App>().get<App>().running)
     {
         EventBus::emit(OnUpdate{
             0.016f

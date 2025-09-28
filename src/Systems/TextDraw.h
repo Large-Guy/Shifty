@@ -5,22 +5,24 @@
 #ifndef SHIFTY_TEXTDRAW_H
 #define SHIFTY_TEXTDRAW_H
 #include "Components/Draw.h"
+#include "Components/RenderTransform.h"
 #include "Components/Text.h"
 #include "ECS/System.h"
 
 
-class TextCommand : public Draw::Command
-{
-public:
-    float x, y, w, h;
-    Text text;
-
-    TextCommand(float x, float y, float w, float h, const Text& text);
-    void execute(SDL_Renderer* renderer) override;
-};
-
 class TextDraw : public System<OnDraw>
 {
+public:
+    class Command : public Draw::Command
+    {
+    public:
+        SDL_FRect render;
+        Text& text;
+
+        Command(SDL_FRect render, Text& text);
+        void execute(SDL_Renderer* renderer) override;
+    };
+
     void process(const OnDraw&) override;
 };
 

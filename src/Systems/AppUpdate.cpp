@@ -18,7 +18,7 @@
 void AppUpdate::process(const OnUpdate& _update)
 {
     SDL_Event e;
-    Entity app = Entity::find<App>();
+    Entity app = Entity::findEntity<App>();
     while (SDL_PollEvent(&e))
     {
         switch (e.type)

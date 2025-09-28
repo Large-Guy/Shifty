@@ -16,12 +16,12 @@ void CommandPaletteUpdate::process(const OnUpdate& onUpdate)
             if (palette.open)
             {
                 transform.h = Tween::Lerp(0.0f, 32.f, Tween::easeInOutCirc(animation.time));
-                Entity::find<InputHandler>().get<InputHandler>().textInput = true;
+                Entity::findEntity<InputHandler>().get<InputHandler>().textInput = true;
             }
             else
             {
                 transform.h = Tween::Lerp(32.f, 0.0f, Tween::easeInBack(animation.time));
-                Entity::find<InputHandler>().get<InputHandler>().textInput = false;
+                Entity::findEntity<InputHandler>().get<InputHandler>().textInput = false;
             }
         });
 }

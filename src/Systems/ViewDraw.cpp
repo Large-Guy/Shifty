@@ -7,25 +7,25 @@
 #include "Components/View.h"
 #include "ECS/Entity.h"
 
-ViewDrawCommand::ViewDrawCommand(RenderTransform& renderTransform, View& view) : Command(1),
-    view(view),
-    renderTransform(renderTransform)
+ViewDraw::Command::Command(RenderTransform& renderTransform, View& view) : Draw::Command(1),
+                                                                           view(view),
+                                                                           renderTransform(renderTransform)
 {
 }
 
-void ViewDrawCommand::execute(SDL_Renderer* renderer)
+void ViewDraw::Command::execute(SDL_Renderer* renderer)
 {
     SDL_FRect rect = {renderTransform.x, renderTransform.y, renderTransform.w, renderTransform.h};
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderFillRect(renderer, &rect);
 }
 
-DebugRenderTransform::DebugRenderTransform(RenderTransform& renderTransform) : Command(1),
-                                                                               renderTransform(renderTransform)
+ViewDraw::DebugRenderTransform::DebugRenderTransform(RenderTransform& renderTransform) : Draw::Command(1),
+    renderTransform(renderTransform)
 {
 }
 
-void DebugRenderTransform::execute(SDL_Renderer* renderer)
+void ViewDraw::DebugRenderTransform::execute(SDL_Renderer* renderer)
 {
     SDL_FRect rect = {renderTransform.x, renderTransform.y, renderTransform.w, renderTransform.h};
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -43,6 +43,6 @@ void ViewDraw::process(const OnDraw& draw)
 
     Entity::multiEach<RenderTransform, View>([draw](RenderTransform& transform, View& view)
     {
-        draw.draw.pushCommand(std::make_shared<ViewDrawCommand>(transform, view));
+        draw.draw.pushCommand(std::make_shared<Command>(transform, view));
     });
 }

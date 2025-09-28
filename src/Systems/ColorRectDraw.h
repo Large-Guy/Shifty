@@ -3,16 +3,20 @@
 #include "../Components/Draw.h"
 #include "../ECS/System.h"
 
-struct RectCommand : public Draw::Command {
-    SDL_FRect& rect;
-    SDL_Color& color;
 
-    RectCommand(int priority, SDL_FRect& rect, SDL_Color& color);
+class ColorRectDraw : System<OnDraw>
+{
+public:
+    struct Command : public Draw::Command
+    {
+        SDL_FRect& rect;
+        SDL_Color& color;
 
-    void execute(SDL_Renderer* renderer) override;
-};
+        Command(int priority, SDL_FRect& rect, SDL_Color& color);
 
-class ColorRectDraw : System<OnDraw> {
+        void execute(SDL_Renderer* renderer) override;
+    };
+
     void process(const OnDraw&) override;
 };
 

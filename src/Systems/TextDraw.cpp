@@ -7,19 +7,14 @@
 #include "Components/Text.h"
 #include "ECS/Entity.h"
 
-TextCommand::TextCommand(float x, float y, float w, float h, const Text& text) : Command(100)
+TextDraw::Command::Command(SDL_FRect render, Text& text) : Draw::Command(100), render(render), text(text)
 {
-    this->x = x;
-    this->y = y;
-    this->w = w;
-    this->h = h;
-    this->text = text;
 }
 
-void TextCommand::execute(SDL_Renderer* renderer)
+void TextDraw::Command::execute(SDL_Renderer* renderer)
 {
-    SDL_FRect dest = {x, y, w, h};
-    SDL_FRect src = {0, 0, w, h};
+    SDL_FRect dest = {render.x, render.y, render.w, render.h};
+    SDL_FRect src = {0, 0, render.w, render.h};
 
     SDL_RenderTexture(renderer, text.texture, &src, &dest);
 }
@@ -71,6 +66,6 @@ void TextDraw::process(const OnDraw& onDraw)
             text.texture = TextRenderer::getTexture(onDraw.draw.renderer, text.font->size(text.size), text.text);
         }
 
-        onDraw.draw.pushCommand(std::make_shared<TextCommand>(x, y, w, h, text));
+        onDraw.draw.pushCommand(std::make_shared<Command>(SDL_FRect{x, y, w, h}, text));
     });
 }
