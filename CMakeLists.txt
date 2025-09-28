@@ -10,8 +10,8 @@ add_executable(Shifty
         src/Components/App.h
         src/Components/Layout.cpp
         src/Components/Layout.h
-        src/Text.cpp
-        src/Text.h
+        src/TextRenderer.cpp
+        src/TextRenderer.h
         src/Components/View.cpp
         src/Components/View.h
         src/Components/InputHandler.cpp
@@ -65,12 +65,16 @@ add_executable(Shifty
         src/Systems/CommandPaletteKeydown.h
         src/GlobalConfig.cpp
         src/GlobalConfig.h
-        src/Components/TextEdit.cpp
-        src/Components/TextEdit.h
+        src/Components/Edit.cpp
+        src/Components/Edit.h
         src/Systems/TextEditSystems.cpp
         src/Systems/TextEditSystems.h
         src/Components/Focus.cpp
         src/Components/Focus.h
+        src/Components/Text.cpp
+        src/Components/Text.h
+        src/Systems/TextDraw.cpp
+        src/Systems/TextDraw.h
 )
 
 set(CMAKE_FRAMEWORK_PATH "${CMAKE_FRAMEWORK_PATH};~/Library/Frameworks") # Or /Library/Frameworks

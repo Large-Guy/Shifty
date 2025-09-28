@@ -1,5 +1,7 @@
 #include "ViewDraw.h"
 
+#include <iostream>
+
 #include "Components/RenderTransform.h"
 #include "Components/Transform.h"
 #include "Components/View.h"

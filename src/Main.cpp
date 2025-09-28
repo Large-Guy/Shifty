@@ -23,6 +23,8 @@
 #include "Systems/DrawRender.h"
 #include "Systems/OnStart.h"
 #include "Systems/RenderTransformsCompute.h"
+#include "Systems/TextDraw.h"
+#include "Systems/TextEditSystems.h"
 #include "Systems/ViewDraw.h"
 
 struct ClearCommand : public Draw::Command
@@ -68,6 +70,10 @@ int main(int argc, char* argv[])
 
     CommandPaletteUpdate commandPaletteUpdate{};
     CommandPaletteKeydown commandPaletteKeydown{};
+
+    TextDraw textDraw{};
+    EditInput editInput{};
+    EditKeydown editKeydown{};
 
     OnStart onStart{};
 

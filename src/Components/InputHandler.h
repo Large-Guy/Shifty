@@ -7,20 +7,6 @@
 #include <string>
 #include <SDL3/SDL.h>
 
-struct OnKeyPress
-{
-    SDL_Keycode key;
-};
-
-struct OnKeyRelease
-{
-    SDL_Keycode key;
-};
-
-struct TextInput
-{
-    const std::string& input;
-};
 
 struct InputHandler
 {
@@ -32,5 +18,22 @@ struct InputHandler
     void feed(const SDL_Event* event);
 };
 
+struct OnKeyPress
+{
+    InputHandler& handler;
+    SDL_Keycode key;
+};
+
+struct OnKeyRelease
+{
+    InputHandler& handler;
+    SDL_Keycode key;
+};
+
+struct OnTextInput
+{
+    InputHandler& handler;
+    const std::string& input;
+};
 
 #endif //SHIFTY_INPUTHANDLER_H

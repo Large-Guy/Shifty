@@ -172,6 +172,7 @@ public:
         std::unordered_map<Component, Archetype::Column, ComponentHash> columns;
         for (auto& element : map)
         {
+            columns.clear();
             auto& column = element.first->components[element.second.column];
             bool containsAll = true;
             for (auto component : components)

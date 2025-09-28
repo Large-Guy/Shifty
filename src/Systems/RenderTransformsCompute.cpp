@@ -213,6 +213,8 @@ void RenderTransformsCompute::process(const OnLayout& onLayout)
             output.y = computePositionProperty(transform.yMode, transform.y, onLayout.relativeHeight);
             output.w = computeScaleProperty(transform.wMode, transform.w, onLayout.relativeWidth);
             output.h = computeScaleProperty(transform.hMode, transform.h, onLayout.relativeHeight);
+
+
             computeLayout(transform, output, layout);
         }, [](Entity entity, Transform, RenderTransform&, const Layout& layout)
         {

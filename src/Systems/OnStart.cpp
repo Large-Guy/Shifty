@@ -6,8 +6,11 @@
 #include "Components/App.h"
 #include "Components/CommandPalette.h"
 #include "Components/Draw.h"
+#include "Components/Edit.h"
+#include "Components/Focus.h"
 #include "Components/Layout.h"
 #include "Components/RenderTransform.h"
+#include "Components/Text.h"
 #include "Components/Transform.h"
 #include "Components/View.h"
 
@@ -17,6 +20,8 @@ void OnStart::process(const OnReady&)
     world.add<InputHandler>();
     world.add<App>();
     world.add<Draw>();
+
+    Font* font = new Font("res/fonts/hack-regular.ttf");
 
     Entity root = Entity::create();
     root.add<Transform>({
@@ -29,4 +34,11 @@ void OnStart::process(const OnReady&)
     root.add<RenderTransform>();
     root.add<CommandPalette>();
     root.add<Animation>();
+    root.add<Text>({
+        .text = "",
+        .font = font,
+        .size = 16
+    });
+    root.add<Edit>();
+    root.add<Focus>();
 }
