@@ -55,6 +55,7 @@ int main(int argc, char* argv[])
         throw std::runtime_error("TTF_Init failed");
     }
 
+    //Create all the systems
     AppCreate appCreate{};
     AppUpdate appUpdate{};
 
