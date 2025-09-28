@@ -23,7 +23,7 @@ void Entity::move(Archetype* current, size_t row, Archetype* next)
         auto& nextRecord = Archetype::componentIndex[component][next];
         auto& nextColumn = next->components[nextRecord.column];
 
-        column.component.move(nextColumn[row], column[newRow]);
+        column.component.move(nextColumn[newRow], column[row]);
     }
     current->remove(row);
     entityIndex.erase(remIter);
