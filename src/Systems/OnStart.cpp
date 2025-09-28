@@ -23,22 +23,27 @@ void OnStart::process(const OnReady&)
 
     Font* font = new Font("res/fonts/hack-regular.ttf");
 
-    Entity root = Entity::create();
-    root.add<Transform>({
+    Entity commandPalette = Entity::create();
+    commandPalette.add<Transform>({
         .yMode = Transform::Mode::Pixel,
         .y = 0.0f,
         .hMode = Transform::Mode::Pixel,
         .h = 32.0f
     });
-    root.add<Layout>({.type = Layout::Type::VERTICAL});
-    root.add<RenderTransform>();
-    root.add<CommandPalette>();
-    root.add<Animation>();
-    root.add<Text>({
+    commandPalette.add<Layout>({.type = Layout::Type::VERTICAL});
+    commandPalette.add<RenderTransform>();
+    commandPalette.add<CommandPalette>();
+    commandPalette.add<Animation>();
+    commandPalette.add<Text>({
         .text = "",
         .font = font,
         .size = 16
     });
-    root.add<Edit>();
-    root.add<Focus>();
+    commandPalette.add<Edit>();
+    commandPalette.add<Focus>();
+
+    Entity layoutRoot = Entity::create();
+    layoutRoot.add<Transform>();
+    layoutRoot.add<Layout>();
+    layoutRoot.add<RenderTransform>();
 }

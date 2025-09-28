@@ -6,17 +6,12 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_executable(Shifty
         src/Main.cpp
-        src/Components/App.cpp
         src/Components/App.h
-        src/Components/Layout.cpp
         src/Components/Layout.h
         src/TextRenderer.cpp
         src/TextRenderer.h
-        src/Components/View.cpp
         src/Components/View.h
-        src/Components/InputHandler.cpp
         src/Components/InputHandler.h
-        src/Components/CommandPalette.cpp
         src/Components/CommandPalette.h
         src/Tween.cpp
         src/Tween.h
@@ -27,7 +22,6 @@ add_executable(Shifty
         src/Events.h
         src/Systems/AppUpdate.cpp
         src/Systems/AppUpdate.h
-        src/Components/Draw.cpp
         src/Components/Draw.h
         src/ECS/Component.cpp
         src/ECS/Component.h
@@ -47,17 +41,14 @@ add_executable(Shifty
         src/Systems/OnStart.h
         src/Systems/ColorRectDraw.cpp
         src/Systems/ColorRectDraw.h
-        src/Components/Transform.cpp
         src/Components/Transform.h
         src/Systems/ViewDraw.cpp
         src/Systems/ViewDraw.h
-        src/Components/RenderTransform.cpp
         src/Components/RenderTransform.h
         src/Systems/RenderTransformsCompute.cpp
         src/Systems/RenderTransformsCompute.h
         src/Systems/CommandPaletteUpdate.cpp
         src/Systems/CommandPaletteUpdate.h
-        src/Components/Animation.cpp
         src/Components/Animation.h
         src/Systems/AnimationUpdate.cpp
         src/Systems/AnimationUpdate.h
@@ -65,13 +56,10 @@ add_executable(Shifty
         src/Systems/CommandPaletteKeydown.h
         src/GlobalConfig.cpp
         src/GlobalConfig.h
-        src/Components/Edit.cpp
         src/Components/Edit.h
         src/Systems/TextEditSystems.cpp
         src/Systems/TextEditSystems.h
-        src/Components/Focus.cpp
         src/Components/Focus.h
-        src/Components/Text.cpp
         src/Components/Text.h
         src/Systems/TextDraw.cpp
         src/Systems/TextDraw.h
