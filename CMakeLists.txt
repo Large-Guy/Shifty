@@ -63,6 +63,7 @@ add_executable(Shifty
         src/Components/Text.h
         src/Systems/TextDraw.cpp
         src/Systems/TextDraw.h
+        src/Components/Root.h
 )
 
 set(CMAKE_FRAMEWORK_PATH "${CMAKE_FRAMEWORK_PATH};~/Library/Frameworks") # Or /Library/Frameworks

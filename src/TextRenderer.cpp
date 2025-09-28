@@ -4,6 +4,7 @@
 #include <ostream>
 #include <ranges>
 
+std::unordered_map<std::string, std::shared_ptr<Font>> Font::loaded = {};
 
 Font::Font(const std::string& path)
 {
@@ -26,6 +27,15 @@ TTF_Font* Font::size(const float size)
     }
 
     return sizes[size];
+}
+
+std::shared_ptr<Font> Font::load(const std::string& path)
+{
+    if (!loaded.contains(path))
+    {
+        loaded[path] = std::make_shared<Font>(path);
+    }
+    return loaded[path];
 }
 
 SDL_Texture* TextRenderer::getTexture(SDL_Renderer* renderer, TTF_Font* font, const std::string& text)

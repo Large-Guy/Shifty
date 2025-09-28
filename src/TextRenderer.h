@@ -1,6 +1,7 @@
 #ifndef SHIFTY_TEXTRENDERER_H
 #define SHIFTY_TEXTRENDERER_H
 
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -8,6 +9,10 @@
 
 struct Font
 {
+private:
+    static std::unordered_map<std::string, std::shared_ptr<Font>> loaded;
+
+public:
     std::string path;
     std::unordered_map<float, TTF_Font*> sizes;
 
@@ -15,6 +20,8 @@ struct Font
     ~Font();
 
     TTF_Font* size(float size);
+
+    static std::shared_ptr<Font> load(const std::string& path);
 };
 
 /**

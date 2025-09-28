@@ -10,6 +10,7 @@
 #include "Components/Focus.h"
 #include "Components/Layout.h"
 #include "Components/RenderTransform.h"
+#include "Components/Root.h"
 #include "Components/Text.h"
 #include "Components/Transform.h"
 #include "Components/View.h"
@@ -20,8 +21,6 @@ void OnStart::process(const OnReady&)
     world.add<InputHandler>();
     world.add<App>();
     world.add<Draw>();
-
-    Font* font = new Font("res/fonts/hack-regular.ttf");
 
     Entity commandPalette = Entity::create();
     commandPalette.add<Transform>({
@@ -36,8 +35,8 @@ void OnStart::process(const OnReady&)
     commandPalette.add<Animation>();
     commandPalette.add<Text>({
         .text = "",
-        .font = font,
-        .size = 16
+        .font = Font::load("res/fonts/hack-regular.ttf"),
+        .size = 15
     });
     commandPalette.add<Edit>();
     commandPalette.add<Focus>();
@@ -46,4 +45,5 @@ void OnStart::process(const OnReady&)
     layoutRoot.add<Transform>();
     layoutRoot.add<Layout>();
     layoutRoot.add<RenderTransform>();
+    layoutRoot.add<Root>();
 }

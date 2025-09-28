@@ -17,7 +17,7 @@ struct Text
     Alignment horizontal = Alignment::Leading;
     Alignment vertical = Alignment::Center;
     std::string text;
-    Font* font;
+    std::shared_ptr<Font> font;
     float size;
 
     std::string rendered;
