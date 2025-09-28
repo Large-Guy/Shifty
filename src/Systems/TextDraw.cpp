@@ -63,6 +63,10 @@ void TextDraw::process(const OnDraw& onDraw)
 
         if (text.rendered != text.text)
         {
+            if (text.texture != nullptr)
+            {
+                SDL_DestroyTexture(text.texture);
+            }
             text.rendered = text.text;
             text.texture = TextRenderer::getTexture(onDraw.draw.renderer, text.font->size(text.size), text.text);
         }
