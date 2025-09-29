@@ -13,7 +13,10 @@ TextDraw::Command::Command(SDL_FRect render, Text& text) : Draw::Command(100), r
 
 void TextDraw::Command::execute(SDL_Renderer* renderer)
 {
-    SDL_FRect dest = {render.x, render.y, render.w, render.h};
+    float scale;
+    SDL_GetRenderScale(renderer, &scale, &scale);
+
+    SDL_FRect dest = {render.x, render.y, render.w / scale, render.h / scale};
     SDL_FRect src = {0, 0, render.w, render.h};
 
     SDL_RenderTexture(renderer, text.texture, &src, &dest);
@@ -23,6 +26,9 @@ void TextDraw::process(const OnDraw& onDraw)
 {
     Entity::multiEach<Text, RenderTransform>([onDraw](Text& text, const RenderTransform& renderTransform)
     {
+        float scale;
+        SDL_GetRenderScale(onDraw.draw.renderer, &scale, &scale);
+
         float x = renderTransform.x;
         float y = renderTransform.y;
 
@@ -62,10 +68,12 @@ void TextDraw::process(const OnDraw& onDraw)
             {
                 SDL_DestroyTexture(text.texture);
             }
+
             text.rendered = text.text;
-            text.texture = TextRenderer::getTexture(onDraw.draw.renderer, text.font->size(text.size), text.text);
+            text.texture =
+                TextRenderer::getTexture(onDraw.draw.renderer, text.font->size(text.size * scale), text.text);
         }
 
-        onDraw.draw.pushCommand(std::make_shared<Command>(SDL_FRect{x, y, w, h}, text));
+        onDraw.draw.pushCommand(std::make_shared<Command>(SDL_FRect{x, y, w * scale, h * scale}, text));
     });
 }

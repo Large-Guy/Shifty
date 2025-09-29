@@ -108,6 +108,5 @@ int main(int argc, char* argv[])
         dt = currentMicros - previous;
         previous = currentMicros;
         deltaTime = static_cast<double>(dt) / 1000000.0;
-        std::cout << 1.0 / deltaTime << std::endl;
     }
 }

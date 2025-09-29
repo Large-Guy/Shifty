@@ -27,16 +27,5 @@ void OnStart::process(const OnReady&)
     Entity layoutRoot = Prefabs::createLayout(Layout::Type::FULL);
     layoutRoot.add<Root>();
 
-    Entity horizontalSplit = Prefabs::createLayout(Layout::Type::HORIZONTAL);
-
-    Layout::addChild(horizontalSplit, Prefabs::createView());
-
-    Entity verticalSplit = Prefabs::createLayout(Layout::Type::VERTICAL);
-
-    Layout::addChild(verticalSplit, Prefabs::createView());
-    Layout::addChild(verticalSplit, Prefabs::createView());
-
-    Layout::addChild(horizontalSplit, verticalSplit);
-
-    Layout::addChild(layoutRoot, horizontalSplit);
+    Layout::addChild(layoutRoot, Prefabs::createView());
 }

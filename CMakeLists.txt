@@ -4,7 +4,7 @@ project(Shifty)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(Shifty
+set(CORE_SOURCES
         src/Main.cpp
         src/Components/App.h
         src/Components/Layout.h
@@ -73,6 +73,15 @@ add_executable(Shifty
         src/Components/Selectable.h
         src/Systems/SelectableMousePress.cpp
         src/Systems/SelectableMousePress.h
+)
+
+file(GLOB_RECURSE PLUGIN_SOURCES "src/Plugins/**/*.cpp")
+file(GLOB_RECURSE PLUGIN_HEADERS "src/Plugins/**/*.h")
+
+add_executable(Shifty
+        ${CORE_SOURCES}
+        ${PLUGIN_SOURCES}
+        ${PLUGIN_HEADERS}
 )
 
 set(CMAKE_FRAMEWORK_PATH "${CMAKE_FRAMEWORK_PATH};~/Library/Frameworks") # Or /Library/Frameworks
