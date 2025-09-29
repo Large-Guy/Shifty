@@ -51,7 +51,7 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
                 return false;
             });
     }
-    else if (keyPress.key == SDLK_ESCAPE || keyPress.key == SDLK_RETURN)
+    else if (keyPress.key == SDLK_ESCAPE)
     {
         Entity::multiEach<Layout, CommandPalette, Animation>(
             [](Layout& layout, CommandPalette& commandPalette, Animation& animation)
@@ -64,42 +64,26 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
                 Entity::find<Focus>().focused = layout.parent;
             });
     }
+    else if (keyPress.key == SDLK_RETURN)
+    {
+        Entity::multiEach<Layout, CommandPalette, Animation, Text>(
+            [](Layout& layout, CommandPalette& commandPalette, Animation& animation, Text& text)
+            {
+                if (!commandPalette.open)
+                    return;
+
+                //TODO: Command execution
+
+                commandPalette.open = false;
+                animation.time = 0;
+                Entity::find<Focus>().focused = layout.parent;
+            });
+    }
     else
     {
         Entity::each<CommandPalette>([](CommandPalette& commandPalette)
         {
             commandPalette.lastShiftPressed = 0;
         });
-    }
-
-    //TODO: Have these split properly before I push this commit
-
-    //Debugging things
-    if (keyPress.key == SDLK_F1) //Horizontal split
-    {
-        Entity root = Entity::findEntity<Root>();
-        root.get<Layout>().type = Layout::Type::HORIZONTAL;
-        Entity padding = Entity::create();
-        padding.add<View>();
-        padding.add<Animation>();
-        padding.add<Transform>();
-        padding.add<RenderTransform>();
-        padding.add<Layout>();
-
-        Layout::addChild(root, padding);
-    }
-
-    if (keyPress.key == SDLK_F2) //Horizontal split
-    {
-        Entity root = Entity::findEntity<Root>();
-        root.get<Layout>().type = Layout::Type::VERTICAL;
-        Entity padding = Entity::create();
-        padding.add<View>();
-        padding.add<Animation>();
-        padding.add<Transform>();
-        padding.add<RenderTransform>();
-        padding.add<Layout>();
-
-        Layout::addChild(root, padding);
     }
 }

@@ -39,7 +39,7 @@ void* Archetype::Column::add(EntityID owner)
         {
             void* newElements = malloc(capacity * component.size);
             //Move everything
-            for (size_t i = 0; i < count; ++i)
+            for (size_t i = 0; i < count - 1; ++i)
             {
                 if (owners[i] == 0)
                     continue; //No need to copy, it's not owned

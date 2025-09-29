@@ -4,6 +4,7 @@
 #include "Components/Animation.h"
 #include "Components/App.h"
 #include "Components/CommandPalette.h"
+#include "Components/Focus.h"
 #include "Components/InputHandler.h"
 #include "Components/Text.h"
 #include "Components/Transform.h"
@@ -12,12 +13,16 @@
 void CommandPaletteUpdate::process(const OnUpdate& onUpdate)
 {
     Entity::multiEach<CommandPalette, Animation, Transform>(
-        [onUpdate](const CommandPalette& palette, Animation& animation, Transform& transform)
+        [onUpdate](Entity entity, CommandPalette& palette, Animation& animation, Transform& transform)
         {
             if (palette.open)
             {
                 transform.h = Tween::Lerp(0.0f, 32.f, Tween::easeInOutCirc(animation.time));
                 Entity::findEntity<InputHandler>().get<InputHandler>().textInput = true;
+                if (Entity::find<Focus>().focused != entity)
+                {
+                    palette.open = false;
+                }
             }
             else
             {

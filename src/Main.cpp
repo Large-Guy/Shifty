@@ -90,11 +90,24 @@ int main(int argc, char* argv[])
 
     EventBus::emit(OnReady{});
 
+    auto now = std::chrono::high_resolution_clock::now();
+    uint64_t previous = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
+    uint64_t dt = 16;
+    double deltaTime = 0.016;
+
     while (Entity::findEntity<App>().get<App>().running)
     {
         EventBus::emit(OnUpdate{
-            0.016f
+            static_cast<float>(deltaTime)
         });
         EventBus::emit(OnRender{});
+
+        auto current = std::chrono::high_resolution_clock::now();
+        uint64_t currentMicros = std::chrono::duration_cast<std::chrono::microseconds>(current.time_since_epoch()).
+            count();
+        dt = currentMicros - previous;
+        previous = currentMicros;
+        deltaTime = static_cast<double>(dt) / 1000000.0;
+        std::cout << 1.0 / deltaTime << std::endl;
     }
 }

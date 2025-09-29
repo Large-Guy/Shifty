@@ -301,7 +301,7 @@ void EditDraw::Command::execute(SDL_Renderer* renderer)
     double blink = std::clamp(std::sin(time * adjusted), 0.0, 1.0);
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, blink * 255.0);
-    SDL_RenderLine(renderer, cursorX + render.x, render.y, cursorX + render.x, render.y + render.h);
+    SDL_RenderLine(renderer, cursorX + render.x, render.y, cursorX + render.x, render.y + h);
 
     //Selection
     if (!edit.highlighting)
@@ -313,7 +313,7 @@ void EditDraw::Command::execute(SDL_Renderer* renderer)
     SDL_SetRenderDrawColor(renderer, 0, 0, 255, 96);
     float startX = std::min(cursorX, selectionX);
     float endX = std::max(cursorX, selectionX);
-    SDL_FRect rect = {startX + render.x, render.y, endX - startX + render.x, render.y + render.h};
+    SDL_FRect rect = {startX + render.x, render.y, endX - startX, h};
     SDL_RenderFillRect(renderer, &rect);
 }
 
@@ -335,10 +335,10 @@ void EditDraw::process(const OnDraw& onDraw)
             case Text::Alignment::Leading:
                 break;
             case Text::Alignment::Center:
-                x = renderTransform.w / 2 - w / 2;
+                x += renderTransform.w / 2 - w / 2;
                 break;
             case Text::Alignment::Trailing:
-                x = renderTransform.w - w / 2;
+                x += renderTransform.w - w / 2;
                 break;
             }
 
@@ -347,10 +347,10 @@ void EditDraw::process(const OnDraw& onDraw)
             case Text::Alignment::Leading:
                 break;
             case Text::Alignment::Center:
-                y = renderTransform.h / 2 - h / 2;
+                y += renderTransform.h / 2 - h / 2;
                 break;
             case Text::Alignment::Trailing:
-                y = renderTransform.h - h / 2;
+                y += renderTransform.h - h / 2;
                 break;
             }
 

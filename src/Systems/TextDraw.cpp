@@ -35,10 +35,10 @@ void TextDraw::process(const OnDraw& onDraw)
         case Text::Alignment::Leading:
             break;
         case Text::Alignment::Center:
-            x = renderTransform.w / 2 - w / 2;
+            x += renderTransform.w / 2 - w / 2;
             break;
         case Text::Alignment::Trailing:
-            x = renderTransform.w - w / 2;
+            x += renderTransform.w - w / 2;
             break;
         }
 
@@ -47,10 +47,10 @@ void TextDraw::process(const OnDraw& onDraw)
         case Text::Alignment::Leading:
             break;
         case Text::Alignment::Center:
-            y = renderTransform.h / 2 - h / 2;
+            y += renderTransform.h / 2 - h / 2;
             break;
         case Text::Alignment::Trailing:
-            y = renderTransform.h - h / 2;
+            y += renderTransform.h - h / 2;
             break;
         }
 
