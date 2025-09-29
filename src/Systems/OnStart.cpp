@@ -1,5 +1,6 @@
 #include "OnStart.h"
 
+#include "Prefabs.h"
 #include "Components/Animation.h"
 #include "ECS/Entity.h"
 #include "Components/InputHandler.h"
@@ -21,29 +22,21 @@ void OnStart::process(const OnReady&)
     world.add<InputHandler>();
     world.add<App>();
     world.add<Draw>();
+    world.add<Focus>();
 
-    Entity commandPalette = Entity::create();
-    commandPalette.add<Transform>({
-        .yMode = Transform::Mode::Pixel,
-        .y = 0.0f,
-        .hMode = Transform::Mode::Pixel,
-        .h = 32.0f
-    });
-    commandPalette.add<Layout>({.type = Layout::Type::VERTICAL});
-    commandPalette.add<RenderTransform>();
-    commandPalette.add<CommandPalette>();
-    commandPalette.add<Animation>();
-    commandPalette.add<Text>({
-        .text = "",
-        .font = Font::load("res/fonts/hack-regular.ttf"),
-        .size = 15
-    });
-    commandPalette.add<Edit>();
-    commandPalette.add<Focus>();
-
-    Entity layoutRoot = Entity::create();
-    layoutRoot.add<Transform>();
-    layoutRoot.add<Layout>();
-    layoutRoot.add<RenderTransform>();
+    Entity layoutRoot = Prefabs::createLayout(Layout::Type::FULL);
     layoutRoot.add<Root>();
+
+    Entity horizontalSplit = Prefabs::createLayout(Layout::Type::HORIZONTAL);
+
+    Layout::addChild(horizontalSplit, Prefabs::createView());
+
+    Entity verticalSplit = Prefabs::createLayout(Layout::Type::VERTICAL);
+
+    Layout::addChild(verticalSplit, Prefabs::createView());
+    Layout::addChild(verticalSplit, Prefabs::createView());
+
+    Layout::addChild(horizontalSplit, verticalSplit);
+
+    Layout::addChild(layoutRoot, horizontalSplit);
 }

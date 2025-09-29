@@ -21,7 +21,7 @@ struct Text
     float size;
 
     std::string rendered;
-    SDL_Texture* texture;
+    SDL_Texture* texture = nullptr;
 };
 
 

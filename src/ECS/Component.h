@@ -7,7 +7,8 @@
 
 using ComponentID = uint32_t;
 
-struct Component {
+struct Component
+{
     std::string name; //DEBUGING PURPOSES ONLY
     ComponentID id = 0;
     size_t size = 0;
@@ -24,13 +25,14 @@ struct Component {
 
     bool operator==(const Component&) const;
 
-    template<typename T>
-    static Component get() {
+    template <typename T>
+    static Component get()
+    {
         auto comp = Component(
             typeid(T).hash_code(),
             sizeof(T),
             [](void* ptr) { new(ptr) T(); },
-            [](void* ptr) { delete static_cast<T*>(ptr); },
+            [](void* ptr) { static_cast<T*>(ptr)->~T(); },
             [](void* dst, void* src) { *static_cast<T*>(dst) = *static_cast<T*>(src); },
             [](void* dst, void* src) { *static_cast<T*>(dst) = std::move(*static_cast<T*>(src)); }
         );
@@ -39,8 +41,10 @@ struct Component {
     }
 };
 
-struct ComponentHash {
-    std::size_t operator()(const Component& component) const {
+struct ComponentHash
+{
+    std::size_t operator()(const Component& component) const
+    {
         return std::hash<unsigned int>{}(component.id);
     }
 };

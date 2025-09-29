@@ -4,7 +4,7 @@
 
 struct GlobalConfig
 {
-    static constexpr float animationSpeed = 3.f;
+    static constexpr float animationSpeed = 1.f;
 };
 
 

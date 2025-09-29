@@ -5,6 +5,7 @@
 #include "Components/App.h"
 #include "Components/CommandPalette.h"
 #include "Components/InputHandler.h"
+#include "Components/Text.h"
 #include "Components/Transform.h"
 #include "ECS/Entity.h"
 

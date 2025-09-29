@@ -8,7 +8,7 @@ struct Transform
     {
         Auto,
         Pixel,
-        Percent
+        Percent,
     };
 
     Mode xMode = Mode::Auto;

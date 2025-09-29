@@ -41,6 +41,20 @@ struct OnTextInput
     const std::string& input;
 };
 
+struct OnMouseButtonPress
+{
+    InputHandler& handler;
+    float x, y;
+    int button;
+};
+
+struct OnMouseButtonRelease
+{
+    InputHandler& handler;
+    float x, y;
+    int button;
+};
+
 inline void InputHandler::feed(const SDL_Event* event)
 {
     auto window = SDL_GetWindowFromID(event->window.windowID);
@@ -63,6 +77,10 @@ inline void InputHandler::feed(const SDL_Event* event)
         break;
     case SDL_EVENT_TEXT_INPUT:
         EventBus::emit(OnTextInput{*this, event->text.text});
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+        EventBus::emit(OnMouseButtonPress{*this, event->button.x, event->button.y, event->button.button});
+    case SDL_EVENT_MOUSE_BUTTON_UP:
+        EventBus::emit(OnMouseButtonRelease{*this, event->button.x, event->button.y, event->button.button});
     default:
         break;
     }

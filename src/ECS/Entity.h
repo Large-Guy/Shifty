@@ -115,7 +115,7 @@ public:
         std::vector<Component> components = {Component::get<Args>()...};
 
         Archetype::Map& map = Archetype::componentIndex[components[0]];
-        std::unordered_map<Component, Archetype::Column, ComponentHash> columns;
+        std::unordered_map<Component, Archetype::Column*, ComponentHash> columns;
         for (auto& element : map)
         {
             columns.clear();
@@ -130,7 +130,7 @@ public:
                     break;
                 }
                 columns.insert({
-                    component, element.first->components[Archetype::componentIndex[component][element.first].
+                    component, &element.first->components[Archetype::componentIndex[component][element.first].
                         column]
                 });
             }
@@ -148,7 +148,7 @@ public:
                 int index = 0;
                 auto getComponent = [&]()
                 {
-                    return columns[components[index++]][i];
+                    return columns[components[index++]]->operator[](i);
                 };
 
                 if constexpr (std::is_invocable_v<Func, Entity, decltype(*static_cast<Args*>(getComponent()))...>)
@@ -161,6 +161,11 @@ public:
                     // Function takes just (Component)
                     callback(*static_cast<Args*>(getComponent())...);
                 }
+                else
+                {
+                    //Error
+                    static_assert(false, "Something went wrong!");
+                }
             }
         }
     }
@@ -171,7 +176,7 @@ public:
         std::vector<Component> components = {Component::get<Args>()...};
 
         Archetype::Map& map = Archetype::componentIndex[components[0]];
-        std::unordered_map<Component, Archetype::Column, ComponentHash> columns;
+        std::unordered_map<Component, Archetype::Column*, ComponentHash> columns;
         for (auto& element : map)
         {
             columns.clear();
@@ -186,7 +191,7 @@ public:
                     break;
                 }
                 columns.insert({
-                    component, element.first->components[Archetype::componentIndex[component][element.first].
+                    component, &element.first->components[Archetype::componentIndex[component][element.first].
                         column]
                 });
             }
@@ -204,7 +209,7 @@ public:
                 int index = 0;
                 auto getComponent = [&]()
                 {
-                    return columns[components[index++]][i];
+                    return columns[components[index++]]->operator[](i);
                 };
 
                 if (!filter(entity, *static_cast<Args*>(getComponent())...))

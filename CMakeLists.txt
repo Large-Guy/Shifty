@@ -59,11 +59,20 @@ add_executable(Shifty
         src/Components/Edit.h
         src/Systems/TextEditSystems.cpp
         src/Systems/TextEditSystems.h
-        src/Components/Focus.h
         src/Components/Text.h
         src/Systems/TextDraw.cpp
         src/Systems/TextDraw.h
         src/Components/Root.h
+        src/Systems/CommandPaletteExpansionUpdate.cpp
+        src/Systems/CommandPaletteExpansionUpdate.h
+        src/Systems/ViewAnimationUpdate.cpp
+        src/Systems/ViewAnimationUpdate.h
+        src/Components/Focus.h
+        src/Prefabs.cpp
+        src/Prefabs.h
+        src/Components/Selectable.h
+        src/Systems/SelectableMousePress.cpp
+        src/Systems/SelectableMousePress.h
 )
 
 set(CMAKE_FRAMEWORK_PATH "${CMAKE_FRAMEWORK_PATH};~/Library/Frameworks") # Or /Library/Frameworks

@@ -1,6 +1,7 @@
 #include "ViewDraw.h"
 
 #include <iostream>
+#include <random>
 
 #include "Components/RenderTransform.h"
 #include "Components/Transform.h"
@@ -16,7 +17,20 @@ ViewDraw::Command::Command(RenderTransform& renderTransform, View& view) : Draw:
 void ViewDraw::Command::execute(SDL_Renderer* renderer)
 {
     SDL_FRect rect = {renderTransform.x, renderTransform.y, renderTransform.w, renderTransform.h};
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+    float r = dist(gen);
+    float g = dist(gen);
+    float b = dist(gen);
+
+    float length = sqrt(r * r + g * g + b * b);
+
+    r /= length;
+    g /= length;
+    b /= length;
+
+    SDL_SetRenderDrawColorFloat(renderer, r, g, b, 1.0f);
     SDL_RenderFillRect(renderer, &rect);
 }
 
@@ -29,7 +43,19 @@ void ViewDraw::DebugRenderTransform::execute(SDL_Renderer* renderer)
 {
     SDL_FRect rect = {renderTransform.x, renderTransform.y, renderTransform.w, renderTransform.h};
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 96);
+    std::mt19937 gen((size_t)&renderTransform);
+    std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+    float r = dist(gen);
+    float g = dist(gen);
+    float b = dist(gen);
+
+    float length = sqrt(r * r + g * g + b * b);
+
+    r /= length;
+    g /= length;
+    b /= length;
+
+    SDL_SetRenderDrawColorFloat(renderer, r, g, b, 1.0f);
     SDL_RenderRect(renderer, &rect);
 }
 
@@ -43,6 +69,6 @@ void ViewDraw::process(const OnDraw& draw)
 
     Entity::multiEach<RenderTransform, View>([draw](RenderTransform& transform, View& view)
     {
-        draw.draw.pushCommand(std::make_shared<Command>(transform, view));
+        //draw.draw.pushCommand(std::make_shared<Command>(transform, view));
     });
 }

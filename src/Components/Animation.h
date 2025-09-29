@@ -9,6 +9,7 @@
 struct Animation
 {
     float time = 0.0f;
+    float speed = 1.0f;
     bool loop = false;
 };
 
