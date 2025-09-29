@@ -25,19 +25,20 @@ float RenderTransformsCompute::computeScaleProperty(Transform::Mode mode, float 
     return property * relativeTo; //Percentage of parent
 }
 
-float RenderTransformsCompute::computePositionProperty(Transform::Mode mode, float property, float relativeTo)
+float RenderTransformsCompute::computePositionProperty(Transform::Mode mode, float property, float start,
+                                                       float relativeTo)
 {
     if (mode == Transform::Mode::Pixel)
     {
-        return property;
+        return start + property;
     }
 
     if (mode == Transform::Mode::Auto)
     {
-        return property * relativeTo; //Percentage of parent
+        return start + property * relativeTo; //Percentage of parent
     }
 
-    return property * relativeTo; //Percentage of parent
+    return start + property * relativeTo; //Percentage of parent
 }
 
 void RenderTransformsCompute::computeLayout(const Transform& transform, RenderTransform& renderTransform,
@@ -50,10 +51,11 @@ void RenderTransformsCompute::computeLayout(const Transform& transform, RenderTr
             for (auto child : layout.children)
             {
                 auto& render = child.get<RenderTransform>();
-                render.x = computePositionProperty(transform.xMode, transform.x, renderTransform.w);
-                render.y = computePositionProperty(transform.yMode, transform.y, renderTransform.h);
-                render.w = computeScaleProperty(transform.xMode, transform.w, renderTransform.w);
-                render.h = computeScaleProperty(transform.yMode, transform.h, renderTransform.h);
+                auto& trans = child.get<Transform>();
+                render.x = computePositionProperty(trans.xMode, trans.x, renderTransform.x, renderTransform.w);
+                render.y = computePositionProperty(trans.yMode, trans.y, renderTransform.y, renderTransform.h);
+                render.w = computeScaleProperty(trans.wMode, trans.w, renderTransform.w);
+                render.h = computeScaleProperty(trans.hMode, trans.h, renderTransform.h);
             }
             break;
         }
@@ -113,7 +115,7 @@ void RenderTransformsCompute::computeLayout(const Transform& transform, RenderTr
                 auto& render = child.get<RenderTransform>();
 
                 //Constant x size
-                render.x = computePositionProperty(trans.xMode, trans.x, renderTransform.w);
+                render.x = computePositionProperty(trans.xMode, trans.x, renderTransform.x, renderTransform.w);
                 render.w = computeScaleProperty(trans.wMode, trans.w, renderTransform.w);
 
                 render.y = consumed;
@@ -175,7 +177,7 @@ void RenderTransformsCompute::computeLayout(const Transform& transform, RenderTr
                 auto& render = child.get<RenderTransform>();
 
                 //Constant y size
-                render.y = computePositionProperty(trans.yMode, trans.x, renderTransform.h);
+                render.y = computePositionProperty(trans.yMode, trans.x, renderTransform.y, renderTransform.h);
                 render.h = computeScaleProperty(trans.hMode, trans.w, renderTransform.h);
 
                 render.x = consumed;
@@ -209,8 +211,10 @@ void RenderTransformsCompute::process(const OnLayout& onLayout)
     Entity::multiEach<Transform, RenderTransform, Layout>(
         [&](Entity entity, const Transform& transform, RenderTransform& output, const Layout& layout)
         {
-            output.x = computePositionProperty(transform.xMode, transform.x, onLayout.relativeWidth);
-            output.y = computePositionProperty(transform.yMode, transform.y, onLayout.relativeHeight);
+            output.x = computePositionProperty(transform.xMode, transform.x, onLayout.relativeX,
+                                               onLayout.relativeWidth);
+            output.y = computePositionProperty(transform.yMode, transform.y, onLayout.relativeY,
+                                               onLayout.relativeHeight);
             output.w = computeScaleProperty(transform.wMode, transform.w, onLayout.relativeWidth);
             output.h = computeScaleProperty(transform.hMode, transform.h, onLayout.relativeHeight);
 

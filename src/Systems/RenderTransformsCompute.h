@@ -17,7 +17,7 @@ struct OnLayout
 class RenderTransformsCompute final : System<OnLayout>
 {
     static float computeScaleProperty(Transform::Mode mode, float property, float relativeTo);
-    static float computePositionProperty(Transform::Mode mode, float property, float relativeTo);
+    static float computePositionProperty(Transform::Mode mode, float property, float start, float relativeTo);
     static void computeLayout(const Transform& transform, RenderTransform& output, const Layout& layout);
     void process(const OnLayout&) override;
 };
