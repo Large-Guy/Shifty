@@ -43,8 +43,12 @@ struct Layout
     {
         if (!from.has<Layout>())
             throw std::runtime_error("Parent entity is missing layout component");
-        if (remove.has<Layout>())
+        if (!remove.has<Layout>())
             throw std::runtime_error("Child entity is missing layout component!");
+        Layout& layout = from.get<Layout>();
+        auto iter = std::find(layout.children.begin(), layout.children.end(), remove);
+        layout.children.erase(iter);
+        remove.get<Layout>().parent = {0};
     }
 };
 

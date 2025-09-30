@@ -25,6 +25,7 @@
 #include "Systems/OnStart.h"
 #include "Systems/RenderTransformsCompute.h"
 #include "Systems/SelectableMousePress.h"
+#include "Systems/SplitCommand.h"
 #include "Systems/TextDraw.h"
 #include "Systems/TextEditSystems.h"
 #include "Systems/ViewAnimationUpdate.h"
@@ -87,6 +88,9 @@ int main(int argc, char* argv[])
     EditDraw editDraw{};
 
     OnStart onStart{};
+
+    //Commands
+    SplitCommand splitCommand{};
 
     EventBus::emit(OnReady{});
 

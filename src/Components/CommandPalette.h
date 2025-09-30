@@ -4,6 +4,13 @@
 
 #include <SDL3/SDL.h>
 #include "Layout.h"
+#include "View.h"
+
+struct OnCommandExecute
+{
+    Entity view;
+    std::vector<std::string> commands;
+};
 
 struct CommandPalette
 {

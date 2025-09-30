@@ -15,6 +15,28 @@
 #include "Components/View.h"
 #include "ECS/Entity.h"
 
+std::vector<std::string> split(const std::string& txt, char ch)
+{
+    std::vector<std::string> strs;
+    size_t pos = txt.find(ch);
+    size_t initialPos = 0;
+    strs.clear();
+
+    // Decompose statement
+    while (pos != std::string::npos)
+    {
+        strs.push_back(txt.substr(initialPos, pos - initialPos));
+        initialPos = pos + 1;
+
+        pos = txt.find(ch, initialPos);
+    }
+
+    // Add the last one
+    strs.push_back(txt.substr(initialPos, std::min(pos, txt.size()) - initialPos + 1));
+
+    return strs;
+}
+
 void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
 {
     using namespace std::chrono;
@@ -72,7 +94,10 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
                 if (!commandPalette.open)
                     return;
 
-                //TODO: Command execution
+                EventBus::emit(OnCommandExecute{
+                    .view = layout.parent,
+                    .commands = split(text.text, ' ')
+                });
 
                 commandPalette.open = false;
                 animation.time = 0;
