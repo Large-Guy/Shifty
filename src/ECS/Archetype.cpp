@@ -41,17 +41,21 @@ void* Archetype::Column::add(EntityID owner)
             std::cout << "Capacity grown: " << this << " : " << count << " : " << capacity << " : " << component.name <<
                 std::endl;
             void* newElements = malloc(capacity * component.size);
-            //Move everything
+            // Move everything properly (construct + move + destroy old)
             for (size_t i = 0; i < owners.size(); ++i)
             {
                 if (owners[i] == 0)
-                    continue; //No need to copy, it's not owned
+                    continue; // No need to copy, it's not owned
                 size_t offset = component.size * i;
                 void* src = static_cast<char*>(elements) + offset;
                 void* dst = static_cast<char*>(newElements) + offset;
+                // Default construct destination then move-assign
+                component.constructor(dst);
                 component.move(dst, src);
+                // Destroy old instance now that it has been moved
+                component.destructor(src);
             }
-            free(elements);
+            free(elements); // raw buffer free after individual destructors
             elements = newElements;
         }
     }
@@ -60,6 +64,7 @@ void* Archetype::Column::add(EntityID owner)
     owners.push_back(owner);
     return root;
 }
+
 
 void* Archetype::Column::add(EntityID owner, void* instance)
 {
