@@ -14,17 +14,16 @@ void SelectableMousePress::process(const OnMouseButtonPress& press)
     {
         bool selectedSomething = false;
         Entity::multiEach<Selectable, RenderTransform>(
-            [press, &selectedSomething](Entity entity, Selectable& selectable, RenderTransform& transform)
+            [press, &selectedSomething](Entity entity, ComRef<Selectable> selectable, ComRef<RenderTransform> transform)
             {
                 if (selectedSomething)
                     return;
 
-                if (transform.x <= press.x && press.x <= transform.x + transform.w && transform.y <= press.y && press.y
-                    <=
-                    transform.y + transform.h)
+                if (transform->x <= press.x && press.x <= transform->x + transform->w &&
+                    transform->y <= press.y && press.y <= transform->y + transform->h)
                 {
                     std::cout << "Focused " << entity.id << std::endl;
-                    Entity::find<Focus>().focused = entity;
+                    Entity::find<Focus>()->focused = entity;
                     selectedSomething = true;
                 }
             });

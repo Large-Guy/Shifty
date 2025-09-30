@@ -13,11 +13,11 @@ class EditShared
 {
 public:
     static void handleTextInput(const OnTextInput& input);
-    static std::pair<size_t, size_t> getSelection(Edit& edit);
-    static std::string getSelectedText(Text& text, Edit& edit);
-    static void deleteSelection(Text& text, Edit& edit);
-    static void clearSelection(Edit& edit);
-    static void select(Edit& edit);
+    static std::pair<size_t, size_t> getSelection(ComRef<Edit> edit);
+    static std::string getSelectedText(ComRef<Text> text, ComRef<Edit> edit);
+    static void deleteSelection(ComRef<Text> text, ComRef<Edit> edit);
+    static void clearSelection(ComRef<Edit> edit);
+    static void select(ComRef<Edit> edit);
 };
 
 class EditInput final : System<OnTextInput>

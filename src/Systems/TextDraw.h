@@ -17,9 +17,9 @@ public:
     {
     public:
         SDL_FRect render;
-        Text& text;
+        ComRef<Text> text;
 
-        Command(SDL_FRect render, Text& text);
+        Command(SDL_FRect render, ComRef<Text> text);
         void execute(SDL_Renderer* renderer) override;
     };
 
