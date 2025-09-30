@@ -26,6 +26,11 @@ struct ComRef
     {
         return *operator->();
     }
+
+    T* get() const
+    {
+        return operator->();
+    }
 };
 
 template <typename T>

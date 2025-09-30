@@ -92,13 +92,13 @@ void EditKeydown::process(const OnKeyPress& input)
                                                   }
                                                   else
                                                   {
-                                                      text.text.erase(edit.cursor - 1, 1);
-                                                      edit.cursor--;
+                                                      text->text.erase(edit->cursor - 1, 1);
+                                                      edit->cursor--;
                                                   }
                                               }
                                           }, [](Entity entity, ComRef<Text> _text, ComRef<Edit> _edit)
                                           {
-                                              return Entity::find<Focus>().focused == entity;
+                                              return Entity::find<Focus>()->focused == entity;
                                           });
             break;
         }
@@ -106,11 +106,11 @@ void EditKeydown::process(const OnKeyPress& input)
         {
             Entity::multiEach<Text, Edit>([&](ComRef<Text> text, ComRef<Edit> edit)
                                           {
-                                              if (edit.highlighting)
+                                              if (edit->highlighting)
                                               {
                                                   EditShared::deleteSelection(text, edit);
                                               }
-                                              else if (edit.cursor > 0)
+                                              else if (edit->cursor > 0)
                                               {
                                                   if (ctrl)
                                                   {
@@ -118,13 +118,13 @@ void EditKeydown::process(const OnKeyPress& input)
                                                   }
                                                   else
                                                   {
-                                                      text.text.erase(edit.cursor - 1, 1);
-                                                      edit.cursor--;
+                                                      text->text.erase(edit->cursor - 1, 1);
+                                                      edit->cursor--;
                                                   }
                                               }
                                           }, [](Entity entity, ComRef<Text> _text, ComRef<Edit> _edit)
                                           {
-                                              return Entity::find<Focus>().focused == entity;
+                                              return Entity::find<Focus>()->focused == entity;
                                           });
             break;
         }
@@ -141,7 +141,7 @@ void EditKeydown::process(const OnKeyPress& input)
                                                   EditShared::clearSelection(edit);
                                               }
 
-                                              if (!edit.cursor > 0)
+                                              if (!edit->cursor > 0)
                                                   return;
 
                                               if (ctrl)
@@ -150,11 +150,11 @@ void EditKeydown::process(const OnKeyPress& input)
                                               }
                                               else
                                               {
-                                                  edit.cursor--;
+                                                  edit->cursor--;
                                               }
                                           }, [](Entity entity, ComRef<Text> _text, ComRef<Edit> _edit)
                                           {
-                                              return Entity::find<Focus>().focused == entity;
+                                              return Entity::find<Focus>()->focused == entity;
                                           });
             break;
         }
@@ -171,7 +171,7 @@ void EditKeydown::process(const OnKeyPress& input)
                                                   EditShared::clearSelection(edit);
                                               }
 
-                                              if (edit.cursor >= text.text.length())
+                                              if (edit->cursor >= text->text.length())
                                                   return;
 
                                               if (ctrl)
@@ -180,11 +180,11 @@ void EditKeydown::process(const OnKeyPress& input)
                                               }
                                               else
                                               {
-                                                  edit.cursor++;
+                                                  edit->cursor++;
                                               }
                                           }, [](Entity entity, ComRef<Text> _text, ComRef<Edit> _edit)
                                           {
-                                              return Entity::find<Focus>().focused == entity;
+                                              return Entity::find<Focus>()->focused == entity;
                                           });
             break;
         }
@@ -194,12 +194,12 @@ void EditKeydown::process(const OnKeyPress& input)
             {
                 Entity::multiEach<Text, Edit>([&](ComRef<Text> text, ComRef<Edit> edit)
                                               {
-                                                  edit.highlightStart = 0;
-                                                  edit.cursor = text.text.length();
-                                                  edit.highlighting = edit.cursor > 0;
+                                                  edit->highlightStart = 0;
+                                                  edit->cursor = text->text.length();
+                                                  edit->highlighting = edit->cursor > 0;
                                               }, [](Entity entity, ComRef<Text> _text, ComRef<Edit> _edit)
                                               {
-                                                  return Entity::find<Focus>().focused == entity;
+                                                  return Entity::find<Focus>()->focused == entity;
                                               });
             }
             break;
@@ -210,14 +210,14 @@ void EditKeydown::process(const OnKeyPress& input)
             {
                 Entity::multiEach<Text, Edit>([&](ComRef<Text> text, ComRef<Edit> edit)
                                               {
-                                                  if (!edit.highlighting)
+                                                  if (!edit->highlighting)
                                                       return;
 
                                                   std::string highlighted = EditShared::getSelectedText(text, edit);
                                                   SDL_SetClipboardText(highlighted.c_str());
                                               }, [](Entity entity, ComRef<Text> _text, ComRef<Edit> _edit)
                                               {
-                                                  return Entity::find<Focus>().focused == entity;
+                                                  return Entity::find<Focus>()->focused == entity;
                                               });
             }
             break;
@@ -238,7 +238,7 @@ void EditKeydown::process(const OnKeyPress& input)
                                                   }
                                               }, [](Entity entity, ComRef<Text> _text, ComRef<Edit> _edit)
                                               {
-                                                  return Entity::find<Focus>().focused == entity;
+                                                  return Entity::find<Focus>()->focused == entity;
                                               });
             }
             break;
@@ -249,7 +249,7 @@ void EditKeydown::process(const OnKeyPress& input)
             {
                 Entity::multiEach<Text, Edit>([&](ComRef<Text> text, ComRef<Edit> edit)
                                               {
-                                                  if (!edit.highlighting)
+                                                  if (!edit->highlighting)
                                                       return;
 
                                                   std::string highlighted = EditShared::getSelectedText(text, edit);
@@ -257,7 +257,7 @@ void EditKeydown::process(const OnKeyPress& input)
                                                   EditShared::deleteSelection(text, edit);
                                               }, [](Entity entity, ComRef<Text> _text, ComRef<Edit> _edit)
                                               {
-                                                  return Entity::find<Focus>().focused == entity;
+                                                  return Entity::find<Focus>()->focused == entity;
                                               });
             }
         }
@@ -268,10 +268,10 @@ void EditKeydown::process(const OnKeyPress& input)
 
 void EditProcess::process(const OnUpdate& onUpdate)
 {
-    Entity::find<InputHandler>().textInput = false; //TODO: Maybe find a better way to do this cuz it's a little sketch
+    Entity::find<InputHandler>()->textInput = false; //TODO: Maybe find a better way to do this cuz it's a little sketch
     Entity::multiEach<Edit>([](ComRef<Edit> edit)
     {
-        Entity::find<InputHandler>().textInput = true;
+        Entity::find<InputHandler>()->textInput = true;
     });
 }
 
@@ -283,9 +283,9 @@ EditDraw::Command::Command(const SDL_FRect render, ComRef<Text> text, ComRef<Edi
 
 void EditDraw::Command::execute(SDL_Renderer* renderer)
 {
-    TTF_Font* font = text.font->size(text.size);
-    const std::string tillCursor = text.text.substr(0, edit.cursor);
-    const std::string tillSelection = text.text.substr(0, edit.highlightStart);
+    TTF_Font* font = text->font->size(text->size);
+    const std::string tillCursor = text->text.substr(0, edit->cursor);
+    const std::string tillSelection = text->text.substr(0, edit->highlightStart);
 
     //Cursor
     float cursorX, h;
@@ -304,7 +304,7 @@ void EditDraw::Command::execute(SDL_Renderer* renderer)
     SDL_RenderLine(renderer, cursorX + render.x, render.y, cursorX + render.x, render.y + h);
 
     //Selection
-    if (!edit.highlighting)
+    if (!edit->highlighting)
         return;
 
     float selectionX, h2;
@@ -321,44 +321,44 @@ void EditDraw::Command::execute(SDL_Renderer* renderer)
 void EditDraw::process(const OnDraw& onDraw)
 {
     Entity::multiEach<Text, Edit, RenderTransform>(
-        [&](ComRef<Text> text, ComRef<Edit> edit, const RenderTransform& renderTransform)
+        [&](ComRef<Text> text, ComRef<Edit> edit, ComRef<RenderTransform> renderTransform)
         {
-            float x = renderTransform.x;
-            float y = renderTransform.y;
+            float x = renderTransform->x;
+            float y = renderTransform->y;
 
             float w, h;
 
-            TextRenderer::sizeText(text.font->size(text.size), text.text, &w, &h);
+            TextRenderer::sizeText(text->font->size(text->size), text->text, &w, &h);
 
-            switch (text.horizontal)
+            switch (text->horizontal)
             {
             case Text::Alignment::Leading:
                 break;
             case Text::Alignment::Center:
-                x += renderTransform.w / 2 - w / 2;
+                x += renderTransform->w / 2 - w / 2;
                 break;
             case Text::Alignment::Trailing:
-                x += renderTransform.w - w / 2;
+                x += renderTransform->w - w / 2;
                 break;
             }
 
-            switch (text.vertical)
+            switch (text->vertical)
             {
             case Text::Alignment::Leading:
                 break;
             case Text::Alignment::Center:
-                y += renderTransform.h / 2 - h / 2;
+                y += renderTransform->h / 2 - h / 2;
                 break;
             case Text::Alignment::Trailing:
-                y += renderTransform.h - h / 2;
+                y += renderTransform->h - h / 2;
                 break;
             }
 
-            h = std::min(renderTransform.h, h);
+            h = std::min(renderTransform->h, h);
 
-            onDraw.draw.pushCommand(std::make_shared<Command>(SDL_FRect{x, y, w, h}, text, edit));
-        }, [](Entity entity, ComRef<Text> text, ComRef<Edit> edit, const RenderTransform& renderTransform)
+            onDraw.draw->pushCommand(std::make_shared<Command>(SDL_FRect{x, y, w, h}, text, edit));
+        }, [](Entity entity, ComRef<Text> text, ComRef<Edit> edit, ComRef<RenderTransform> renderTransform)
         {
-            return Entity::find<Focus>().focused == entity;
+            return Entity::find<Focus>()->focused == entity;
         });
 }

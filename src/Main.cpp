@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
     uint64_t dt = 16;
     double deltaTime = 0.016;
 
-    while (Entity::findEntity<App>().get<App>().running)
+    while (Entity::findEntity<App>().get<App>()->running)
     {
         EventBus::emit(OnUpdate{
             static_cast<float>(deltaTime)

@@ -29,14 +29,14 @@ struct Layout
             throw std::runtime_error("Parent entity is missing layout component");
         if (!add.has<Layout>())
             throw std::runtime_error("Child entity is missing layout component!");
-        Layout& layout = to.get<Layout>();
-        Layout& other = add.get<Layout>();
-        if (other.parent != nullptr)
+        ComRef<Layout> layout = to.get<Layout>();
+        ComRef<Layout> other = add.get<Layout>();
+        if (other->parent != nullptr)
         {
-            removeChild(other.parent, add);
+            removeChild(other->parent, add);
         }
-        other.parent = to;
-        layout.children.push_back(add);
+        other->parent = to;
+        layout->children.push_back(add);
     }
 
     static void removeChild(Entity from, Entity remove)
@@ -45,10 +45,10 @@ struct Layout
             throw std::runtime_error("Parent entity is missing layout component");
         if (!remove.has<Layout>())
             throw std::runtime_error("Child entity is missing layout component!");
-        Layout& layout = from.get<Layout>();
-        auto iter = std::find(layout.children.begin(), layout.children.end(), remove);
-        layout.children.erase(iter);
-        remove.get<Layout>().parent = {0};
+        ComRef<Layout> layout = from.get<Layout>();
+        auto iter = std::find(layout->children.begin(), layout->children.end(), remove);
+        layout->children.erase(iter);
+        remove.get<Layout>()->parent = {0};
     }
 };
 

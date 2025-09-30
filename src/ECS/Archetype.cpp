@@ -1,6 +1,7 @@
 #include "Archetype.h"
 
 #include <cstring>
+#include <iostream>
 #include <stdexcept>
 
 std::unordered_map<Type, Archetype*, TypeHash> Archetype::archetypeIndex = {};
@@ -37,9 +38,11 @@ void* Archetype::Column::add(EntityID owner)
             elements = malloc(capacity * component.size);
         else
         {
+            std::cout << "Capacity grown: " << this << " : " << count << " : " << capacity << " : " << component.name <<
+                std::endl;
             void* newElements = malloc(capacity * component.size);
             //Move everything
-            for (size_t i = 0; i < count - 1; ++i)
+            for (size_t i = 0; i < owners.size(); ++i)
             {
                 if (owners[i] == 0)
                     continue; //No need to copy, it's not owned
@@ -52,7 +55,7 @@ void* Archetype::Column::add(EntityID owner)
             elements = newElements;
         }
     }
-    void* root = static_cast<char*>(elements) + (component.size * count - component.size);
+    void* root = static_cast<char*>(elements) + (component.size * (count - 1));
     component.constructor(root);
     owners.push_back(owner);
     return root;
@@ -68,6 +71,8 @@ void* Archetype::Column::add(EntityID owner, void* instance)
 void Archetype::Column::remove(size_t index)
 {
     owners[index] = 0; //AKA null entity
+    //Destroy the data
+    component.destructor(operator[](index));
 }
 
 

@@ -41,9 +41,9 @@ class EditDraw final : System<OnDraw>
     {
     public:
         SDL_FRect render;
-        Text& text;
-        Edit& edit;
-        Command(SDL_FRect render, Text& text, Edit& edit);
+        ComRef<Text> text;
+        ComRef<Edit> edit;
+        Command(SDL_FRect render, ComRef<Text> text, ComRef<Edit> edit);
         void execute(SDL_Renderer* renderer) override;
     };
 

@@ -13,21 +13,21 @@
 void ViewAnimationUpdate::process(const OnUpdate&)
 {
     Entity::multiEach<Animation, Layout, View, Transform>(
-        [&](Animation& animation, Layout& layout, View& view, Transform& transform)
+        [&](ComRef<Animation> animation, ComRef<Layout> layout, ComRef<View> view, ComRef<Transform> transform)
         {
-            if (layout.parent != nullptr)
+            if (layout->parent != nullptr)
             {
-                if (layout.parent.get<Layout>().type == Layout::Type::HORIZONTAL)
+                if (layout->parent.get<Layout>()->type == Layout::Type::HORIZONTAL)
                 {
-                    transform.hMode = Transform::Mode::Auto;
-                    transform.wMode = Transform::Mode::Percent;
-                    transform.w = Tween::Lerp(0.0f, 1.0f, Tween::easeOutElastic(animation.time));
+                    transform->hMode = Transform::Mode::Auto;
+                    transform->wMode = Transform::Mode::Percent;
+                    transform->w = Tween::Lerp(0.0f, 1.0f, Tween::easeOutElastic(animation->time));
                 }
-                else if (layout.parent.get<Layout>().type == Layout::Type::VERTICAL)
+                else if (layout->parent.get<Layout>()->type == Layout::Type::VERTICAL)
                 {
-                    transform.wMode = Transform::Mode::Auto;
-                    transform.hMode = Transform::Mode::Percent;
-                    transform.h = Tween::Lerp(0.0f, 1.0f, Tween::easeOutElastic(animation.time));
+                    transform->wMode = Transform::Mode::Auto;
+                    transform->hMode = Transform::Mode::Percent;
+                    transform->h = Tween::Lerp(0.0f, 1.0f, Tween::easeOutElastic(animation->time));
                 }
             }
         });

@@ -8,15 +8,15 @@
 #include "Components/View.h"
 #include "ECS/Entity.h"
 
-ViewDraw::Command::Command(RenderTransform& renderTransform, View& view) : Draw::Command(1),
-                                                                           view(view),
-                                                                           renderTransform(renderTransform)
+ViewDraw::Command::Command(ComRef<RenderTransform> renderTransform, ComRef<View> view) : Draw::Command(1),
+    view(view),
+    renderTransform(renderTransform)
 {
 }
 
 void ViewDraw::Command::execute(SDL_Renderer* renderer)
 {
-    SDL_FRect rect = {renderTransform.x, renderTransform.y, renderTransform.w, renderTransform.h};
+    SDL_FRect rect = {renderTransform->x, renderTransform->y, renderTransform->w, renderTransform->h};
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<float> dist(0.0f, 1.0f);
@@ -34,16 +34,16 @@ void ViewDraw::Command::execute(SDL_Renderer* renderer)
     SDL_RenderFillRect(renderer, &rect);
 }
 
-ViewDraw::DebugRenderTransform::DebugRenderTransform(RenderTransform& renderTransform) : Draw::Command(1),
+ViewDraw::DebugRenderTransform::DebugRenderTransform(ComRef<RenderTransform> renderTransform) : Draw::Command(1),
     renderTransform(renderTransform)
 {
 }
 
 void ViewDraw::DebugRenderTransform::execute(SDL_Renderer* renderer)
 {
-    SDL_FRect rect = {renderTransform.x, renderTransform.y, renderTransform.w, renderTransform.h};
+    SDL_FRect rect = {renderTransform->x, renderTransform->y, renderTransform->w, renderTransform->h};
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    std::mt19937 gen((size_t)&renderTransform);
+    std::mt19937 gen((size_t)renderTransform.get());
     std::uniform_real_distribution<float> dist(0.0f, 1.0f);
     float r = dist(gen);
     float g = dist(gen);
@@ -62,12 +62,12 @@ void ViewDraw::DebugRenderTransform::execute(SDL_Renderer* renderer)
 
 void ViewDraw::process(const OnDraw& draw)
 {
-    Entity::each<RenderTransform>([draw](RenderTransform& transform)
+    Entity::each<RenderTransform>([draw](ComRef<RenderTransform> transform)
     {
-        draw.draw.pushCommand(std::make_shared<DebugRenderTransform>(transform));
+        draw.draw->pushCommand(std::make_shared<DebugRenderTransform>(transform));
     });
 
-    Entity::multiEach<RenderTransform, View>([draw](RenderTransform& transform, View& view)
+    Entity::multiEach<RenderTransform, View>([draw](ComRef<RenderTransform> transform, ComRef<View> view)
     {
         //draw.draw.pushCommand(std::make_shared<Command>(transform, view));
     });

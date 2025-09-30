@@ -12,19 +12,19 @@ class ViewDraw final : System<OnDraw>
 {
     struct Command : public Draw::Command
     {
-        View& view;
-        RenderTransform& renderTransform;
+        ComRef<View> view;
+        ComRef<RenderTransform> renderTransform;
 
-        Command(RenderTransform& renderTransform, View& view);
+        Command(ComRef<RenderTransform> renderTransform, ComRef<View> view);
 
         void execute(SDL_Renderer* renderer) override;
     };
 
     struct DebugRenderTransform : public Draw::Command
     {
-        RenderTransform& renderTransform;
+        ComRef<RenderTransform> renderTransform;
 
-        DebugRenderTransform(RenderTransform& renderTransform);
+        DebugRenderTransform(ComRef<RenderTransform> renderTransform);
 
         void execute(SDL_Renderer* renderer) override;
     };
