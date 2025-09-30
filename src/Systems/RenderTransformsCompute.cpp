@@ -41,35 +41,35 @@ float RenderTransformsCompute::computePositionProperty(Transform::Mode mode, flo
     return start + property * relativeTo; //Percentage of parent
 }
 
-void RenderTransformsCompute::computeLayout(const Transform& transform, RenderTransform& renderTransform,
-                                            const Layout& layout)
+void RenderTransformsCompute::computeLayout(ComRef<Transform> transform, ComRef<RenderTransform> renderTransform,
+                                            ComRef<Layout> layout)
 {
-    switch (layout.type)
+    switch (layout->type)
     {
     case Layout::Type::FREE:
         {
-            for (auto child : layout.children)
+            for (auto child : layout->children)
             {
-                auto& render = child.get<RenderTransform>();
-                auto& trans = child.get<Transform>();
-                render.x = computePositionProperty(trans.xMode, trans.x, renderTransform.x, renderTransform.w);
-                render.y = computePositionProperty(trans.yMode, trans.y, renderTransform.y, renderTransform.h);
-                render.w = computeScaleProperty(trans.wMode, trans.w, renderTransform.w);
-                render.h = computeScaleProperty(trans.hMode, trans.h, renderTransform.h);
+                auto render = child.get<RenderTransform>();
+                auto trans = child.get<Transform>();
+                render->x = computePositionProperty(trans->xMode, trans->x, renderTransform->x, renderTransform->w);
+                render->y = computePositionProperty(trans->yMode, trans->y, renderTransform->y, renderTransform->h);
+                render->w = computeScaleProperty(trans->wMode, trans->w, renderTransform->w);
+                render->h = computeScaleProperty(trans->hMode, trans->h, renderTransform->h);
             }
             break;
         }
     case Layout::Type::FULL:
         {
-            if (layout.children.size() > 1)
+            if (layout->children.size() > 1)
                 throw std::runtime_error("Full layout only permits one child!");
-            if (!layout.children.empty())
+            if (!layout->children.empty())
             {
-                auto& render = layout.children.front().get<RenderTransform>();
-                render.x = renderTransform.x;
-                render.y = renderTransform.y;
-                render.w = renderTransform.w;
-                render.h = renderTransform.h;
+                auto render = layout->children.front().get<RenderTransform>();
+                render->x = renderTransform->x;
+                render->y = renderTransform->y;
+                render->w = renderTransform->w;
+                render->h = renderTransform->h;
             }
             break;
         }
@@ -77,18 +77,18 @@ void RenderTransformsCompute::computeLayout(const Transform& transform, RenderTr
         {
             //Calculate height override behavior
             float totalPercent = .0f;
-            float remainingPixels = renderTransform.h;
+            float remainingPixels = renderTransform->h;
             int autoCount = 0;
-            for (auto child : layout.children)
+            for (auto child : layout->children)
             {
-                auto& trans = child.get<Transform>();
-                switch (trans.hMode)
+                auto trans = child.get<Transform>();
+                switch (trans->hMode)
                 {
                 case Transform::Mode::Pixel:
-                    remainingPixels -= trans.h;
+                    remainingPixels -= trans->h;
                     break;
                 case Transform::Mode::Percent:
-                    totalPercent += trans.h;
+                    totalPercent += trans->h;
                     break;
                 case Transform::Mode::Auto:
                     autoCount++;
@@ -103,35 +103,35 @@ void RenderTransformsCompute::computeLayout(const Transform& transform, RenderTr
                 percentageScale = 1.f / totalPercent;
             }
 
-            remainingPixels -= computeScaleProperty(Transform::Mode::Percent, totalPercent, renderTransform.h);
+            remainingPixels -= computeScaleProperty(Transform::Mode::Percent, totalPercent, renderTransform->h);
 
             float consumed = .0f;
 
             float autoSize = remainingPixels / static_cast<float>(autoCount);
-            for (int i = 0; i < layout.children.size(); i++)
+            for (int i = 0; i < layout->children.size(); i++)
             {
-                auto& child = layout.children[i];
-                auto& trans = child.get<Transform>();
-                auto& render = child.get<RenderTransform>();
+                auto& child = layout->children[i];
+                auto trans = child.get<Transform>();
+                auto render = child.get<RenderTransform>();
 
                 //Constant x size
-                render.x = computePositionProperty(trans.xMode, trans.x, renderTransform.x, renderTransform.w);
-                render.w = computeScaleProperty(trans.wMode, trans.w, renderTransform.w);
+                render->x = computePositionProperty(trans->xMode, trans->x, renderTransform->x, renderTransform->w);
+                render->w = computeScaleProperty(trans->wMode, trans->w, renderTransform->w);
 
-                render.y = consumed;
-                switch (trans.hMode)
+                render->y = consumed;
+                switch (trans->hMode)
                 {
                 case Transform::Mode::Pixel:
-                    render.h = trans.h;
+                    render->h = trans->h;
                     break;
                 case Transform::Mode::Percent:
-                    render.h = trans.h * renderTransform.h * percentageScale;
+                    render->h = trans->h * renderTransform->h * percentageScale;
                     break;
                 case Transform::Mode::Auto:
-                    render.h = autoSize;
+                    render->h = autoSize;
                     break;
                 }
-                consumed += render.h;
+                consumed += render->h;
             }
             break;
         }
@@ -139,18 +139,18 @@ void RenderTransformsCompute::computeLayout(const Transform& transform, RenderTr
         {
             //Calculate height override behavior
             float totalPercent = .0f;
-            float remainingPixels = renderTransform.w;
+            float remainingPixels = renderTransform->w;
             int autoCount = 0;
-            for (auto child : layout.children)
+            for (auto child : layout->children)
             {
-                auto& trans = child.get<Transform>();
-                switch (trans.wMode)
+                auto trans = child.get<Transform>();
+                switch (trans->wMode)
                 {
                 case Transform::Mode::Pixel:
-                    remainingPixels -= trans.w;
+                    remainingPixels -= trans->w;
                     break;
                 case Transform::Mode::Percent:
-                    totalPercent += trans.w;
+                    totalPercent += trans->w;
                     break;
                 case Transform::Mode::Auto:
                     autoCount++;
@@ -165,41 +165,41 @@ void RenderTransformsCompute::computeLayout(const Transform& transform, RenderTr
                 percentageScale = 1.f / totalPercent;
             }
 
-            remainingPixels -= computeScaleProperty(Transform::Mode::Percent, totalPercent, renderTransform.w);
+            remainingPixels -= computeScaleProperty(Transform::Mode::Percent, totalPercent, renderTransform->w);
 
             float consumed = .0f;
 
             float autoSize = remainingPixels / static_cast<float>(autoCount);
-            for (int i = 0; i < layout.children.size(); i++)
+            for (int i = 0; i < layout->children.size(); i++)
             {
-                auto& child = layout.children[i];
-                auto& trans = child.get<Transform>();
-                auto& render = child.get<RenderTransform>();
+                auto& child = layout->children[i];
+                auto trans = child.get<Transform>();
+                auto render = child.get<RenderTransform>();
 
                 //Constant y size
-                render.y = computePositionProperty(trans.yMode, trans.x, renderTransform.y, renderTransform.h);
-                render.h = computeScaleProperty(trans.hMode, trans.w, renderTransform.h);
+                render->y = computePositionProperty(trans->yMode, trans->x, renderTransform->y, renderTransform->h);
+                render->h = computeScaleProperty(trans->hMode, trans->w, renderTransform->h);
 
-                render.x = consumed;
-                switch (trans.wMode)
+                render->x = consumed;
+                switch (trans->wMode)
                 {
                 case Transform::Mode::Pixel:
-                    render.w = trans.w;
+                    render->w = trans->w;
                     break;
                 case Transform::Mode::Percent:
-                    render.w = trans.w * renderTransform.w * percentageScale;
+                    render->w = trans->w * renderTransform->w * percentageScale;
                     break;
                 case Transform::Mode::Auto:
-                    render.w = autoSize;
+                    render->w = autoSize;
                     break;
                 }
-                consumed += render.w;
+                consumed += render->w;
             }
             break;
         }
     }
 
-    for (auto& child : layout.children)
+    for (auto& child : layout->children)
     {
         computeLayout(child.get<Transform>(), child.get<RenderTransform>(), child.get<Layout>());
     }
@@ -209,20 +209,20 @@ void RenderTransformsCompute::computeLayout(const Transform& transform, RenderTr
 void RenderTransformsCompute::process(const OnLayout& onLayout)
 {
     Entity::multiEach<Transform, RenderTransform, Layout>(
-        [&](Entity entity, const Transform& transform, RenderTransform& output, const Layout& layout)
+        [&](Entity entity, ComRef<Transform> transform, ComRef<RenderTransform> output, ComRef<Layout> layout)
         {
-            output.x = computePositionProperty(transform.xMode, transform.x, onLayout.relativeX,
-                                               onLayout.relativeWidth);
-            output.y = computePositionProperty(transform.yMode, transform.y, onLayout.relativeY,
-                                               onLayout.relativeHeight);
-            output.w = computeScaleProperty(transform.wMode, transform.w, onLayout.relativeWidth);
-            output.h = computeScaleProperty(transform.hMode, transform.h, onLayout.relativeHeight);
+            output->x = computePositionProperty(transform->xMode, transform->x, onLayout.relativeX,
+                                                onLayout.relativeWidth);
+            output->y = computePositionProperty(transform->yMode, transform->y, onLayout.relativeY,
+                                                onLayout.relativeHeight);
+            output->w = computeScaleProperty(transform->wMode, transform->w, onLayout.relativeWidth);
+            output->h = computeScaleProperty(transform->hMode, transform->h, onLayout.relativeHeight);
 
 
             computeLayout(transform, output, layout);
-        }, [](Entity entity, Transform, RenderTransform&, const Layout& layout)
+        }, [](Entity entity, ComRef<Transform>, ComRef<RenderTransform>, ComRef<Layout> layout)
         {
-            if (layout.parent.id == 0)
+            if (layout->parent.id == 0)
             {
                 return true;
             }

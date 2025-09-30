@@ -6,7 +6,7 @@
 
 #include "../ECS/Entity.h"
 
-ColorRectDraw::Command::Command(int priority, SDL_FRect& rect, SDL_Color& color) : rect(rect), color(color),
+ColorRectDraw::Command::Command(int priority, SDL_FRect rect, SDL_Color color) : rect(rect), color(color),
     Draw::Command(priority)
 {
 }
@@ -21,8 +21,8 @@ void ColorRectDraw::Command::execute(SDL_Renderer* renderer)
 
 void ColorRectDraw::process(const OnDraw& onDraw)
 {
-    Entity::multiEach<SDL_FRect, SDL_Color>([onDraw](SDL_FRect& rect, SDL_Color& color)
+    Entity::multiEach<SDL_FRect, SDL_Color>([onDraw](ComRef<SDL_FRect> rect, ComRef<SDL_Color> color)
     {
-        onDraw.draw.pushCommand(std::make_shared<Command>(1, rect, color));
+        onDraw.draw->pushCommand(std::make_shared<Command>(1, *rect, *color));
     });
 }

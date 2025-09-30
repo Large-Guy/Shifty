@@ -7,6 +7,7 @@
 
 #include "Components/App.h"
 #include <iostream>
+#include <chrono>
 
 #include "Components/CommandPalette.h"
 #include "Events.h"

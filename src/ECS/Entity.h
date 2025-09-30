@@ -15,10 +15,24 @@
 using EntityID = uint32_t;
 
 template <typename T>
+struct ComRef
+{
+    EntityID owner = {0};
+    Component component = {};
+
+    T* operator->() const;
+
+    T& operator*() const
+    {
+        return *operator->();
+    }
+};
+
+template <typename T>
 struct OnComponentCreate
 {
     EntityID entity;
-    T& component;
+    ComRef<T> component;
 };
 
 class Entity
@@ -60,27 +74,27 @@ public:
     }
 
     template <typename T>
-    T& get() const
+    ComRef<T> get() const
     {
-        return *static_cast<T*>(get(Component::get<T>()));
+        return {id, Component::get<T>()};
     }
 
     template <typename T>
-    T& add()
+    ComRef<T> add()
     {
-        T* component = static_cast<T*>(add(Component::get<T>()));
-        OnComponentCreate<T> event{id, *component};
+        add(Component::get<T>());
+        OnComponentCreate<T> event{id, {id, Component::get<T>()}};
         EventBus::emit(event);
-        return *component;
+        return ComRef<T>{id, Component::get<T>()};
     }
 
     template <typename T>
-    T& add(T instance)
+    ComRef<T> add(T instance)
     {
-        T* component = static_cast<T*>(add(Component::get<T>(), &instance));
-        OnComponentCreate<T> event{id, *component};
+        add(Component::get<T>(), &instance);
+        OnComponentCreate<T> event{id, {id, Component::get<T>()}};
         EventBus::emit(event);
-        return *component;
+        return {id, Component::get<T>()};
     }
 
     template <typename T>
@@ -90,7 +104,7 @@ public:
     }
 
     template <typename T>
-    static void each(std::function<void(T&)> callback, std::function<bool(T&)> filter = nullptr)
+    static void each(std::function<void(ComRef<T>)> callback, std::function<bool(ComRef<T>)> filter = nullptr)
     {
         Archetype::Map& map = Archetype::componentIndex[Component::get<T>()];
         for (auto& element : map)
@@ -102,9 +116,9 @@ public:
                 if (entity.id == 0)
                     continue;
 
-                if (filter && !filter(*static_cast<T*>(column[i])))
+                if (filter && !filter(ComRef<T>{entity.id, column.component}))
                     continue;
-                callback(*static_cast<T*>(column[i]));
+                callback(ComRef<T>{entity.id, column.component});
             }
         }
     }
@@ -145,21 +159,19 @@ public:
                 if (entity.id == 0)
                     continue;
 
-                int index = 0;
-                auto getComponent = [&]()
-                {
-                    return columns[components[index++]]->operator[](i);
-                };
-
-                if constexpr (std::is_invocable_v<Func, Entity, decltype(*static_cast<Args*>(getComponent()))...>)
+                if constexpr (std::is_invocable_v<Func, Entity, decltype(ComRef<Args>{
+                                                      entity.id, Component::get<Args>()
+                                                  })...>)
                 {
                     // Function takes (Entity, Component)
-                    callback(entity, *static_cast<Args*>(getComponent())...);
+                    callback(entity, ComRef<Args>{entity.id, Component::get<Args>()}...);
                 }
-                else if constexpr (std::is_invocable_v<Func, decltype(*static_cast<Args*>(getComponent()))...>)
+                else if constexpr (std::is_invocable_v<Func, decltype(ComRef<Args>{
+                                                           entity.id, Component::get<Args>()
+                                                       })...>)
                 {
                     // Function takes just (Component)
-                    callback(*static_cast<Args*>(getComponent())...);
+                    callback(ComRef<Args>{entity.id, Component::get<Args>()}...);
                 }
                 else
                 {
@@ -206,33 +218,28 @@ public:
                 if (entity.id == 0)
                     continue;
 
-                int index = 0;
-                auto getComponent = [&]()
-                {
-                    return columns[components[index++]]->operator[](i);
-                };
-
-                if (!filter(entity, *static_cast<Args*>(getComponent())...))
+                if (!filter(entity, ComRef<Args>{entity.id, Component::get<Args>()}...))
                     continue;
 
-                index = 0;
-
-                if constexpr (std::is_invocable_v<Func, Entity, decltype(*static_cast<Args*>(getComponent()))...>)
+                if constexpr (std::is_invocable_v<
+                    Func, Entity, decltype(ComRef<Args>{entity.id, Component::get<Args>()})...>)
                 {
                     // Function takes (Entity, Component)
-                    callback(entity, *static_cast<Args*>(getComponent())...);
+                    callback(entity, ComRef<Args>{entity.id, Component::get<Args>()}...);
                 }
-                else if constexpr (std::is_invocable_v<Func, decltype(*static_cast<Args*>(getComponent()))...>)
+                else if constexpr (std::is_invocable_v<
+                    Func, decltype(ComRef<Args>{entity.id, Component::get<Args>()})...>)
                 {
                     // Function takes just (Component)
-                    callback(*static_cast<Args*>(getComponent())...);
+                    callback(ComRef<Args>{entity.id, Component::get<Args>()}...);
                 }
             }
         }
     }
 
     template <typename T>
-    static void each(std::function<void(Entity entity, T&)> callback, std::function<bool(T&)> filter = nullptr)
+    static void each(std::function<void(Entity entity, ComRef<T>)> callback,
+                     std::function<bool(ComRef<T>)> filter = nullptr)
     {
         Archetype::Map& map = Archetype::componentIndex[Component::get<T>()];
         for (auto& element : map)
@@ -244,9 +251,9 @@ public:
                 if (entity.id == 0)
                     continue;
 
-                if (filter && !filter(*static_cast<T*>(column[i])))
+                if (filter && !filter(ComRef<T>{entity.id, column.component}))
                     continue;
-                callback(entity, *static_cast<T*>(column[i]));
+                callback(entity, ComRef<T>{entity.id, column.component});
             }
         }
     }
@@ -269,7 +276,7 @@ public:
     }
 
     template <typename T>
-    static T& find()
+    static ComRef<T> find()
     {
         const Archetype::Map& map = Archetype::componentIndex[Component::get<T>()];
         for (auto& element : map)
@@ -279,7 +286,7 @@ public:
             {
                 if (column.owners[i] == 0)
                     continue;
-                return *static_cast<T*>(column[i]);
+                return {column.owners[i], column.component};
             }
         }
         throw std::runtime_error("Entity not found with component");
@@ -302,5 +309,12 @@ public:
         return false;
     }
 };
+
+template <typename T>
+T* ComRef<T>::operator->() const
+{
+    return static_cast<T*>(Entity(owner).get(component));
+}
+
 
 #endif //SHIFTY_ENTITY_H

@@ -7,30 +7,30 @@
 
 void DrawRender::process(const OnRender&)
 {
-    Entity::each<Draw>([](Draw& draw)
+    Entity::each<Draw>([](ComRef<Draw> draw)
     {
         EventBus::emit(OnDraw{draw});
 
         //Flush
 
-        SDL_SetRenderDrawColor(draw.renderer, 0, 0, 0, 255);
-        SDL_RenderClear(draw.renderer);
+        SDL_SetRenderDrawColor(draw->renderer, 0, 0, 0, 255);
+        SDL_RenderClear(draw->renderer);
         std::string debug = "";
-        for (const auto& command : draw.commands)
+        for (const auto& command : draw->commands)
         {
 #ifdef DEBUG
             std::string text = typeid(*command.get()).name();
             debug += text + "\n";
 #endif
-            command->execute(draw.renderer);
+            command->execute(draw->renderer);
         }
 
 #ifdef DEBUG
         SDL_RenderDebugText(draw.renderer, 32, 32, debug.c_str());
 #endif
 
-        SDL_RenderPresent(draw.renderer);
+        SDL_RenderPresent(draw->renderer);
 
-        draw.commands.clear();
+        draw->commands.clear();
     });
 }

@@ -45,29 +45,31 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
     if (keyPress.key == SDLK_LSHIFT || keyPress.key == SDLK_RSHIFT)
     {
         Entity::multiEach<Layout, CommandPalette, Animation, Text, Edit>(
-            [time](Entity entity, Layout& layout, CommandPalette& commandPalette, Animation& animation, Text& text,
-                   Edit& edit)
+            [time](Entity entity, ComRef<Layout> layout, ComRef<CommandPalette> commandPalette,
+                   ComRef<Animation> animation, ComRef<Text> text,
+                   ComRef<Edit> edit)
             {
-                if (commandPalette.open)
+                if (commandPalette->open)
                     return;
 
-                uint64_t elapsed = time - commandPalette.lastShiftPressed;
+                uint64_t elapsed = time - commandPalette->lastShiftPressed;
                 if (elapsed < 200)
                 {
-                    commandPalette.open = true;
-                    animation.time = 0;
-                    edit.highlightStart = 0;
-                    edit.cursor = text.text.length();
+                    commandPalette->open = true;
+                    animation->time = 0;
+                    edit->highlightStart = 0;
+                    edit->cursor = text->text.length();
                     EditShared::deleteSelection(text, edit);
-                    Entity::find<Focus>().focused = entity;
+                    Entity::find<Focus>()->focused = entity;
                 }
-                commandPalette.lastShiftPressed = time;
-            }, [](Entity& entity, const Layout& layout, CommandPalette& _palette, Animation& _animation, Text& _text,
-                  Edit& _edit)
+                commandPalette->lastShiftPressed = time;
+            }, [](Entity entity, ComRef<Layout> layout, ComRef<CommandPalette> _palette, ComRef<Animation> _animation,
+                  ComRef<Text> _text,
+                  ComRef<Edit> _edit)
             {
-                if (layout.parent != nullptr)
+                if (layout->parent != nullptr)
                 {
-                    return Entity::find<Focus>().focused == layout.parent;
+                    return Entity::find<Focus>()->focused == layout->parent;
                 }
 
                 return false;
@@ -76,39 +78,40 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
     else if (keyPress.key == SDLK_ESCAPE)
     {
         Entity::multiEach<Layout, CommandPalette, Animation>(
-            [](Layout& layout, CommandPalette& commandPalette, Animation& animation)
+            [](ComRef<Layout> layout, ComRef<CommandPalette> commandPalette, ComRef<Animation> animation)
             {
-                if (!commandPalette.open)
+                if (!commandPalette->open)
                     return;
 
-                commandPalette.open = false;
-                animation.time = 0;
-                Entity::find<Focus>().focused = layout.parent;
+                commandPalette->open = false;
+                animation->time = 0;
+                Entity::find<Focus>()->focused = layout->parent;
             });
     }
     else if (keyPress.key == SDLK_RETURN)
     {
         Entity::multiEach<Layout, CommandPalette, Animation, Text>(
-            [](Layout& layout, CommandPalette& commandPalette, Animation& animation, Text& text)
+            [](ComRef<Layout> layout, ComRef<CommandPalette> commandPalette, ComRef<Animation> animation,
+               ComRef<Text> text)
             {
-                if (!commandPalette.open)
+                if (!commandPalette->open)
                     return;
 
                 EventBus::emit(OnCommandExecute{
-                    .view = layout.parent,
-                    .commands = split(text.text, ' ')
+                    .view = layout->parent,
+                    .commands = split(text->text, ' ')
                 });
 
-                commandPalette.open = false;
-                animation.time = 0;
-                Entity::find<Focus>().focused = layout.parent;
+                commandPalette->open = false;
+                animation->time = 0;
+                Entity::find<Focus>()->focused = layout->parent;
             });
     }
     else
     {
-        Entity::each<CommandPalette>([](CommandPalette& commandPalette)
+        Entity::each<CommandPalette>([](ComRef<CommandPalette> commandPalette)
         {
-            commandPalette.lastShiftPressed = 0;
+            commandPalette->lastShiftPressed = 0;
         });
     }
 }

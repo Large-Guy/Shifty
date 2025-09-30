@@ -6,6 +6,8 @@
 #include <vector>
 #include <SDL3/SDL.h>
 
+#include "ECS/Entity.h"
+
 struct Draw
 {
     struct Command
@@ -41,7 +43,7 @@ struct Draw
 
 struct OnDraw
 {
-    Draw& draw;
+    ComRef<Draw> draw;
 };
 
 #endif //SHIFTY_DRAW_H

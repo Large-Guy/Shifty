@@ -13,21 +13,22 @@
 void CommandPaletteUpdate::process(const OnUpdate& onUpdate)
 {
     Entity::multiEach<CommandPalette, Animation, Transform>(
-        [onUpdate](Entity entity, CommandPalette& palette, Animation& animation, Transform& transform)
+        [onUpdate](Entity entity, ComRef<CommandPalette> palette, ComRef<Animation> animation,
+                   ComRef<Transform> transform)
         {
-            if (palette.open)
+            if (palette->open)
             {
-                transform.h = Tween::Lerp(0.0f, 32.f, Tween::easeInOutCirc(animation.time));
-                Entity::findEntity<InputHandler>().get<InputHandler>().textInput = true;
-                if (Entity::find<Focus>().focused != entity)
+                transform->h = Tween::Lerp(0.0f, 32.f, Tween::easeInOutCirc(animation->time));
+                Entity::findEntity<InputHandler>().get<InputHandler>()->textInput = true;
+                if (Entity::find<Focus>()->focused != entity)
                 {
-                    palette.open = false;
+                    palette->open = false;
                 }
             }
             else
             {
-                transform.h = Tween::Lerp(32.f, 0.0f, Tween::easeInBack(animation.time));
-                Entity::findEntity<InputHandler>().get<InputHandler>().textInput = false;
+                transform->h = Tween::Lerp(32.f, 0.0f, Tween::easeInBack(animation->time));
+                Entity::findEntity<InputHandler>().get<InputHandler>()->textInput = false;
             }
         });
 }

@@ -9,10 +9,10 @@ class ColorRectDraw : System<OnDraw>
 public:
     struct Command : public Draw::Command
     {
-        SDL_FRect& rect;
-        SDL_Color& color;
+        SDL_FRect rect;
+        SDL_Color color;
 
-        Command(int priority, SDL_FRect& rect, SDL_Color& color);
+        Command(int priority, SDL_FRect rect, SDL_Color color);
 
         void execute(SDL_Renderer* renderer) override;
     };
