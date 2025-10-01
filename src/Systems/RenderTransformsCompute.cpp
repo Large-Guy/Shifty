@@ -41,8 +41,23 @@ float RenderTransformsCompute::computePositionProperty(Transform::Mode mode, flo
     return start + property * relativeTo; //Percentage of parent
 }
 
+static std::string getTypeString(Layout::Type type)
+{
+    switch (type)
+    {
+    case Layout::Type::FREE:
+        return "FREE";
+    case Layout::Type::FULL:
+        return "FULL";
+    case Layout::Type::VERTICAL:
+        return "VERTICAL";
+    case Layout::Type::HORIZONTAL:
+        return "HORIZONTAL";
+    }
+}
+
 void RenderTransformsCompute::computeLayout(ComRef<Transform> transform, ComRef<RenderTransform> renderTransform,
-                                            ComRef<Layout> layout)
+                                            ComRef<Layout> layout, int depth)
 {
     switch (layout->type)
     {
@@ -118,7 +133,7 @@ void RenderTransformsCompute::computeLayout(ComRef<Transform> transform, ComRef<
                 render->x = computePositionProperty(trans->xMode, trans->x, renderTransform->x, renderTransform->w);
                 render->w = computeScaleProperty(trans->wMode, trans->w, renderTransform->w);
 
-                render->y = consumed;
+                render->y = renderTransform->y + consumed;
                 switch (trans->hMode)
                 {
                 case Transform::Mode::Pixel:
@@ -180,7 +195,7 @@ void RenderTransformsCompute::computeLayout(ComRef<Transform> transform, ComRef<
                 render->y = computePositionProperty(trans->yMode, trans->x, renderTransform->y, renderTransform->h);
                 render->h = computeScaleProperty(trans->hMode, trans->w, renderTransform->h);
 
-                render->x = consumed;
+                render->x = renderTransform->x + consumed;
                 switch (trans->wMode)
                 {
                 case Transform::Mode::Pixel:
@@ -201,7 +216,7 @@ void RenderTransformsCompute::computeLayout(ComRef<Transform> transform, ComRef<
 
     for (auto& child : layout->children)
     {
-        computeLayout(child.get<Transform>(), child.get<RenderTransform>(), child.get<Layout>());
+        computeLayout(child.get<Transform>(), child.get<RenderTransform>(), child.get<Layout>(), depth + 1);
     }
 }
 

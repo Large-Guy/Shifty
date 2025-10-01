@@ -55,8 +55,8 @@ void ViewDraw::DebugRenderTransform::execute(SDL_Renderer* renderer)
     g /= length;
     b /= length;
 
-    SDL_SetRenderDrawColorFloat(renderer, r, g, b, 1.0f);
-    SDL_RenderRect(renderer, &rect);
+    SDL_SetRenderDrawColorFloat(renderer, r, g, b, 0.10f);
+    SDL_RenderFillRect(renderer, &rect);
 }
 
 
