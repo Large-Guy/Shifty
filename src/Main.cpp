@@ -23,6 +23,7 @@
 #include "Systems/CommandPaletteUpdate.h"
 #include "Systems/DrawCreate.h"
 #include "Systems/DrawRender.h"
+#include "Systems/TabViewSystems.h"
 #include "Systems/OnStart.h"
 #include "Systems/RenderTransformsCompute.h"
 #include "Systems/SelectableMousePress.h"
@@ -81,6 +82,9 @@ int main(int argc, char* argv[])
     CommandPaletteUpdate commandPaletteUpdate{};
     CommandPaletteKeydown commandPaletteKeydown{};
     CommandPaletteExpansionUpdate commandPaletteDraw{};
+
+    TabViewKeydown tabKeydown{};
+    TabViewUpdate tabViewUpdate{};
 
     TextDraw textDraw{};
     EditProcess editProcess{};

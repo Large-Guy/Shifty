@@ -9,6 +9,7 @@ struct Transform
         Auto,
         Pixel,
         Percent,
+        Absolute,
     };
 
     Mode xMode = Mode::Auto;

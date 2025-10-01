@@ -3,7 +3,8 @@
 
 #include <SDL3/SDL_render.h>
 
-struct View {
+struct View
+{
     SDL_Texture* texture;
 };
 

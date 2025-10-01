@@ -75,6 +75,9 @@ set(CORE_SOURCES
         src/Systems/SelectableMousePress.h
         src/Systems/Commands/SplitCommand.cpp
         src/Systems/Commands/SplitCommand.h
+        src/Systems/TabViewSystems.cpp
+        src/Systems/TabViewSystems.h
+        src/Components/TabViewState.h
 )
 
 file(GLOB_RECURSE PLUGIN_SOURCES "src/Plugins/**/*.cpp")

@@ -19,20 +19,39 @@ void AppUpdate::process(const OnUpdate& _update)
 {
     SDL_Event e;
     Entity app = Entity::findEntity<App>();
+    ComRef<InputHandler> handler = app.get<InputHandler>();
     while (SDL_PollEvent(&e))
     {
+        auto window = SDL_GetWindowFromID(e.window.windowID);
+        if (handler->textInput != SDL_TextInputActive(window))
+        {
+            if (handler->textInput)
+                SDL_StartTextInput(window);
+            else
+                SDL_StopTextInput(window);
+        }
+
         switch (e.type)
         {
         case SDL_EVENT_QUIT:
             app.get<App>()->running = false;
+        case SDL_EVENT_KEY_DOWN:
+            handler->keyStates[e.key.key] = true;
+            EventBus::emit(OnKeyPress{handler, e.key.key});
+            break;
+        case SDL_EVENT_KEY_UP:
+            handler->keyStates[e.key.key] = false;
+            EventBus::emit(OnKeyRelease{handler, e.key.key});
+            break;
+        case SDL_EVENT_TEXT_INPUT:
+            EventBus::emit(OnTextInput{handler, e.text.text});
+        case SDL_EVENT_MOUSE_BUTTON_DOWN:
+            EventBus::emit(OnMouseButtonPress{handler, e.button.x, e.button.y, e.button.button});
+        case SDL_EVENT_MOUSE_BUTTON_UP:
+            EventBus::emit(OnMouseButtonRelease{handler, e.button.x, e.button.y, e.button.button});
         default:
             break;
         }
-
-        if (!app.has<InputHandler>())
-            throw std::runtime_error("Input handler does not exist");
-
-        app.get<InputHandler>()->feed(&e);
     }
 
     int screenWidth, screenHeight;

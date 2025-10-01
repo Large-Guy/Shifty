@@ -15,6 +15,8 @@ void ViewAnimationUpdate::process(const OnUpdate&)
     Entity::multiEach<Animation, Layout, View, Transform>(
         [&](ComRef<Animation> animation, ComRef<Layout> layout, ComRef<View> view, ComRef<Transform> transform)
         {
+            if (animation->time > 1.0f)
+                return;
             if (layout->parent != nullptr)
             {
                 if (layout->parent.get<Layout>()->type == Layout::Type::HORIZONTAL)

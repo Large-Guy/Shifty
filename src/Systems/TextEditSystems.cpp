@@ -72,8 +72,8 @@ void EditInput::process(const OnTextInput& input)
 
 void EditKeydown::process(const OnKeyPress& input)
 {
-    bool shift = input.handler.isPressed(SDLK_LSHIFT) || input.handler.isPressed(SDLK_RSHIFT);
-    bool ctrl = input.handler.isPressed(SDLK_LCTRL) || input.handler.isPressed(SDLK_RCTRL);
+    bool shift = input.handler->isPressed(SDLK_LSHIFT) || input.handler->isPressed(SDLK_RSHIFT);
+    bool ctrl = input.handler->isPressed(SDLK_LCTRL) || input.handler->isPressed(SDLK_RCTRL);
     switch (input.key)
     {
     case SDLK_BACKSPACE:
@@ -141,7 +141,7 @@ void EditKeydown::process(const OnKeyPress& input)
                                                   EditShared::clearSelection(edit);
                                               }
 
-                                              if (!edit->cursor > 0)
+                                              if (edit->cursor < 0)
                                                   return;
 
                                               if (ctrl)

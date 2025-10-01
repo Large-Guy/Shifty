@@ -12,7 +12,7 @@
 
 float RenderTransformsCompute::computeScaleProperty(Transform::Mode mode, float property, float relativeTo)
 {
-    if (mode == Transform::Mode::Pixel)
+    if (mode == Transform::Mode::Pixel || mode == Transform::Mode::Absolute)
     {
         return property;
     }
@@ -28,6 +28,11 @@ float RenderTransformsCompute::computeScaleProperty(Transform::Mode mode, float 
 float RenderTransformsCompute::computePositionProperty(Transform::Mode mode, float property, float start,
                                                        float relativeTo)
 {
+    if (mode == Transform::Mode::Absolute)
+    {
+        return property;
+    }
+
     if (mode == Transform::Mode::Pixel)
     {
         return start + property;
@@ -76,11 +81,9 @@ void RenderTransformsCompute::computeLayout(ComRef<Transform> transform, ComRef<
         }
     case Layout::Type::FULL:
         {
-            if (layout->children.size() > 1)
-                throw std::runtime_error("Full layout only permits one child!");
-            if (!layout->children.empty())
+            for (auto child : layout->children)
             {
-                auto render = layout->children.front().get<RenderTransform>();
+                auto render = child.get<RenderTransform>();
                 render->x = renderTransform->x;
                 render->y = renderTransform->y;
                 render->w = renderTransform->w;
@@ -108,6 +111,8 @@ void RenderTransformsCompute::computeLayout(ComRef<Transform> transform, ComRef<
                 case Transform::Mode::Auto:
                     autoCount++;
                     break;
+                default:
+                    break;
                 }
             }
 
@@ -133,7 +138,8 @@ void RenderTransformsCompute::computeLayout(ComRef<Transform> transform, ComRef<
                 render->x = computePositionProperty(trans->xMode, trans->x, renderTransform->x, renderTransform->w);
                 render->w = computeScaleProperty(trans->wMode, trans->w, renderTransform->w);
 
-                render->y = renderTransform->y + consumed;
+                render->y = computePositionProperty(trans->yMode, trans->y, consumed + renderTransform->y,
+                                                    renderTransform->h);
                 switch (trans->hMode)
                 {
                 case Transform::Mode::Pixel:
@@ -144,6 +150,9 @@ void RenderTransformsCompute::computeLayout(ComRef<Transform> transform, ComRef<
                     break;
                 case Transform::Mode::Auto:
                     render->h = autoSize;
+                    break;
+                case Transform::Mode::Absolute:
+                    render->h = trans->h;
                     break;
                 }
                 consumed += render->h;
@@ -170,6 +179,8 @@ void RenderTransformsCompute::computeLayout(ComRef<Transform> transform, ComRef<
                 case Transform::Mode::Auto:
                     autoCount++;
                     break;
+                default:
+                    break;
                 }
             }
 
@@ -192,10 +203,11 @@ void RenderTransformsCompute::computeLayout(ComRef<Transform> transform, ComRef<
                 auto render = child.get<RenderTransform>();
 
                 //Constant y size
-                render->y = computePositionProperty(trans->yMode, trans->x, renderTransform->y, renderTransform->h);
-                render->h = computeScaleProperty(trans->hMode, trans->w, renderTransform->h);
+                render->y = computePositionProperty(trans->yMode, trans->y, renderTransform->y, renderTransform->h);
+                render->h = computeScaleProperty(trans->hMode, trans->h, renderTransform->h);
 
-                render->x = renderTransform->x + consumed;
+                render->x = computePositionProperty(trans->xMode, trans->x, consumed + renderTransform->x,
+                                                    renderTransform->w);
                 switch (trans->wMode)
                 {
                 case Transform::Mode::Pixel:
@@ -206,6 +218,9 @@ void RenderTransformsCompute::computeLayout(ComRef<Transform> transform, ComRef<
                     break;
                 case Transform::Mode::Auto:
                     render->w = autoSize;
+                    break;
+                case Transform::Mode::Absolute:
+                    render->w = trans->w;
                     break;
                 }
                 consumed += render->w;
