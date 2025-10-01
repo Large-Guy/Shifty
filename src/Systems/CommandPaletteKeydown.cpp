@@ -97,6 +97,8 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
                 if (!commandPalette->open)
                     return;
 
+                Entity::find<Focus>()->focused = layout->parent;
+
                 EventBus::emit(OnCommandExecute{
                     .view = layout->parent,
                     .commands = split(text->text, ' ')
@@ -104,7 +106,6 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
 
                 commandPalette->open = false;
                 animation->time = 0;
-                Entity::find<Focus>()->focused = layout->parent;
             });
     }
     else

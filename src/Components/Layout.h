@@ -39,6 +39,22 @@ struct Layout
         layout->children.push_back(add);
     }
 
+    static void insertChild(Entity to, Entity add, size_t index)
+    {
+        if (!to.has<Layout>())
+            throw std::runtime_error("Parent entity is missing layout component");
+        if (!add.has<Layout>())
+            throw std::runtime_error("Child entity is missing layout component!");
+        ComRef<Layout> layout = to.get<Layout>();
+        ComRef<Layout> other = add.get<Layout>();
+        if (other->parent != nullptr)
+        {
+            removeChild(other->parent, add);
+        }
+        other->parent = to;
+        layout->children.insert(layout->children.begin() + index, add);
+    }
+
     static void removeChild(Entity from, Entity remove)
     {
         if (!from.has<Layout>())

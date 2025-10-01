@@ -73,8 +73,8 @@ set(CORE_SOURCES
         src/Components/Selectable.h
         src/Systems/SelectableMousePress.cpp
         src/Systems/SelectableMousePress.h
-        src/Systems/SplitCommand.cpp
-        src/Systems/SplitCommand.h
+        src/Systems/Commands/SplitCommand.cpp
+        src/Systems/Commands/SplitCommand.h
 )
 
 file(GLOB_RECURSE PLUGIN_SOURCES "src/Plugins/**/*.cpp")

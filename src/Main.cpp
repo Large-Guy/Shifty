@@ -26,7 +26,7 @@
 #include "Systems/OnStart.h"
 #include "Systems/RenderTransformsCompute.h"
 #include "Systems/SelectableMousePress.h"
-#include "Systems/SplitCommand.h"
+#include "Systems/Commands/SplitCommand.h"
 #include "Systems/TextDraw.h"
 #include "Systems/TextEditSystems.h"
 #include "Systems/ViewAnimationUpdate.h"
