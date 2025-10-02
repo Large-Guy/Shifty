@@ -8,7 +8,8 @@
 #include "Components/View.h"
 #include "ECS/Entity.h"
 
-ViewTabDraw::Command::Command(ComRef<RenderTransform> renderTransform, ComRef<Tab> tab) : Draw::Command(1),
+ViewTabDraw::Command::Command(ComRef<RenderTransform> renderTransform, ComRef<Tab> tab, int layer) :
+    Draw::Command(30 - layer),
     tab(tab),
     renderTransform(renderTransform)
 {
@@ -34,7 +35,7 @@ void ViewTabDraw::Command::execute(SDL_Renderer* renderer)
     g /= length;
     b /= length;
 
-    SDL_SetRenderDrawColorFloat(renderer, r, g, b, 0.5f);
+    SDL_SetRenderDrawColorFloat(renderer, r, g, b, 1.0f);
     SDL_RenderFillRect(renderer, &rect);
 }
 
@@ -80,9 +81,11 @@ void ViewTabDraw::process(const OnDraw& draw)
         if (view->holdingTabs.empty())
             return;
 
-        std::cout << "Drawing " << view.get() << std::endl;
-        draw.draw->pushCommand(
-            std::make_shared<Command>(view->holdingTabs.front().get<RenderTransform>(),
-                                      view->holdingTabs.front().get<Tab>()));
+        for (int i = 0; i < view->holdingTabs.size(); ++i)
+        {
+            draw.draw->pushCommand(
+                std::make_shared<Command>(view->holdingTabs[i].get<RenderTransform>(),
+                                          view->holdingTabs[i].get<Tab>(), i));
+        }
     });
 }

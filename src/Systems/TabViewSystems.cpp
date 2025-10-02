@@ -133,10 +133,15 @@ void TabViewClick::process(const OnMouseButtonPress& press)
         if (transform->x < press.x && transform->x + transform->w > press.x &&
             transform->y < press.y && transform->y + transform->h > press.y)
         {
-            std::cout << "Clicked " << tab->url << std::endl;
             Entity targetView = Entity::find<TabViewState>()->targetView;
+            //If the view is going to be left empty, we swap tabs instead of moving them
+            if (targetView.get<View>()->holdingTabs.size() == 1)
+            {
+                View::addTab(entity.get<Tab>()->viewer, targetView.get<View>()->holdingTabs.front());
+            }
             View::addTab(targetView, entity);
             Entity::find<TabViewState>()->active = false;
+            Entity::findEntity<TabViewState>().get<Animation>()->time = 0.0f;
         }
     });
 }

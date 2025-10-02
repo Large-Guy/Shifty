@@ -32,5 +32,5 @@ void OnStart::process(const OnReady&)
 
     Entity tabViewState = Entity::create();
     tabViewState.add<TabViewState>();
-    tabViewState.add<Animation>({.speed = 1.5f});
+    tabViewState.add<Animation>({.speed = 2.f});
 }

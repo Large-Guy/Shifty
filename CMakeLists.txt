@@ -73,8 +73,8 @@ set(CORE_SOURCES
         src/Components/Selectable.h
         src/Systems/SelectableMousePress.cpp
         src/Systems/SelectableMousePress.h
-        src/Systems/Commands/SplitCommand.cpp
-        src/Systems/Commands/SplitCommand.h
+        src/Systems/Commands/TabCommand.cpp
+        src/Systems/Commands/TabCommand.h
         src/Systems/TabViewSystems.cpp
         src/Systems/TabViewSystems.h
         src/Components/TabViewState.h

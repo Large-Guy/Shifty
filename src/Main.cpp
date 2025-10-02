@@ -27,7 +27,7 @@
 #include "Systems/OnStart.h"
 #include "Systems/RenderTransformsCompute.h"
 #include "Systems/SelectableMousePress.h"
-#include "Systems/Commands/SplitCommand.h"
+#include "Systems/Commands/TabCommand.h"
 #include "Systems/TextDraw.h"
 #include "Systems/TextEditSystems.h"
 #include "Systems/ViewAnimationUpdate.h"
@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
     OnStart onStart{};
 
     //Commands
-    SplitCommand splitCommand{};
+    TabCommand splitCommand{};
 
     EventBus::emit(OnReady{});
 

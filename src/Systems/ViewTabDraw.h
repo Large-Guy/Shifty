@@ -16,7 +16,7 @@ class ViewTabDraw final : System<OnDraw>
         ComRef<Tab> tab;
         ComRef<RenderTransform> renderTransform;
 
-        Command(ComRef<RenderTransform> renderTransform, ComRef<Tab> tab);
+        Command(ComRef<RenderTransform> renderTransform, ComRef<Tab> tab, int layer);
 
         void execute(SDL_Renderer* renderer) override;
     };

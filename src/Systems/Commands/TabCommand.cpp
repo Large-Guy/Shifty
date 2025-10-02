@@ -1,4 +1,4 @@
-#include "SplitCommand.h"
+#include "TabCommand.h"
 
 #include <iostream>
 
@@ -35,7 +35,7 @@ static void split(Layout::Type type, Entity view)
     }
 }
 
-void SplitCommand::process(const OnCommandExecute& command)
+void TabCommand::process(const OnCommandExecute& command)
 {
     if (command.commands.empty())
         return;
@@ -54,6 +54,11 @@ void SplitCommand::process(const OnCommandExecute& command)
         {
             split(Layout::Type::VERTICAL, command.view);
         }
+    }
+    if (command.commands.front() == ":t")
+    {
+        Entity focusedView = Entity::find<Focus>()->focused;
+        Prefabs::createTab("test", focusedView);
     }
 }
 

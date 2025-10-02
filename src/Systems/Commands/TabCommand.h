@@ -4,7 +4,7 @@
 #include "ECS/System.h"
 
 
-class SplitCommand final : System<OnCommandExecute>
+class TabCommand final : System<OnCommandExecute>
 {
     void process(const OnCommandExecute&) override;
 };
