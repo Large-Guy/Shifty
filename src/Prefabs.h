@@ -9,6 +9,7 @@ class Prefabs
 public:
     static Entity createView();
     static Entity createLayout(Layout::Type type);
+    static Entity createTab(const std::string& url, Entity view);
 };
 
 

@@ -9,6 +9,7 @@
 #include "Components/Layout.h"
 #include "Components/RenderTransform.h"
 #include "Components/Selectable.h"
+#include "Components/Tab.h"
 #include "Components/Text.h"
 #include "Components/Transform.h"
 #include "Components/View.h"
@@ -42,6 +43,9 @@ Entity Prefabs::createView()
     commandPalette.add<Edit>();
 
     Layout::addChild(view, commandPalette);
+
+    createTab("Test", view);
+
     return view;
 }
 
@@ -52,4 +56,13 @@ Entity Prefabs::createLayout(Layout::Type type)
     layout.add<Layout>({.type = type});
     layout.add<RenderTransform>();
     return layout;
+}
+
+Entity Prefabs::createTab(const std::string& url, Entity view)
+{
+    Entity tab = Entity::create();
+    tab.add<RenderTransform>();
+    tab.add<Tab>({.url = url});
+    View::addTab(view, tab);
+    return tab;
 }

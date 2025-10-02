@@ -31,7 +31,7 @@
 #include "Systems/TextDraw.h"
 #include "Systems/TextEditSystems.h"
 #include "Systems/ViewAnimationUpdate.h"
-#include "Systems/ViewDraw.h"
+#include "Systems/ViewTabDraw.h"
 
 struct ClearCommand : public Draw::Command
 {
@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
 
     //ColorRectDraw colorRectDraw{}; //Debugging purposes
 
-    ViewDraw viewDraw{};
+    ViewTabDraw viewDraw{};
     ViewAnimationUpdate viewAnimationUpdate{};
 
     SelectableMousePress selectableMousePress{};
@@ -85,6 +85,7 @@ int main(int argc, char* argv[])
 
     TabViewKeydown tabKeydown{};
     TabViewUpdate tabViewUpdate{};
+    TabViewClick tabViewClick{};
 
     TextDraw textDraw{};
     EditProcess editProcess{};

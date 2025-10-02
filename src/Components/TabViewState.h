@@ -4,6 +4,7 @@
 struct TabViewState
 {
     bool active;
+    Entity targetView;
 };
 
 #endif //SHIFTY_TABVIEWSTATE_H

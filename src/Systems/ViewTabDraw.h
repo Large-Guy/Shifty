@@ -4,18 +4,19 @@
 #include "Components/Draw.h"
 #include "Components/Draw.h"
 #include "Components/RenderTransform.h"
+#include "Components/Tab.h"
 #include "Components/View.h"
 #include "ECS/System.h"
 
 
-class ViewDraw final : System<OnDraw>
+class ViewTabDraw final : System<OnDraw>
 {
     struct Command : public Draw::Command
     {
-        ComRef<View> view;
+        ComRef<Tab> tab;
         ComRef<RenderTransform> renderTransform;
 
-        Command(ComRef<RenderTransform> renderTransform, ComRef<View> view);
+        Command(ComRef<RenderTransform> renderTransform, ComRef<Tab> tab);
 
         void execute(SDL_Renderer* renderer) override;
     };

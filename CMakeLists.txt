@@ -42,8 +42,8 @@ set(CORE_SOURCES
         src/Systems/ColorRectDraw.cpp
         src/Systems/ColorRectDraw.h
         src/Components/Transform.h
-        src/Systems/ViewDraw.cpp
-        src/Systems/ViewDraw.h
+        src/Systems/ViewTabDraw.cpp
+        src/Systems/ViewTabDraw.h
         src/Components/RenderTransform.h
         src/Systems/RenderTransformsCompute.cpp
         src/Systems/RenderTransformsCompute.h
@@ -78,6 +78,7 @@ set(CORE_SOURCES
         src/Systems/TabViewSystems.cpp
         src/Systems/TabViewSystems.h
         src/Components/TabViewState.h
+        src/Components/Tab.h
 )
 
 file(GLOB_RECURSE PLUGIN_SOURCES "src/Plugins/**/*.cpp")

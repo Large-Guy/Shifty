@@ -1,6 +1,7 @@
 #include "TabViewSystems.h"
 
 #include <iostream>
+#include <ranges>
 
 #include "GlobalConfig.h"
 #include "Tween.h"
@@ -9,29 +10,31 @@
 #include "Components/Layout.h"
 #include "Components/RenderTransform.h"
 #include "Components/Root.h"
+#include "Components/Tab.h"
 #include "Components/TabViewState.h"
 #include "Components/Transform.h"
 #include "Components/View.h"
 
 void TabViewKeydown::process(const OnKeyPress& event)
 {
+    if (Entity::find<Focus>()->focused == nullptr || !Entity::find<Focus>()->focused.has<Layout>())
+        return;
+
     bool ctrl = event.handler->isPressed(SDLK_LCTRL) || event.handler->isPressed(SDLK_RCTRL);
     bool shift = event.handler->isPressed(SDLK_LSHIFT) || event.handler->isPressed(SDLK_RSHIFT);
     if (event.key == SDLK_TAB && ctrl)
     {
         Entity::find<TabViewState>()->active = true;
+        Entity::find<TabViewState>()->targetView = Entity::find<Focus>()->focused;
         Entity::findEntity<TabViewState>().get<Animation>()->time = 0.f;
-        Entity::multiEach<View, RenderTransform>(
-            [&](ComRef<View> view, ComRef<RenderTransform> renderTransform)
+        Entity::multiEach<Tab, RenderTransform>(
+            [&](ComRef<Tab> tab, ComRef<RenderTransform> renderTransform)
             {
-                renderTransform->overrideX = true;
-                renderTransform->overrideY = true;
-                renderTransform->overrideW = true;
-                renderTransform->overrideH = true;
-                renderTransform->overriddenX = renderTransform->x;
-                renderTransform->overriddenY = renderTransform->y;
-                renderTransform->overriddenW = renderTransform->w;
-                renderTransform->overriddenH = renderTransform->h;
+                auto viewRenderTransform = tab->viewer.get<RenderTransform>();
+                renderTransform->x = viewRenderTransform->x;
+                renderTransform->y = viewRenderTransform->y;
+                renderTransform->w = viewRenderTransform->w;
+                renderTransform->h = viewRenderTransform->h;
             });
     }
     if (Entity::find<TabViewState>()->active && event.key == SDLK_ESCAPE)
@@ -43,12 +46,18 @@ void TabViewKeydown::process(const OnKeyPress& event)
 
 void TabViewUpdate::process(const OnUpdate& update)
 {
+    ComRef<TabViewState> viewState = Entity::find<TabViewState>();
     ComRef<Animation> viewAnimation = Entity::findEntity<TabViewState>().get<Animation>();
 
     //Calculate size of screen
-    Entity browserDisplay = Entity::findEntity<Root>();
-    float width = browserDisplay.get<RenderTransform>()->w;
-    float height = browserDisplay.get<RenderTransform>()->h;
+    ComRef<RenderTransform> root = Entity::findEntity<Root>().get<RenderTransform>();
+    float width = root->w;
+    float height = root->h;
+    if (viewState->targetView != nullptr)
+    {
+        width = viewState->targetView.get<RenderTransform>()->w;
+        height = viewState->targetView.get<RenderTransform>()->h;
+    }
 
     //Calculate tab size, 10% padding on either end
     float tWidth = 0.8f / GlobalConfig::tabsPerPageHorizontal * width;
@@ -64,8 +73,10 @@ void TabViewUpdate::process(const OnUpdate& update)
     });
 
     int i = 0;
-    Entity::multiEach<View, RenderTransform>([&](ComRef<View> view, ComRef<RenderTransform> transform)
+    Entity::multiEach<Tab, RenderTransform>([&](ComRef<Tab> tab, ComRef<RenderTransform> transform)
     {
+        auto viewRenderTransform = tab->viewer.get<RenderTransform>();
+
         int x = (i % GlobalConfig::tabsPerPageHorizontal);
         int y = i / GlobalConfig::tabsPerPageHorizontal;
         if (y > GlobalConfig::tabsPerPageVertical)
@@ -74,8 +85,13 @@ void TabViewUpdate::process(const OnUpdate& update)
         }
 
 
-        float tx = static_cast<float>(x) * (tWidth) + pWidth;
-        float ty = static_cast<float>(y) * (tHeight) + pHeight;
+        float tx = static_cast<float>(x) * (tWidth) + pWidth + 8;
+        float ty = static_cast<float>(y) * (tHeight) + pHeight + 8;
+        if (Entity::find<TabViewState>()->targetView != nullptr)
+        {
+            tx += viewState->targetView.get<RenderTransform>()->x;
+            ty += viewState->targetView.get<RenderTransform>()->y;
+        }
 
         if (Entity::find<TabViewState>()->active)
         {
@@ -83,10 +99,10 @@ void TabViewUpdate::process(const OnUpdate& update)
                                         Tween::easeOutBack(viewAnimation->time), viewAnimation->time);
             float back = Tween::easeOutBack(viewAnimation->time);
 
-            transform->overriddenX = Tween::Lerp(transform->x, tx, back);
-            transform->overriddenY = Tween::Lerp(transform->y, ty, back);
-            transform->overriddenW = Tween::Lerp(transform->w, tWidth, elastic);
-            transform->overriddenH = Tween::Lerp(transform->h, tHeight, elastic);
+            transform->x = Tween::Lerp(viewRenderTransform->x, tx, back);
+            transform->y = Tween::Lerp(viewRenderTransform->y, ty, back);
+            transform->w = Tween::Lerp(viewRenderTransform->w, tWidth - 16, elastic);
+            transform->h = Tween::Lerp(viewRenderTransform->h, tHeight - 16, elastic);
         }
         else
         {
@@ -95,11 +111,32 @@ void TabViewUpdate::process(const OnUpdate& update)
                                      Tween::easeOutBack(viewAnimation->time),
                                      viewAnimation->time);
 
-            transform->overriddenX = Tween::Lerp(tx, transform->x, back);
-            transform->overriddenY = Tween::Lerp(ty, transform->y, back);
-            transform->overriddenW = Tween::Lerp(tWidth, transform->w, elastic);
-            transform->overriddenH = Tween::Lerp(tHeight, transform->h, elastic);
+            transform->x = Tween::Lerp(tx, viewRenderTransform->x, back);
+            transform->y = Tween::Lerp(ty, viewRenderTransform->y, back);
+            transform->w = Tween::Lerp(tWidth - 16, viewRenderTransform->w, elastic);
+            transform->h = Tween::Lerp(tHeight - 16, viewRenderTransform->h, elastic);
         }
         i++;
+    });
+}
+
+void TabViewClick::process(const OnMouseButtonPress& press)
+{
+    if (!Entity::find<TabViewState>()->active)
+        return;
+
+    if (press.button != SDL_BUTTON_LEFT)
+        return;
+
+    Entity::multiEach<Tab, RenderTransform>([&](Entity entity, ComRef<Tab> tab, ComRef<RenderTransform> transform)
+    {
+        if (transform->x < press.x && transform->x + transform->w > press.x &&
+            transform->y < press.y && transform->y + transform->h > press.y)
+        {
+            std::cout << "Clicked " << tab->url << std::endl;
+            Entity targetView = Entity::find<TabViewState>()->targetView;
+            View::addTab(targetView, entity);
+            Entity::find<TabViewState>()->active = false;
+        }
     });
 }

@@ -15,4 +15,9 @@ class TabViewUpdate : System<OnUpdate>
     void process(const OnUpdate&) override;
 };
 
+class TabViewClick : System<OnMouseButtonPress>
+{
+    void process(const OnMouseButtonPress&) override;
+};
+
 #endif //SHIFTY_NAVIGATIONUPDATE_H
