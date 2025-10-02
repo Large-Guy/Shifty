@@ -5,11 +5,11 @@
 #include "Components/Draw.h"
 #include "Components/RenderTransform.h"
 #include "Components/Tab.h"
-#include "Components/View.h"
+#include "Components/Panel.h"
 #include "ECS/System.h"
 
 
-class ViewTabDraw final : System<OnDraw>
+class TabDraw final : System<OnDraw>
 {
     struct Command : public Draw::Command
     {

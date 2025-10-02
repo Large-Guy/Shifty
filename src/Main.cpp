@@ -13,25 +13,28 @@
 #include "Events.h"
 #include "Components/Draw.h"
 #include "Components/InputHandler.h"
-#include "Components/View.h"
+#include "Components/Panel.h"
 #include "Systems/AnimationUpdate.h"
 #include "Systems/AppCreate.h"
 #include "Systems/AppUpdate.h"
-#include "Systems/ColorRectDraw.h"
+#include "Systems/Rendering/ColorRectDraw.h"
 #include "Systems/CommandPaletteExpansionUpdate.h"
-#include "Systems/CommandPaletteKeydown.h"
 #include "Systems/CommandPaletteUpdate.h"
 #include "Systems/DrawCreate.h"
-#include "Systems/DrawRender.h"
-#include "Systems/TabViewSystems.h"
+#include "Systems/Rendering/DrawRender.h"
+#include "Systems/TabViewUpdate.h"
 #include "Systems/OnStart.h"
 #include "Systems/RenderTransformsCompute.h"
-#include "Systems/SelectableMousePress.h"
 #include "Systems/Commands/TabCommand.h"
-#include "Systems/TextDraw.h"
+#include "Systems/Rendering/TextDraw.h"
 #include "Systems/TextEditSystems.h"
 #include "Systems/ViewAnimationUpdate.h"
-#include "Systems/ViewTabDraw.h"
+#include "Systems/Groups/EditSystemGroup.h"
+#include "Systems/Groups/TabViewSystemGroup.h"
+#include "Systems/Input/CommandPaletteKeydown.h"
+#include "Systems/Input/SelectableMousePress.h"
+#include "Systems/Rendering/CommandPaletteDraw.h"
+#include "Systems/Rendering/TabDraw.h"
 
 struct ClearCommand : public Draw::Command
 {
@@ -72,7 +75,7 @@ int main(int argc, char* argv[])
 
     //ColorRectDraw colorRectDraw{}; //Debugging purposes
 
-    ViewTabDraw viewDraw{};
+    TabDraw viewDraw{};
     ViewAnimationUpdate viewAnimationUpdate{};
 
     SelectableMousePress selectableMousePress{};
@@ -81,17 +84,14 @@ int main(int argc, char* argv[])
 
     CommandPaletteUpdate commandPaletteUpdate{};
     CommandPaletteKeydown commandPaletteKeydown{};
-    CommandPaletteExpansionUpdate commandPaletteDraw{};
+    CommandPaletteExpansionUpdate commandPaletteExpansion{};
+    CommandPaletteDraw commandPaletteDraw{};
 
-    TabViewKeydown tabKeydown{};
-    TabViewUpdate tabViewUpdate{};
-    TabViewClick tabViewClick{};
+    TabViewSystemGroup tabbing{};
 
     TextDraw textDraw{};
-    EditProcess editProcess{};
-    EditInput editInput{};
-    EditKeydown editKeydown{};
-    EditDraw editDraw{};
+
+    EditSystemGroup editSystemGroup{};
 
     OnStart onStart{};
 

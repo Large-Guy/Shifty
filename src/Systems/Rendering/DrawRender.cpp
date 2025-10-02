@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-#include "../Components/Draw.h"
-#include "../ECS/Entity.h"
+#include "../../Components/Draw.h"
+#include "../../ECS/Entity.h"
 
 void DrawRender::process(const OnRender&)
 {
@@ -13,7 +13,7 @@ void DrawRender::process(const OnRender&)
 
         //Flush
 
-        SDL_SetRenderDrawColor(draw->renderer, 0, 0, 0, 255);
+        SDL_SetRenderDrawColor(draw->renderer, 31, 31, 31, 255);
         SDL_RenderClear(draw->renderer);
         std::string debug = "";
         for (const auto& command : draw->commands)

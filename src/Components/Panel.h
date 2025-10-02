@@ -5,13 +5,13 @@
 
 #include "Tab.h"
 
-struct View
+struct Panel
 {
     std::vector<Entity> holdingTabs;
 
     static void removeTab(Entity viewEntity, Entity tabEntity)
     {
-        ComRef<View> view = viewEntity.get<View>();
+        ComRef<Panel> view = viewEntity.get<Panel>();
         ComRef<Tab> tab = tabEntity.get<Tab>();
 
         auto iter = std::find(view->holdingTabs.begin(), view->holdingTabs.end(), tabEntity);
@@ -21,7 +21,7 @@ struct View
 
     static void addTab(Entity viewEntity, Entity tabEntity)
     {
-        ComRef<View> view = viewEntity.get<View>();
+        ComRef<Panel> view = viewEntity.get<Panel>();
         ComRef<Tab> tab = tabEntity.get<Tab>();
 
         if (tab->viewer != nullptr)

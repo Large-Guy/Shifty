@@ -3,8 +3,12 @@
 #include <iostream>
 
 #include "Prefabs.h"
+#include "Components/Animation.h"
 #include "Components/Focus.h"
 #include "Components/RenderTransform.h"
+#include "Components/TabViewState.h"
+#include "Systems/TabViewUpdate.h"
+#include "Systems/Shared/TabViewShared.h"
 
 static void split(Layout::Type type, Entity view)
 {
@@ -55,10 +59,14 @@ void TabCommand::process(const OnCommandExecute& command)
             split(Layout::Type::VERTICAL, command.view);
         }
     }
-    if (command.commands.front() == ":t")
+    if (command.commands.front() == ":tab" || command.commands.front() == ":t")
     {
         Entity focusedView = Entity::find<Focus>()->focused;
         Prefabs::createTab("test", focusedView);
+    }
+    if (command.commands.front() == ":view" || command.commands.front() == ":v")
+    {
+        TabViewShared::show();
     }
 }
 

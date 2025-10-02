@@ -1,5 +1,5 @@
-#ifndef SHIFTY_COMMANDPALETTEDRAW_H
-#define SHIFTY_COMMANDPALETTEDRAW_H
+#ifndef SHIFTY_COMMANDPALETTEEXPANSIONUPDATE_H
+#define SHIFTY_COMMANDPALETTEEXPANSIONUPDATE_H
 #include "Events.h"
 #include "Components/Draw.h"
 #include "ECS/System.h"
@@ -11,4 +11,4 @@ class CommandPaletteExpansionUpdate : System<OnUpdate>
 };
 
 
-#endif //SHIFTY_COMMANDPALETTEDRAW_H
+#endif //SHIFTY_COMMANDPALETTEEXPANSIONUPDATE_H

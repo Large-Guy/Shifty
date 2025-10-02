@@ -4,7 +4,6 @@
 
 #include <iostream>
 
-#include "TextEditSystems.h"
 #include "Components/Animation.h"
 #include "Components/CommandPalette.h"
 #include "Components/Edit.h"
@@ -12,8 +11,10 @@
 #include "Components/Root.h"
 #include "Components/Text.h"
 #include "Components/Transform.h"
-#include "Components/View.h"
+#include "Components/Panel.h"
 #include "ECS/Entity.h"
+#include "Systems/TextEditSystems.h"
+#include "Systems/Shared/EditShared.h"
 
 std::vector<std::string> split(const std::string& txt, char ch)
 {

@@ -12,13 +12,13 @@
 #include "Components/Tab.h"
 #include "Components/Text.h"
 #include "Components/Transform.h"
-#include "Components/View.h"
+#include "Components/Panel.h"
 
 Entity Prefabs::createView()
 {
     Entity view = Entity::create();
     view.add<Transform>();
-    view.add<View>();
+    view.add<Panel>();
     view.add<Layout>({.type = Layout::Type::FREE});
     view.add<RenderTransform>();
     view.add<Animation>({.time = 0.f});
@@ -63,6 +63,6 @@ Entity Prefabs::createTab(const std::string& url, Entity view)
     Entity tab = Entity::create();
     tab.add<RenderTransform>();
     tab.add<Tab>({.url = url});
-    View::addTab(view, tab);
+    Panel::addTab(view, tab);
     return tab;
 }

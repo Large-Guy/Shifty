@@ -7,13 +7,13 @@
 #include "Components/Animation.h"
 #include "Components/Layout.h"
 #include "Components/Transform.h"
-#include "Components/View.h"
+#include "Components/Panel.h"
 #include "ECS/Entity.h"
 
 void ViewAnimationUpdate::process(const OnUpdate&)
 {
-    Entity::multiEach<Animation, Layout, View, Transform>(
-        [&](ComRef<Animation> animation, ComRef<Layout> layout, ComRef<View> view, ComRef<Transform> transform)
+    Entity::multiEach<Animation, Layout, Panel, Transform>(
+        [&](ComRef<Animation> animation, ComRef<Layout> layout, ComRef<Panel> view, ComRef<Transform> transform)
         {
             if (animation->time > 1.0f)
                 return;

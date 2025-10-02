@@ -1,7 +1,7 @@
 #ifndef SHIFTY_COLORRECTDRAW_H
 #define SHIFTY_COLORRECTDRAW_H
-#include "../Components/Draw.h"
-#include "../ECS/System.h"
+#include "../../Components/Draw.h"
+#include "../../ECS/System.h"
 
 
 class ColorRectDraw : System<OnDraw>

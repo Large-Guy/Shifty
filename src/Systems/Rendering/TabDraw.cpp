@@ -1,21 +1,21 @@
-#include "ViewTabDraw.h"
+#include "TabDraw.h"
 
 #include <iostream>
 #include <random>
 
 #include "Components/RenderTransform.h"
 #include "Components/Transform.h"
-#include "Components/View.h"
+#include "Components/Panel.h"
 #include "ECS/Entity.h"
 
-ViewTabDraw::Command::Command(ComRef<RenderTransform> renderTransform, ComRef<Tab> tab, int layer) :
+TabDraw::Command::Command(ComRef<RenderTransform> renderTransform, ComRef<Tab> tab, int layer) :
     Draw::Command(30 - layer),
     tab(tab),
     renderTransform(renderTransform)
 {
 }
 
-void ViewTabDraw::Command::execute(SDL_Renderer* renderer)
+void TabDraw::Command::execute(SDL_Renderer* renderer)
 {
     float x = renderTransform->x;
     float y = renderTransform->y;
@@ -39,12 +39,12 @@ void ViewTabDraw::Command::execute(SDL_Renderer* renderer)
     SDL_RenderFillRect(renderer, &rect);
 }
 
-ViewTabDraw::DebugRenderTransform::DebugRenderTransform(ComRef<RenderTransform> renderTransform) : Draw::Command(1),
+TabDraw::DebugRenderTransform::DebugRenderTransform(ComRef<RenderTransform> renderTransform) : Draw::Command(50),
     renderTransform(renderTransform)
 {
 }
 
-void ViewTabDraw::DebugRenderTransform::execute(SDL_Renderer* renderer)
+void TabDraw::DebugRenderTransform::execute(SDL_Renderer* renderer)
 {
     float x = renderTransform->x;
     float y = renderTransform->y;
@@ -69,14 +69,14 @@ void ViewTabDraw::DebugRenderTransform::execute(SDL_Renderer* renderer)
 }
 
 
-void ViewTabDraw::process(const OnDraw& draw)
+void TabDraw::process(const OnDraw& draw)
 {
-    Entity::multiEach<View, RenderTransform>([draw](ComRef<View> view, ComRef<RenderTransform> transform)
+    Entity::multiEach<Panel, RenderTransform>([draw](ComRef<Panel> view, ComRef<RenderTransform> transform)
     {
         draw.draw->pushCommand(std::make_shared<DebugRenderTransform>(transform));
     });
 
-    Entity::multiEach<RenderTransform, View>([draw](ComRef<RenderTransform> transform, ComRef<View> view)
+    Entity::multiEach<RenderTransform, Panel>([draw](ComRef<RenderTransform> transform, ComRef<Panel> view)
     {
         if (view->holdingTabs.empty())
             return;

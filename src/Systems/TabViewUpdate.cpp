@@ -1,4 +1,4 @@
-#include "TabViewSystems.h"
+#include "TabViewUpdate.h"
 
 #include <iostream>
 #include <ranges>
@@ -13,36 +13,9 @@
 #include "Components/Tab.h"
 #include "Components/TabViewState.h"
 #include "Components/Transform.h"
-#include "Components/View.h"
+#include "Components/Panel.h"
+#include "Shared/TabViewShared.h"
 
-void TabViewKeydown::process(const OnKeyPress& event)
-{
-    if (Entity::find<Focus>()->focused == nullptr || !Entity::find<Focus>()->focused.has<Layout>())
-        return;
-
-    bool ctrl = event.handler->isPressed(SDLK_LCTRL) || event.handler->isPressed(SDLK_RCTRL);
-    bool shift = event.handler->isPressed(SDLK_LSHIFT) || event.handler->isPressed(SDLK_RSHIFT);
-    if (event.key == SDLK_TAB && ctrl)
-    {
-        Entity::find<TabViewState>()->active = true;
-        Entity::find<TabViewState>()->targetView = Entity::find<Focus>()->focused;
-        Entity::findEntity<TabViewState>().get<Animation>()->time = 0.f;
-        Entity::multiEach<Tab, RenderTransform>(
-            [&](ComRef<Tab> tab, ComRef<RenderTransform> renderTransform)
-            {
-                auto viewRenderTransform = tab->viewer.get<RenderTransform>();
-                renderTransform->x = viewRenderTransform->x;
-                renderTransform->y = viewRenderTransform->y;
-                renderTransform->w = viewRenderTransform->w;
-                renderTransform->h = viewRenderTransform->h;
-            });
-    }
-    if (Entity::find<TabViewState>()->active && event.key == SDLK_ESCAPE)
-    {
-        Entity::find<TabViewState>()->active = false;
-        Entity::findEntity<TabViewState>().get<Animation>()->time = 0.f;
-    }
-}
 
 void TabViewUpdate::process(const OnUpdate& update)
 {
@@ -67,7 +40,7 @@ void TabViewUpdate::process(const OnUpdate& update)
     float pHeight = 0.1f * height;
 
     int viewCount = 0;
-    Entity::each<View>([&](ComRef<View> view)
+    Entity::each<Panel>([&](ComRef<Panel> view)
     {
         viewCount++;
     });
@@ -120,28 +93,3 @@ void TabViewUpdate::process(const OnUpdate& update)
     });
 }
 
-void TabViewClick::process(const OnMouseButtonPress& press)
-{
-    if (!Entity::find<TabViewState>()->active)
-        return;
-
-    if (press.button != SDL_BUTTON_LEFT)
-        return;
-
-    Entity::multiEach<Tab, RenderTransform>([&](Entity entity, ComRef<Tab> tab, ComRef<RenderTransform> transform)
-    {
-        if (transform->x < press.x && transform->x + transform->w > press.x &&
-            transform->y < press.y && transform->y + transform->h > press.y)
-        {
-            Entity targetView = Entity::find<TabViewState>()->targetView;
-            //If the view is going to be left empty, we swap tabs instead of moving them
-            if (targetView.get<View>()->holdingTabs.size() == 1)
-            {
-                View::addTab(entity.get<Tab>()->viewer, targetView.get<View>()->holdingTabs.front());
-            }
-            View::addTab(targetView, entity);
-            Entity::find<TabViewState>()->active = false;
-            Entity::findEntity<TabViewState>().get<Animation>()->time = 0.0f;
-        }
-    });
-}

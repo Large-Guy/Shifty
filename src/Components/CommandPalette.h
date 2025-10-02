@@ -4,7 +4,7 @@
 
 #include <SDL3/SDL.h>
 #include "Layout.h"
-#include "View.h"
+#include "Panel.h"
 
 struct OnCommandExecute
 {

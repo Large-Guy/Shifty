@@ -10,7 +10,7 @@ set(CORE_SOURCES
         src/Components/Layout.h
         src/TextRenderer.cpp
         src/TextRenderer.h
-        src/Components/View.h
+        src/Components/Panel.h
         src/Components/InputHandler.h
         src/Components/CommandPalette.h
         src/Tween.cpp
@@ -35,15 +35,15 @@ set(CORE_SOURCES
         src/Systems/AppCreate.h
         src/Systems/DrawCreate.cpp
         src/Systems/DrawCreate.h
-        src/Systems/DrawRender.cpp
-        src/Systems/DrawRender.h
+        src/Systems/Rendering/DrawRender.cpp
+        src/Systems/Rendering/DrawRender.h
         src/Systems/OnStart.cpp
         src/Systems/OnStart.h
-        src/Systems/ColorRectDraw.cpp
-        src/Systems/ColorRectDraw.h
+        src/Systems/Rendering/ColorRectDraw.cpp
+        src/Systems/Rendering/ColorRectDraw.h
         src/Components/Transform.h
-        src/Systems/ViewTabDraw.cpp
-        src/Systems/ViewTabDraw.h
+        src/Systems/Rendering/TabDraw.cpp
+        src/Systems/Rendering/TabDraw.h
         src/Components/RenderTransform.h
         src/Systems/RenderTransformsCompute.cpp
         src/Systems/RenderTransformsCompute.h
@@ -52,16 +52,14 @@ set(CORE_SOURCES
         src/Components/Animation.h
         src/Systems/AnimationUpdate.cpp
         src/Systems/AnimationUpdate.h
-        src/Systems/CommandPaletteKeydown.cpp
-        src/Systems/CommandPaletteKeydown.h
         src/GlobalConfig.cpp
         src/GlobalConfig.h
         src/Components/Edit.h
         src/Systems/TextEditSystems.cpp
         src/Systems/TextEditSystems.h
         src/Components/Text.h
-        src/Systems/TextDraw.cpp
-        src/Systems/TextDraw.h
+        src/Systems/Rendering/TextDraw.cpp
+        src/Systems/Rendering/TextDraw.h
         src/Components/Root.h
         src/Systems/CommandPaletteExpansionUpdate.cpp
         src/Systems/CommandPaletteExpansionUpdate.h
@@ -71,14 +69,28 @@ set(CORE_SOURCES
         src/Prefabs.cpp
         src/Prefabs.h
         src/Components/Selectable.h
-        src/Systems/SelectableMousePress.cpp
-        src/Systems/SelectableMousePress.h
         src/Systems/Commands/TabCommand.cpp
         src/Systems/Commands/TabCommand.h
-        src/Systems/TabViewSystems.cpp
-        src/Systems/TabViewSystems.h
+        src/Systems/TabViewUpdate.cpp
+        src/Systems/TabViewUpdate.h
         src/Components/TabViewState.h
         src/Components/Tab.h
+        src/Systems/Shared/TabViewShared.cpp
+        src/Systems/Shared/TabViewShared.h
+        src/Systems/Input/CommandPaletteKeydown.cpp
+        src/Systems/Input/CommandPaletteKeydown.h
+        src/Systems/Input/SelectableMousePress.cpp
+        src/Systems/Input/SelectableMousePress.h
+        src/Systems/Input/TabViewKeydown.cpp
+        src/Systems/Input/TabViewKeydown.h
+        src/Systems/Groups/TabViewSystemGroup.h
+        src/Systems/Input/TabViewClick.h
+        src/Systems/Input/TabViewClick.cpp
+        src/Systems/Groups/EditSystemGroup.h
+        src/Systems/Shared/EditShared.cpp
+        src/Systems/Shared/EditShared.h
+        src/Systems/Rendering/CommandPaletteDraw.cpp
+        src/Systems/Rendering/CommandPaletteDraw.h
 )
 
 file(GLOB_RECURSE PLUGIN_SOURCES "src/Plugins/**/*.cpp")

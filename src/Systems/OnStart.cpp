@@ -15,7 +15,7 @@
 #include "Components/TabViewState.h"
 #include "Components/Text.h"
 #include "Components/Transform.h"
-#include "Components/View.h"
+#include "Components/Panel.h"
 
 void OnStart::process(const OnReady&)
 {

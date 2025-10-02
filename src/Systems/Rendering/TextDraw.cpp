@@ -7,7 +7,7 @@
 #include "Components/Text.h"
 #include "ECS/Entity.h"
 
-TextDraw::Command::Command(SDL_FRect render, ComRef<Text> text) : Draw::Command(100), render(render), text(text)
+TextDraw::Command::Command(SDL_FRect render, ComRef<Text> text) : Draw::Command(250), render(render), text(text)
 {
 }
 
@@ -18,6 +18,8 @@ void TextDraw::Command::execute(SDL_Renderer* renderer)
 
     SDL_FRect dest = {render.x, render.y, render.w / scale, render.h / scale};
     SDL_FRect src = {0, 0, render.w, render.h};
+
+    SDL_SetTextureColorMod(text->texture, 0, 0, 0);
 
     SDL_RenderTexture(renderer, text->texture, &src, &dest);
 }

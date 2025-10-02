@@ -4,7 +4,7 @@
 
 #include "ColorRectDraw.h"
 
-#include "../ECS/Entity.h"
+#include "../../ECS/Entity.h"
 
 ColorRectDraw::Command::Command(int priority, SDL_FRect rect, SDL_Color color) : rect(rect), color(color),
     Draw::Command(priority)
