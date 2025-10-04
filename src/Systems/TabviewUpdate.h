@@ -5,7 +5,7 @@
 #include "ECS/System.h"
 
 
-class TabViewUpdate : System<OnUpdate>
+class TabviewUpdate : System<OnUpdate>
 {
     void process(const OnUpdate&) override;
 };

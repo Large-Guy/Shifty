@@ -63,34 +63,38 @@ set(CORE_SOURCES
         src/Components/Root.h
         src/Systems/CommandPaletteExpansionUpdate.cpp
         src/Systems/CommandPaletteExpansionUpdate.h
-        src/Systems/ViewAnimationUpdate.cpp
-        src/Systems/ViewAnimationUpdate.h
+        src/Systems/PanelAnimationUpdate.cpp
+        src/Systems/PanelAnimationUpdate.h
         src/Components/Focus.h
         src/Prefabs.cpp
         src/Prefabs.h
         src/Components/Selectable.h
         src/Systems/Commands/TabCommand.cpp
         src/Systems/Commands/TabCommand.h
-        src/Systems/TabViewUpdate.cpp
-        src/Systems/TabViewUpdate.h
-        src/Components/TabViewState.h
+        src/Systems/TabviewUpdate.cpp
+        src/Systems/TabviewUpdate.h
+        src/Components/TabviewState.h
         src/Components/Tab.h
-        src/Systems/Shared/TabViewShared.cpp
-        src/Systems/Shared/TabViewShared.h
+        src/Systems/Shared/TabviewShared.cpp
+        src/Systems/Shared/TabviewShared.h
         src/Systems/Input/CommandPaletteKeydown.cpp
         src/Systems/Input/CommandPaletteKeydown.h
         src/Systems/Input/SelectableMousePress.cpp
         src/Systems/Input/SelectableMousePress.h
-        src/Systems/Input/TabViewKeydown.cpp
-        src/Systems/Input/TabViewKeydown.h
+        src/Systems/Input/TabviewKeydown.cpp
+        src/Systems/Input/TabviewKeydown.h
         src/Systems/Groups/TabViewSystemGroup.h
-        src/Systems/Input/TabViewClick.h
-        src/Systems/Input/TabViewClick.cpp
+        src/Systems/Input/TabviewClick.h
+        src/Systems/Input/TabviewClick.cpp
         src/Systems/Groups/EditSystemGroup.h
         src/Systems/Shared/EditShared.cpp
         src/Systems/Shared/EditShared.h
         src/Systems/Rendering/CommandPaletteDraw.cpp
         src/Systems/Rendering/CommandPaletteDraw.h
+        src/Systems/Rendering/PanelDraw.cpp
+        src/Systems/Rendering/PanelDraw.h
+        src/Systems/Rendering/TabviewDraw.cpp
+        src/Systems/Rendering/TabviewDraw.h
 )
 
 file(GLOB_RECURSE PLUGIN_SOURCES "src/Plugins/**/*.cpp")

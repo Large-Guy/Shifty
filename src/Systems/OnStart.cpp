@@ -12,7 +12,7 @@
 #include "Components/Layout.h"
 #include "Components/RenderTransform.h"
 #include "Components/Root.h"
-#include "Components/TabViewState.h"
+#include "Components/TabviewState.h"
 #include "Components/Text.h"
 #include "Components/Transform.h"
 #include "Components/Panel.h"
@@ -31,6 +31,7 @@ void OnStart::process(const OnReady&)
     Layout::addChild(layoutRoot, Prefabs::createView());
 
     Entity tabViewState = Entity::create();
-    tabViewState.add<TabViewState>();
+    tabViewState.add<TabviewState>();
     tabViewState.add<Animation>({.speed = 2.f});
+    tabViewState.add<RenderTransform>();
 }

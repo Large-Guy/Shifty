@@ -3,7 +3,7 @@
 #include "Components/InputHandler.h"
 #include "ECS/System.h"
 
-class TabViewKeydown : System<OnKeyPress>
+class TabviewKeydown : System<OnKeyPress>
 {
     void process(const OnKeyPress&) override;
 };

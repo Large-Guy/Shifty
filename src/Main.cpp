@@ -22,19 +22,21 @@
 #include "Systems/CommandPaletteUpdate.h"
 #include "Systems/DrawCreate.h"
 #include "Systems/Rendering/DrawRender.h"
-#include "Systems/TabViewUpdate.h"
+#include "Systems/TabviewUpdate.h"
 #include "Systems/OnStart.h"
 #include "Systems/RenderTransformsCompute.h"
 #include "Systems/Commands/TabCommand.h"
 #include "Systems/Rendering/TextDraw.h"
 #include "Systems/TextEditSystems.h"
-#include "Systems/ViewAnimationUpdate.h"
+#include "Systems/PanelAnimationUpdate.h"
 #include "Systems/Groups/EditSystemGroup.h"
 #include "Systems/Groups/TabViewSystemGroup.h"
 #include "Systems/Input/CommandPaletteKeydown.h"
 #include "Systems/Input/SelectableMousePress.h"
 #include "Systems/Rendering/CommandPaletteDraw.h"
+#include "Systems/Rendering/PanelDraw.h"
 #include "Systems/Rendering/TabDraw.h"
+#include "Systems/Rendering/TabviewDraw.h"
 
 struct ClearCommand : public Draw::Command
 {
@@ -76,7 +78,8 @@ int main(int argc, char* argv[])
     //ColorRectDraw colorRectDraw{}; //Debugging purposes
 
     TabDraw viewDraw{};
-    ViewAnimationUpdate viewAnimationUpdate{};
+    PanelDraw panelDraw{};
+    PanelAnimationUpdate viewAnimationUpdate{};
 
     SelectableMousePress selectableMousePress{};
 
@@ -88,6 +91,7 @@ int main(int argc, char* argv[])
     CommandPaletteDraw commandPaletteDraw{};
 
     TabViewSystemGroup tabbing{};
+    TabviewDraw tabviewDraw{};
 
     TextDraw textDraw{};
 

@@ -3,7 +3,7 @@
 #include "Components/InputHandler.h"
 #include "ECS/System.h"
 
-class TabViewClick : System<OnMouseButtonPress>
+class TabviewClick : System<OnMouseButtonPress>
 {
     void process(const OnMouseButtonPress&) override;
 };

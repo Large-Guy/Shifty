@@ -3,7 +3,16 @@
 
 #include <SDL3/SDL.h>
 
-struct App {
+struct App
+{
+    enum class State
+    {
+        Normal,
+        Command,
+        Tabview,
+    };
+
+    State state = State::Normal;
     SDL_Window* window;
     bool running = true;
 };

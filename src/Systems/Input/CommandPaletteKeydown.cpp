@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "Components/Animation.h"
+#include "Components/App.h"
 #include "Components/CommandPalette.h"
 #include "Components/Edit.h"
 #include "Components/Focus.h"
@@ -43,7 +44,8 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
     using namespace std::chrono;
     uint64_t time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
-    if (keyPress.key == SDLK_LSHIFT || keyPress.key == SDLK_RSHIFT)
+    if ((keyPress.key == SDLK_LSHIFT || keyPress.key == SDLK_RSHIFT) && Entity::find<App>()->state ==
+        App::State::Normal)
     {
         Entity::multiEach<Layout, CommandPalette, Animation, Text, Edit>(
             [time](Entity entity, ComRef<Layout> layout, ComRef<CommandPalette> commandPalette,
@@ -62,6 +64,8 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
                     edit->cursor = text->text.length();
                     EditShared::deleteSelection(text, edit);
                     Entity::find<Focus>()->focused = entity;
+
+                    Entity::find<App>()->state = App::State::Command;
                 }
                 commandPalette->lastShiftPressed = time;
             }, [](Entity entity, ComRef<Layout> layout, ComRef<CommandPalette> _palette, ComRef<Animation> _animation,
@@ -76,7 +80,7 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
                 return false;
             });
     }
-    else if (keyPress.key == SDLK_ESCAPE)
+    else if (keyPress.key == SDLK_ESCAPE && Entity::find<App>()->state == App::State::Command)
     {
         Entity::multiEach<Layout, CommandPalette, Animation>(
             [](ComRef<Layout> layout, ComRef<CommandPalette> commandPalette, ComRef<Animation> animation)
@@ -84,12 +88,14 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
                 if (!commandPalette->open)
                     return;
 
+                Entity::find<App>()->state = App::State::Normal;
+
                 commandPalette->open = false;
                 animation->time = 0;
                 Entity::find<Focus>()->focused = layout->parent;
             });
     }
-    else if (keyPress.key == SDLK_RETURN)
+    else if (keyPress.key == SDLK_RETURN && Entity::find<App>()->state == App::State::Command)
     {
         Entity::multiEach<Layout, CommandPalette, Animation, Text>(
             [](ComRef<Layout> layout, ComRef<CommandPalette> commandPalette, ComRef<Animation> animation,
@@ -97,6 +103,8 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
             {
                 if (!commandPalette->open)
                     return;
+
+                Entity::find<App>()->state = App::State::Normal;
 
                 Entity::find<Focus>()->focused = layout->parent;
 

@@ -1,4 +1,4 @@
-#include "ViewAnimationUpdate.h"
+#include "PanelAnimationUpdate.h"
 
 #include <iostream>
 #include <ostream>
@@ -10,7 +10,7 @@
 #include "Components/Panel.h"
 #include "ECS/Entity.h"
 
-void ViewAnimationUpdate::process(const OnUpdate&)
+void PanelAnimationUpdate::process(const OnUpdate&)
 {
     Entity::multiEach<Animation, Layout, Panel, Transform>(
         [&](ComRef<Animation> animation, ComRef<Layout> layout, ComRef<Panel> view, ComRef<Transform> transform)

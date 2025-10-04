@@ -21,14 +21,6 @@ class TabDraw final : System<OnDraw>
         void execute(SDL_Renderer* renderer) override;
     };
 
-    struct DebugRenderTransform : public Draw::Command
-    {
-        ComRef<RenderTransform> renderTransform;
-
-        DebugRenderTransform(ComRef<RenderTransform> renderTransform);
-
-        void execute(SDL_Renderer* renderer) override;
-    };
 
     void process(const OnDraw&) override;
 };

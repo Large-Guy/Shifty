@@ -8,7 +8,7 @@
 #include "ECS/System.h"
 
 
-class ViewAnimationUpdate : System<OnUpdate>
+class PanelAnimationUpdate : System<OnUpdate>
 {
     void process(const OnUpdate&) override;
 };

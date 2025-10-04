@@ -6,9 +6,9 @@
 #include "Components/Animation.h"
 #include "Components/Focus.h"
 #include "Components/RenderTransform.h"
-#include "Components/TabViewState.h"
-#include "Systems/TabViewUpdate.h"
-#include "Systems/Shared/TabViewShared.h"
+#include "Components/TabviewState.h"
+#include "Systems/TabviewUpdate.h"
+#include "Systems/Shared/TabviewShared.h"
 
 static void split(Layout::Type type, Entity view)
 {
@@ -66,7 +66,7 @@ void TabCommand::process(const OnCommandExecute& command)
     }
     if (command.commands.front() == ":view" || command.commands.front() == ":v")
     {
-        TabViewShared::show();
+        TabviewShared::show();
     }
 }
 

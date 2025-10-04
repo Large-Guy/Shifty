@@ -1,4 +1,4 @@
-#include "TabViewUpdate.h"
+#include "TabviewUpdate.h"
 
 #include <iostream>
 #include <ranges>
@@ -6,22 +6,45 @@
 #include "GlobalConfig.h"
 #include "Tween.h"
 #include "Components/Animation.h"
+#include "Components/App.h"
 #include "Components/Focus.h"
 #include "Components/Layout.h"
 #include "Components/RenderTransform.h"
 #include "Components/Root.h"
 #include "Components/Tab.h"
-#include "Components/TabViewState.h"
+#include "Components/TabviewState.h"
 #include "Components/Transform.h"
 #include "Components/Panel.h"
-#include "Shared/TabViewShared.h"
+#include "Shared/TabviewShared.h"
 
 
-void TabViewUpdate::process(const OnUpdate& update)
+void TabviewUpdate::process(const OnUpdate& update)
 {
-    ComRef<TabViewState> viewState = Entity::find<TabViewState>();
-    ComRef<Animation> viewAnimation = Entity::findEntity<TabViewState>().get<Animation>();
+    Entity viewStateEntity = Entity::findEntity<TabviewState>();
+    ComRef<TabviewState> viewState = viewStateEntity.get<TabviewState>();
+    ComRef<RenderTransform> viewStateTransform = viewStateEntity.get<RenderTransform>();
 
+    ComRef<Animation> viewAnimation = Entity::findEntity<TabviewState>().get<Animation>();
+
+    if (!viewState->active && Entity::find<App>()->state == App::State::Tabview)
+    {
+        Entity::find<App>()->state = App::State::Normal;
+    }
+
+    //Preview selected tag
+    Entity currentFocusedTab = viewState->focusedTab;
+    if (currentFocusedTab != nullptr)
+    {
+        ComRef<RenderTransform> currentFocusedTabTransform = currentFocusedTab.get<RenderTransform>();
+
+        float rate = 20.f * update.deltaTime;
+        viewStateTransform->x = Tween::Lerp(viewStateTransform->x, currentFocusedTabTransform->x, rate);
+        viewStateTransform->y = Tween::Lerp(viewStateTransform->y, currentFocusedTabTransform->y, rate);
+        viewStateTransform->w = Tween::Lerp(viewStateTransform->w, currentFocusedTabTransform->w, rate);
+        viewStateTransform->h = Tween::Lerp(viewStateTransform->h, currentFocusedTabTransform->h, rate);
+    }
+
+    //Transition animation
     //Calculate size of screen
     ComRef<RenderTransform> root = Entity::findEntity<Root>().get<RenderTransform>();
     float width = root->w;
@@ -48,11 +71,16 @@ void TabViewUpdate::process(const OnUpdate& update)
     int i = 0;
     Entity::multiEach<Tab, RenderTransform>([&](ComRef<Tab> tab, ComRef<RenderTransform> transform)
     {
+        if (i < GlobalConfig::tabsPerPageHorizontal * GlobalConfig::tabsPerPageVertical * viewState->page)
+        {
+            i++;
+            return;
+        }
         auto viewRenderTransform = tab->viewer.get<RenderTransform>();
 
         int x = (i % GlobalConfig::tabsPerPageHorizontal);
         int y = i / GlobalConfig::tabsPerPageHorizontal;
-        if (y > GlobalConfig::tabsPerPageVertical)
+        if (y >= GlobalConfig::tabsPerPageVertical)
         {
             return;
         }
@@ -60,13 +88,13 @@ void TabViewUpdate::process(const OnUpdate& update)
 
         float tx = static_cast<float>(x) * (tWidth) + pWidth + 8;
         float ty = static_cast<float>(y) * (tHeight) + pHeight + 8;
-        if (Entity::find<TabViewState>()->targetView != nullptr)
+        if (Entity::find<TabviewState>()->targetView != nullptr)
         {
             tx += viewState->targetView.get<RenderTransform>()->x;
             ty += viewState->targetView.get<RenderTransform>()->y;
         }
 
-        if (Entity::find<TabViewState>()->active)
+        if (Entity::find<TabviewState>()->active)
         {
             float elastic = Tween::Lerp(Tween::easeInCubic(viewAnimation->time),
                                         Tween::easeOutBack(viewAnimation->time), viewAnimation->time);
