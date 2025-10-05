@@ -72,7 +72,7 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
                   ComRef<Text> _text,
                   ComRef<Edit> _edit)
             {
-                if (layout->parent != nullptr)
+                if (layout->parent != Entity::null)
                 {
                     return Entity::find<Focus>()->focused == layout->parent;
                 }

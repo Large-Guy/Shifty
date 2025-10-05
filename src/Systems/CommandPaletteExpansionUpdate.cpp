@@ -16,7 +16,7 @@ void CommandPaletteExpansionUpdate::process(const OnUpdate& update)
         [&](ComRef<CommandPalette> palette, ComRef<Transform> transform, ComRef<RenderTransform> render,
             ComRef<Text> text, ComRef<Layout> layout)
         {
-            if (layout->parent == nullptr)
+            if (layout->parent == Entity::null)
                 return;
 
             float maxWidth = layout->parent.get<RenderTransform>()->w;

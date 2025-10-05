@@ -75,9 +75,11 @@ void* Archetype::Column::add(EntityID owner, void* instance)
 
 void Archetype::Column::remove(size_t index)
 {
-    owners[index] = 0; //AKA null entity
     //Destroy the data
+    component.onRemove(owners[index]);
     component.destructor(operator[](index));
+
+    owners[index] = 0; //AKA null entity
 }
 
 

@@ -33,7 +33,7 @@ void TabviewUpdate::process(const OnUpdate& update)
 
     //Preview selected tag
     Entity currentFocusedTab = viewState->focusedTab;
-    if (currentFocusedTab != nullptr)
+    if (currentFocusedTab != Entity::null)
     {
         ComRef<RenderTransform> currentFocusedTabTransform = currentFocusedTab.get<RenderTransform>();
 
@@ -49,7 +49,7 @@ void TabviewUpdate::process(const OnUpdate& update)
     ComRef<RenderTransform> root = Entity::findEntity<Root>().get<RenderTransform>();
     float width = root->w;
     float height = root->h;
-    if (viewState->targetView != nullptr)
+    if (viewState->targetView != Entity::null)
     {
         width = viewState->targetView.get<RenderTransform>()->w;
         height = viewState->targetView.get<RenderTransform>()->h;
@@ -88,7 +88,7 @@ void TabviewUpdate::process(const OnUpdate& update)
 
         float tx = static_cast<float>(x) * (tWidth) + pWidth + 8;
         float ty = static_cast<float>(y) * (tHeight) + pHeight + 8;
-        if (Entity::find<TabviewState>()->targetView != nullptr)
+        if (Entity::find<TabviewState>()->targetView != Entity::null)
         {
             tx += viewState->targetView.get<RenderTransform>()->x;
             ty += viewState->targetView.get<RenderTransform>()->y;

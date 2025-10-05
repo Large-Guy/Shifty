@@ -40,6 +40,13 @@ struct OnComponentCreate
     ComRef<T> component;
 };
 
+template <typename T>
+struct OnComponentDestroy
+{
+    EntityID entity;
+    ComRef<T> component;
+};
+
 class Entity
 {
     struct Record
@@ -54,13 +61,14 @@ class Entity
     void move(Archetype* current, size_t row, Archetype* next);
 
 public:
+    static const Entity null;
+
     EntityID id;
 
     Entity(EntityID id = 0);
 
     bool operator==(const Entity& other) const;
     bool operator==(EntityID other) const;
-    bool operator==(std::nullptr_t other) const;
 
     static Entity create();
 
@@ -71,6 +79,8 @@ public:
     void* add(Component component, void* instance = nullptr);
 
     void remove(Component component);
+
+    void destroy();
 
     template <typename T>
     bool has() const
@@ -88,8 +98,7 @@ public:
     ComRef<T> add()
     {
         add(Component::get<T>());
-        OnComponentCreate<T> event{id, {id, Component::get<T>()}};
-        EventBus::emit(event);
+        Component::get<T>().onAdd(id);
         return ComRef<T>{id, Component::get<T>()};
     }
 
@@ -97,8 +106,7 @@ public:
     ComRef<T> add(T instance)
     {
         add(Component::get<T>(), &instance);
-        OnComponentCreate<T> event{id, {id, Component::get<T>()}};
-        EventBus::emit(event);
+        Component::get<T>().onAdd(id);
         return {id, Component::get<T>()};
     }
 
@@ -321,5 +329,21 @@ T* ComRef<T>::operator->() const
     return static_cast<T*>(Entity(owner).get(component));
 }
 
+template <typename T>
+constexpr Component Component::get()
+{
+    auto comp = Component{
+        .name = typeid(T).name(),
+        .id = typeid(T).hash_code(),
+        .size = sizeof(T),
+        .constructor = [](void* ptr) { new(ptr) T(); },
+        .destructor = [](void* ptr) { static_cast<T*>(ptr)->~T(); },
+        .copy = [](void* dst, void* src) { *static_cast<T*>(dst) = *static_cast<T*>(src); },
+        .move = [](void* dst, void* src) { *static_cast<T*>(dst) = std::move(*static_cast<T*>(src)); },
+        .onAdd = [](EntityID id) { EventBus::emit(OnComponentCreate<T>{id, {id, Component::get<T>()}}); },
+        .onRemove = [](EntityID id) { EventBus::emit(OnComponentDestroy<T>{id, {id, Component::get<T>()}}); }
+    };
+    return comp;
+}
 
 #endif //SHIFTY_ENTITY_H

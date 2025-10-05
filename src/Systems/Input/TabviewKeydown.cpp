@@ -13,7 +13,7 @@
 
 void TabviewKeydown::process(const OnKeyPress& event)
 {
-    if (Entity::find<Focus>()->focused == nullptr || !Entity::find<Focus>()->focused.has<Layout>())
+    if (Entity::find<Focus>()->focused == Entity::null || !Entity::find<Focus>()->focused.has<Layout>())
         return;
 
     bool ctrl = event.handler->isPressed(SDLK_LCTRL) || event.handler->isPressed(SDLK_RCTRL);

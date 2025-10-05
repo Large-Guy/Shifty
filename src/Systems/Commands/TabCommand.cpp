@@ -13,7 +13,7 @@
 static void split(Layout::Type type, Entity view)
 {
     //We need to repeatedly use .get because creating entities can move components around
-    if (view.get<Layout>()->parent != nullptr)
+    if (view.get<Layout>()->parent != Entity::null)
     {
         auto parentLayout = view.get<Layout>()->parent.get<Layout>();
         //Find my index
@@ -66,7 +66,7 @@ void TabCommand::process(const OnCommandExecute& command)
     }
     if (command.commands.front() == ":view" || command.commands.front() == ":v")
     {
-        TabviewShared::show();
+        TabviewShared::show(); //TODO: Fix bug where enter automatically selects tab to swap.
     }
 }
 

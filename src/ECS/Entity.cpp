@@ -6,6 +6,7 @@
 
 std::unordered_map<EntityID, Entity::Record> Entity::entityIndex = {};
 EntityID Entity::count = 0;
+const Entity Entity::null = {0};
 
 void Entity::move(Archetype* current, size_t row, Archetype* next)
 {
@@ -44,12 +45,6 @@ bool Entity::operator==(const EntityID other) const
 {
     return this->id == other;
 }
-
-bool Entity::operator==(std::nullptr_t other) const
-{
-    return this->id == 0;
-}
-
 
 Entity Entity::create()
 {
@@ -110,4 +105,13 @@ void Entity::remove(Component component)
 
     auto* archetypeNext = archetype->getEdge(component).remove;
     move(archetype, record.row, archetypeNext);
+}
+
+void Entity::destroy()
+{
+    auto& record = entityIndex.at(id);
+    auto* archetype = record.archetype;
+    archetype->remove(record.row);
+    entityIndex.erase(id);
+    id = 0;
 }

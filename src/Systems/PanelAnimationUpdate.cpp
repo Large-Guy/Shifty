@@ -17,7 +17,7 @@ void PanelAnimationUpdate::process(const OnUpdate&)
         {
             if (animation->time > 1.0f)
                 return;
-            if (layout->parent != nullptr)
+            if (layout->parent != Entity::null)
             {
                 if (layout->parent.get<Layout>()->type == Layout::Type::HORIZONTAL)
                 {

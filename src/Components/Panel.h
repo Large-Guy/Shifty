@@ -24,7 +24,7 @@ struct Panel
         ComRef<Panel> view = viewEntity.get<Panel>();
         ComRef<Tab> tab = tabEntity.get<Tab>();
 
-        if (tab->viewer != nullptr)
+        if (tab->viewer != Entity::null)
         {
             removeTab(tab->viewer, tabEntity);
         }

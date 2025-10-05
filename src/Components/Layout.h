@@ -31,7 +31,7 @@ struct Layout
             throw std::runtime_error("Child entity is missing layout component!");
         ComRef<Layout> layout = to.get<Layout>();
         ComRef<Layout> other = add.get<Layout>();
-        if (other->parent != nullptr)
+        if (other->parent != Entity::null)
         {
             removeChild(other->parent, add);
         }
@@ -47,7 +47,7 @@ struct Layout
             throw std::runtime_error("Child entity is missing layout component!");
         ComRef<Layout> layout = to.get<Layout>();
         ComRef<Layout> other = add.get<Layout>();
-        if (other->parent != nullptr)
+        if (other->parent != Entity::null)
         {
             removeChild(other->parent, add);
         }

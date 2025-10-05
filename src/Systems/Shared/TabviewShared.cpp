@@ -38,6 +38,7 @@ void TabviewShared::hide()
 
 void TabviewShared::swap(Entity tab)
 {
+    //TODO: There is something wrong with the swapping logic. I think things are being rearranged incorrectly.
     Entity targetView = Entity::find<TabviewState>()->targetView;
     //If the view is going to be left empty, we swap tabs instead of moving them
     if (targetView.get<Panel>()->holdingTabs.size() == 1)

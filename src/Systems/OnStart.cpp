@@ -28,10 +28,14 @@ void OnStart::process(const OnReady&)
     Entity layoutRoot = Prefabs::createLayout(Layout::Type::FULL);
     layoutRoot.add<Root>();
 
-    Layout::addChild(layoutRoot, Prefabs::createView());
+    Entity mainView = Prefabs::createView();
+
+    Layout::addChild(layoutRoot, mainView);
 
     Entity tabViewState = Entity::create();
     tabViewState.add<TabviewState>();
     tabViewState.add<Animation>({.speed = 2.f});
     tabViewState.add<RenderTransform>();
+
+    world.get<Focus>()->focused = mainView;
 }
