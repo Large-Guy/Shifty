@@ -14,6 +14,7 @@ struct App
 
     State state = State::Normal;
     SDL_Window* window;
+    SDL_GPUDevice* gpuDevice;
     bool running = true;
 };
 
