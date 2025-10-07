@@ -13,7 +13,7 @@ void DrawRender::process(const OnRender&)
 
         //Flush
 
-        SDL_SetRenderDrawColor(draw->renderer, 31, 31, 31, 255);
+        SDL_SetRenderDrawColor(draw->renderer, 31, 31, 31, 127);
         SDL_RenderClear(draw->renderer);
         std::string debug = "";
         for (const auto& command : draw->commands)

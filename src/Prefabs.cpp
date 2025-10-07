@@ -37,8 +37,8 @@ Entity Prefabs::createView()
     commandPalette.add<Animation>({.speed = 3.0f});
     commandPalette.add<Text>({
         .text = "",
-        .font = Font::load("res/fonts/hack-regular.ttf"),
-        .size = 15
+        .font = Font::load("res/fonts/Quicksand-SemiBold.ttf"),
+        .size = 18
     });
     commandPalette.add<Edit>();
 
