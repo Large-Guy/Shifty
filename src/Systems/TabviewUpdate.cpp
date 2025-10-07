@@ -69,7 +69,7 @@ void TabviewUpdate::process(const OnUpdate& update)
     });
 
     int i = 0;
-    Entity::multiEach<Tab, RenderTransform>([&](ComRef<Tab> tab, ComRef<RenderTransform> transform)
+    Entity::multiEach<Tab, RenderTransform>([&](Entity entity, ComRef<Tab> tab, ComRef<RenderTransform> transform)
     {
         if (i < GlobalConfig::tabsPerPageHorizontal * GlobalConfig::tabsPerPageVertical * viewState->page)
         {
@@ -78,16 +78,16 @@ void TabviewUpdate::process(const OnUpdate& update)
         }
         auto viewRenderTransform = tab->viewer.get<RenderTransform>();
 
-        int x = (i % GlobalConfig::tabsPerPageHorizontal);
-        int y = i / GlobalConfig::tabsPerPageHorizontal;
-        if (y >= GlobalConfig::tabsPerPageVertical)
+        int tabX = (i % GlobalConfig::tabsPerPageHorizontal);
+        int tabY = i / GlobalConfig::tabsPerPageHorizontal;
+        if (tabY >= GlobalConfig::tabsPerPageVertical)
         {
             return;
         }
 
 
-        float tx = static_cast<float>(x) * (tWidth) + pWidth + 8;
-        float ty = static_cast<float>(y) * (tHeight) + pHeight + 8;
+        float tx = static_cast<float>(tabX) * (tWidth) + pWidth + 8;
+        float ty = static_cast<float>(tabY) * (tHeight) + pHeight + 8;
         if (Entity::find<TabviewState>()->targetView != Entity::null)
         {
             tx += viewState->targetView.get<RenderTransform>()->x;
@@ -112,10 +112,20 @@ void TabviewUpdate::process(const OnUpdate& update)
                                      Tween::easeOutBack(viewAnimation->time),
                                      viewAnimation->time);
 
-            transform->x = Tween::Lerp(tx, viewRenderTransform->x, back);
-            transform->y = Tween::Lerp(ty, viewRenderTransform->y, back);
-            transform->w = Tween::Lerp(tWidth - 16, viewRenderTransform->w, elastic);
-            transform->h = Tween::Lerp(tHeight - 16, viewRenderTransform->h, elastic);
+            float x = viewRenderTransform->x;
+            float y = viewRenderTransform->y;
+            float w = viewRenderTransform->w;
+            float h = viewRenderTransform->h;
+
+            x += 8;
+            y += 8;
+            w -= 16;
+            h -= 16;
+
+            transform->x = Tween::Lerp(tx, x, back);
+            transform->y = Tween::Lerp(ty, y, back);
+            transform->w = Tween::Lerp(tWidth - 16, w, elastic);
+            transform->h = Tween::Lerp(tHeight - 16, h, elastic);
         }
         i++;
     });

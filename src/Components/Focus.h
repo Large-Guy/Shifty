@@ -5,6 +5,8 @@
 struct Focus
 {
     Entity focused = {0};
+    Entity previousFocused = {0};
+    Entity focusChanged = {0};
 };
 
 #endif //SHIFTY_FOCUS_H

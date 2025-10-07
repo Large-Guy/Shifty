@@ -24,6 +24,7 @@ void OnStart::process(const OnReady&)
     world.add<App>();
     world.add<Draw>();
     world.add<Focus>();
+    world.add<Animation>();
 
     Entity layoutRoot = Prefabs::createLayout(Layout::Type::FULL);
     layoutRoot.add<Root>();

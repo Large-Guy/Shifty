@@ -12,8 +12,8 @@ void DrawRender::process(const OnRender&)
         EventBus::emit(OnDraw{draw});
 
         //Flush
-
-        SDL_SetRenderDrawColor(draw->renderer, 31, 31, 31, 127);
+        SDL_SetRenderDrawBlendMode(draw->renderer, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawColor(draw->renderer, 255, 255, 255, 64);
         SDL_RenderClear(draw->renderer);
         std::string debug = "";
         for (const auto& command : draw->commands)
