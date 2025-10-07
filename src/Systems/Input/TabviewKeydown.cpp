@@ -16,6 +16,10 @@ void TabviewKeydown::process(const OnKeyPress& event)
     if (Entity::find<Focus>()->focused == Entity::null || !Entity::find<Focus>()->focused.has<Layout>())
         return;
 
+    //This is a hacky solution to the immediate selection bug
+    if (Entity::findEntity<TabviewState>().get<Animation>()->time <= 0.f)
+        return;
+
     bool ctrl = event.handler->isPressed(SDLK_LCTRL) || event.handler->isPressed(SDLK_RCTRL);
     bool shift = event.handler->isPressed(SDLK_LSHIFT) || event.handler->isPressed(SDLK_RSHIFT);
     if (event.key == SDLK_TAB && ctrl && Entity::find<App>()->state == App::State::Normal)

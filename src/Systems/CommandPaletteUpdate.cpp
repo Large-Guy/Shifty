@@ -23,6 +23,7 @@ void CommandPaletteUpdate::process(const OnUpdate& onUpdate)
                 if (Entity::find<Focus>()->focused != entity)
                 {
                     palette->open = false;
+                    Entity::find<App>()->state = App::State::Normal;
                 }
             }
             else

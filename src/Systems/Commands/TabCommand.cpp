@@ -66,7 +66,7 @@ void TabCommand::process(const OnCommandExecute& command)
     }
     if (command.commands.front() == ":view" || command.commands.front() == ":v")
     {
-        TabviewShared::show(); //TODO: Fix bug where enter automatically selects tab to swap.
+        TabviewShared::show();
     }
 }
 
