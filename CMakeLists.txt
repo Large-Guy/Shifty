@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 4.0)
 cmake_policy(SET CMP0074 NEW)
-project(Shifty)
+project(Shifty LANGUAGES C CXX OBJCXX)
 
 set(CMAKE_CXX_STANDARD 23)
 
@@ -103,6 +103,13 @@ set(CORE_SOURCES
         src/Rendering/Shader.h
 )
 
+if (APPLE)
+    set(PLATFORM_SOURCES
+            src/Rendering/Mac/Vibrancy.mm
+            src/Rendering/Mac/Vibrancy.hpp
+    )
+endif ()
+
 file(GLOB_RECURSE PLUGIN_SOURCES "src/Plugins/**/*.cpp")
 file(GLOB_RECURSE PLUGIN_HEADERS "src/Plugins/**/*.h")
 
@@ -110,6 +117,7 @@ add_executable(Shifty
         ${CORE_SOURCES}
         ${PLUGIN_SOURCES}
         ${PLUGIN_HEADERS}
+        ${PLATFORM_SOURCES}
 )
 
 set(CMAKE_FRAMEWORK_PATH "${CMAKE_FRAMEWORK_PATH};~/Library/Frameworks") # Or /Library/Frameworks
@@ -118,11 +126,17 @@ find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
 find_package(SDL3_image REQUIRED SDL3_image-shared)
 find_package(SDL3_ttf REQUIRED SDL3_ttf-shared)
 
+if (APPLE)
+    find_library(COCOA_FRAMEWORK Cocoa)
+endif ()
+
 target_link_libraries(Shifty PRIVATE
         SDL3::SDL3
         SDL3_image::SDL3_image
         SDL3_ttf::SDL3_ttf
+        ${COCOA_FRAMEWORK}
 )
+
 
 target_include_directories(Shifty PRIVATE
         ${CMAKE_SOURCE_DIR}/src
