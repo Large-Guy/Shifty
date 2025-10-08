@@ -97,6 +97,10 @@ set(CORE_SOURCES
         src/Systems/Rendering/TabviewDraw.h
         src/Systems/FocusUpdate.cpp
         src/Systems/FocusUpdate.h
+        src/Rendering/Window.cpp
+        src/Rendering/Window.h
+        src/Rendering/Shader.cpp
+        src/Rendering/Shader.h
 )
 
 file(GLOB_RECURSE PLUGIN_SOURCES "src/Plugins/**/*.cpp")

@@ -3,6 +3,8 @@
 
 #include <SDL3/SDL.h>
 
+#include "Rendering/Window.h"
+
 struct App
 {
     enum class State
@@ -12,9 +14,9 @@ struct App
         Tabview,
     };
 
+    Window window = {};
+
     State state = State::Normal;
-    SDL_Window* window;
-    SDL_GPUDevice* gpuDevice;
     bool running = true;
 };
 
