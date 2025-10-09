@@ -27,6 +27,11 @@ struct Draw
     std::vector<std::shared_ptr<Command>> commands;
     SDL_Renderer* renderer;
 
+    SDL_GPUDevice* gpuDevice;
+    SDL_GPUTexture* renderTexture;
+
+    int width, height;
+
     void pushCommand(const std::shared_ptr<Command>& command)
     {
         auto iter = commands.begin();

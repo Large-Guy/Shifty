@@ -24,11 +24,9 @@ Window::~Window()
 void Window::open()
 {
     std::cout << "Creating window ..." << std::endl;
-    this->gpuDevice = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV | SDL_GPU_SHADERFORMAT_MSL, true, nullptr);
-    if (this->gpuDevice == nullptr)
-        throw std::runtime_error(std::string("Failed to create GPU device ") + SDL_GetError());
 
     constexpr int w = 1080, h = 720;
+
     int flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_TRANSPARENT;
 
 #ifdef __APPLE__
@@ -51,10 +49,7 @@ void Window::open()
 
 void Window::close()
 {
-    SDL_ReleaseWindowFromGPUDevice(this->gpuDevice, this->window);
     SDL_DestroyWindow(this->window);
-    SDL_DestroyGPUDevice(this->gpuDevice);
 
     this->window = nullptr;
-    this->gpuDevice = nullptr;
 }

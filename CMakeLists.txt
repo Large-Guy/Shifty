@@ -105,8 +105,8 @@ set(CORE_SOURCES
 
 if (APPLE)
     set(PLATFORM_SOURCES
-            src/Rendering/Mac/Vibrancy.mm
-            src/Rendering/Mac/Vibrancy.hpp
+            src/Rendering/Mac/Compatibility.hpp
+            src/Rendering/Mac/Compatibility.mm
     )
 endif ()
 

@@ -1,4 +1,4 @@
-#include "Vibrancy.hpp"
+#include "Compatibility.hpp"
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_video.h>
@@ -7,7 +7,7 @@
 
 void injectMacVibrancy(SDL_Window *window) {
     SDL_PropertiesID properties = SDL_GetWindowProperties(window);
-    auto *win = (NSWindow *) SDL_GetPointerProperty(properties, "SDL.window.cocoa.window", nullptr);
+    auto *win = (__bridge NSWindow *) SDL_GetPointerProperty(properties, "SDL.window.cocoa.window", nullptr);
 
     if (!win)
         throw std::runtime_error("Cocoa window was not valid!");
@@ -16,7 +16,7 @@ void injectMacVibrancy(SDL_Window *window) {
     win.backgroundColor = [NSColor clearColor];
 
     NSVisualEffectView *blurView = [[NSVisualEffectView alloc] initWithFrame:win.contentView.bounds];
-    blurView.material = NSVisualEffectMaterialUnderWindowBackground;
+    blurView.material = NSVisualEffectMaterialSidebar;
     blurView.blendingMode = NSVisualEffectBlendingModeBehindWindow;
     blurView.state = NSVisualEffectStateActive;
     blurView.translatesAutoresizingMaskIntoConstraints = NO; 

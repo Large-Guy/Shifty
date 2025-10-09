@@ -11,7 +11,6 @@ class Window
 {
 public:
     SDL_Window* window = nullptr;
-    SDL_GPUDevice* gpuDevice = nullptr;
 
     Window();
     ~Window();
