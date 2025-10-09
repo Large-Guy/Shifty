@@ -101,6 +101,8 @@ set(CORE_SOURCES
         src/Rendering/Window.h
         src/Rendering/Shader.cpp
         src/Rendering/Shader.h
+        src/Systems/DrawResize.cpp
+        src/Systems/DrawResize.h
 )
 
 if (APPLE)

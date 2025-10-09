@@ -44,4 +44,14 @@ void DrawCreate::process(const OnComponentCreate<Draw>& component)
     draw->width = w;
     draw->height = h;
     draw->renderTexture = SDL_CreateGPUTexture(draw->gpuDevice, &info);
+
+    SDL_GPUTransferBufferCreateInfo createInfo{};
+    createInfo.usage = SDL_GPU_TRANSFERBUFFERUSAGE_DOWNLOAD;
+    createInfo.size = draw->width * draw->height * 4;
+
+    draw->dataTransferBuffer = SDL_CreateGPUTransferBuffer(draw->gpuDevice, &createInfo);
+
+    draw->outputTexture = SDL_CreateTexture(draw->renderer, SDL_PIXELFORMAT_RGBA32,
+                                            SDL_TEXTUREACCESS_STREAMING, draw->width,
+                                            draw->height);
 }

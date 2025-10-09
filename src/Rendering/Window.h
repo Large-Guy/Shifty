@@ -6,6 +6,11 @@
 #define SHIFTY_WINDOW_H
 #include <SDL3/SDL_gpu.h>
 
+struct OnWindowResize
+{
+    SDL_Window* window;
+    int width, height;
+};
 
 class Window
 {

@@ -30,6 +30,9 @@ struct Draw
     SDL_GPUDevice* gpuDevice;
     SDL_GPUTexture* renderTexture;
 
+    SDL_GPUTransferBuffer* dataTransferBuffer;
+    SDL_Texture* outputTexture;
+
     int width, height;
 
     void pushCommand(const std::shared_ptr<Command>& command)

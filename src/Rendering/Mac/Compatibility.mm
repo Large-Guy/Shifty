@@ -16,7 +16,7 @@ void injectMacVibrancy(SDL_Window *window) {
     win.backgroundColor = [NSColor clearColor];
 
     NSVisualEffectView *blurView = [[NSVisualEffectView alloc] initWithFrame:win.contentView.bounds];
-    blurView.material = NSVisualEffectMaterialSidebar;
+    blurView.material = NSVisualEffectMaterialUnderWindowBackground;
     blurView.blendingMode = NSVisualEffectBlendingModeBehindWindow;
     blurView.state = NSVisualEffectStateActive;
     blurView.translatesAutoresizingMaskIntoConstraints = NO; 
