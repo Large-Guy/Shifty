@@ -58,7 +58,7 @@ void DrawRender::process(const OnRender&)
         //Flush
 #ifdef __APPLE__
         //Apple specific clearing to support macOS Vibrancy
-        //SDL_SetRenderDrawColor(draw->renderer, 0, 0, 0, 0);
+        SDL_SetRenderDrawColor(draw->renderer, 0, 0, 0, 0);
 #else
 
         SDL_SetRenderDrawColor(draw->renderer, 0, 0, 0, 64); //Darken

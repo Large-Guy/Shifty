@@ -7,11 +7,7 @@
 #include <execinfo.h>
 #include <SDL3/SDL_init.h>
 
-#ifdef __APPLE__
-
-extern void injectMacVibrancy(SDL_Window* window);
-
-#endif
+#include "Mac/Compatibility.hpp"
 
 Window::Window()
 {
