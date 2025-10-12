@@ -109,6 +109,8 @@ if (APPLE)
     set(PLATFORM_SOURCES
             src/Rendering/Mac/Compatibility.hpp
             src/Rendering/Mac/Compatibility.mm
+            src/Rendering/Pipeline.cpp
+            src/Rendering/Pipeline.h
     )
 endif ()
 

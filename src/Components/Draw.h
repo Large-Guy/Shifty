@@ -7,6 +7,7 @@
 #include <SDL3/SDL.h>
 
 #include "ECS/Entity.h"
+#include "Rendering/Shader.h"
 
 struct Draw
 {
@@ -33,6 +34,8 @@ struct Draw
     SDL_GPUTransferBuffer* dataTransferBuffer;
     SDL_Texture* outputTexture;
 
+    std::unordered_map<std::string, std::shared_ptr<Shader>> shaders;
+
     int width, height;
 
     void pushCommand(const std::shared_ptr<Command>& command)
@@ -46,6 +49,27 @@ struct Draw
             }
         }
         commands.insert(iter, command);
+    }
+
+    std::shared_ptr<Shader> load(const std::string& path, SDL_GPUShaderStage stage, int samplers, int ubos, int ssbos,
+                                 int textures)
+    {
+        if (shaders.contains(path))
+        {
+            return shaders[path];
+        }
+
+        std::shared_ptr<Shader> newShader = std::make_shared<Shader>();
+        newShader->device = gpuDevice;
+        newShader->samplers = samplers;
+        newShader->uniforms = ubos;
+        newShader->storage = ssbos;
+        newShader->textures = textures;
+        newShader->stage = stage;
+        newShader->load(path);
+
+        shaders[path] = newShader;
+        return newShader;
     }
 };
 

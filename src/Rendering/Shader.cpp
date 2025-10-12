@@ -1,5 +1,7 @@
 #include "Shader.h"
 
+#include <stdexcept>
+
 Shader::Shader()
 = default;
 
