@@ -24,7 +24,28 @@ void DrawRender::process(const OnRender&)
         colorTargetInfo.load_op = SDL_GPU_LOADOP_CLEAR;
         colorTargetInfo.store_op = SDL_GPU_STOREOP_STORE;
 
+        //Other
+        auto vertShader = draw->loadShader("res/shaders/triangle.vert.msl", SDL_GPU_SHADERSTAGE_VERTEX, 0, 0, 0, 0);
+        auto fragShader = draw->loadShader("res/shaders/triangle.frag.msl", SDL_GPU_SHADERSTAGE_FRAGMENT, 0, 0, 0, 0);
+
+        SDL_GPURasterizerState rasterizer{};
+        rasterizer.fill_mode = SDL_GPU_FILLMODE_FILL;
+
+        auto pipeline = draw->loadPipeline(vertShader, fragShader, rasterizer);
+
         SDL_GPURenderPass* renderPass = SDL_BeginGPURenderPass(cmdBuf, &colorTargetInfo, 1, nullptr);
+        SDL_GPUViewport viewport{};
+        viewport.x = 0.0f;
+        viewport.y = 0.0f;
+        viewport.w = draw->width;
+        viewport.h = draw->height;
+        viewport.min_depth = 0.0f;
+        viewport.max_depth = 1.0f;
+
+        SDL_BindGPUGraphicsPipeline(renderPass, pipeline->pipeline);
+        SDL_SetGPUViewport(renderPass, &viewport);
+        SDL_DrawGPUPrimitives(renderPass, 3, 1, 0, 0);
+
         SDL_EndGPURenderPass(renderPass);
 
         SDL_GPUCopyPass* pCopyPass = SDL_BeginGPUCopyPass(cmdBuf);

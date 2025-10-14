@@ -7,6 +7,7 @@
 #include <SDL3/SDL.h>
 
 #include "ECS/Entity.h"
+#include "Rendering/Pipeline.h"
 #include "Rendering/Shader.h"
 
 struct Draw
@@ -30,11 +31,55 @@ struct Draw
 
     SDL_GPUDevice* gpuDevice;
     SDL_GPUTexture* renderTexture;
+    SDL_GPUTextureFormat format;
 
     SDL_GPUTransferBuffer* dataTransferBuffer;
     SDL_Texture* outputTexture;
 
     std::unordered_map<std::string, std::shared_ptr<Shader>> shaders;
+
+    struct PipelineInfo
+    {
+        std::shared_ptr<Shader> vert;
+        std::shared_ptr<Shader> frag;
+        SDL_GPURasterizerState rasterState;
+
+        bool operator==(const PipelineInfo& other) const
+        {
+            return vert.get() == other.vert.get() &&
+                frag.get() == other.frag.get() &&
+                std::memcmp(&rasterState, &other.rasterState, sizeof(SDL_GPURasterizerState)) == 0;
+        }
+    };
+
+    struct PipelineHash
+    {
+        size_t operator()(const PipelineInfo& info) const
+        {
+            size_t h = 0;
+            std::hash<void*> ptr_hash;
+            std::hash<int> int_hash;
+
+            h ^= ptr_hash(info.vert.get()) + 0x9e3779b9 + (h << 6) + (h >> 2);
+            h ^= ptr_hash(info.frag.get()) + 0x9e3779b9 + (h << 6) + (h >> 2);
+
+            // Combine all relevant rasterState fields
+            h ^= int_hash(info.rasterState.cull_mode) + 0x9e3779b9 + (h << 6) + (h >> 2);
+            h ^= int_hash(info.rasterState.depth_bias_clamp) + 0x9e3779b9 + (h << 6) + (h >> 2);
+            h ^= int_hash(info.rasterState.depth_bias_constant_factor) + 0x9e3779b9 + (h << 6) + (h >> 2);
+            h ^= int_hash(info.rasterState.depth_bias_slope_factor) + 0x9e3779b9 + (h << 6) + (h >> 2);
+            h ^= int_hash(info.rasterState.enable_depth_bias) + 0x9e3779b9 + (h << 6) + (h >> 2);
+            h ^= int_hash(info.rasterState.enable_depth_clip) + 0x9e3779b9 + (h << 6) + (h >> 2);
+            h ^= int_hash(info.rasterState.fill_mode) + 0x9e3779b9 + (h << 6) + (h >> 2);
+            h ^= int_hash(info.rasterState.front_face) + 0x9e3779b9 + (h << 6) + (h >> 2);
+            h ^= int_hash(info.rasterState.padding1) + 0x9e3779b9 + (h << 6) + (h >> 2);
+            h ^= int_hash(info.rasterState.padding2) + 0x9e3779b9 + (h << 6) + (h >> 2);
+
+            return h;
+        }
+    };
+
+    std::unordered_map<PipelineInfo, std::shared_ptr<Pipeline>, PipelineHash> pipelines;
 
     int width, height;
 
@@ -51,25 +96,39 @@ struct Draw
         commands.insert(iter, command);
     }
 
-    std::shared_ptr<Shader> load(const std::string& path, SDL_GPUShaderStage stage, int samplers, int ubos, int ssbos,
-                                 int textures)
+    std::shared_ptr<Shader> loadShader(const std::string& path, SDL_GPUShaderStage stage, int samplers, int ubos,
+                                       int ssbos,
+                                       int textures)
     {
         if (shaders.contains(path))
         {
             return shaders[path];
         }
 
-        std::shared_ptr<Shader> newShader = std::make_shared<Shader>();
-        newShader->device = gpuDevice;
-        newShader->samplers = samplers;
-        newShader->uniforms = ubos;
-        newShader->storage = ssbos;
-        newShader->textures = textures;
-        newShader->stage = stage;
-        newShader->load(path);
-
+        std::shared_ptr<Shader> newShader = std::make_shared<Shader>(gpuDevice, path, stage, samplers, ubos, ssbos,
+                                                                     textures);
         shaders[path] = newShader;
         return newShader;
+    }
+
+    std::shared_ptr<Pipeline> loadPipeline(std::shared_ptr<Shader> vertex,
+                                           std::shared_ptr<Shader> fragment,
+                                           SDL_GPURasterizerState state)
+    {
+        auto pipeline = PipelineInfo{
+            vertex,
+            fragment,
+            state
+        };
+        if (pipelines.contains(pipeline))
+        {
+            return pipelines[pipeline];
+        }
+
+        std::shared_ptr<Pipeline> newPipeline = std::make_shared<Pipeline>(gpuDevice, format, state, vertex, fragment);
+
+        pipelines[pipeline] = newPipeline;
+        return newPipeline;
     }
 };
 

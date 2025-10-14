@@ -57,7 +57,7 @@ void AppUpdate::process(const OnUpdate& _update)
     }
 
     int screenWidth, screenHeight;
-    SDL_GetWindowSize(app.get<App>()->window.window, &screenWidth, &screenHeight);
+    SDL_GetWindowSize(app.get<App>()->window->window, &screenWidth, &screenHeight);
 
     EventBus::emit<OnLayout>({0, 0, static_cast<float>(screenWidth), static_cast<float>(screenHeight)});
 }

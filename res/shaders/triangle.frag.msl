@@ -1,0 +1,9 @@
+struct Output {
+    float4 Color [[user(locn0)]];
+    float4 Position [[position]];
+};
+
+fragment float4 main_fragment(Output in [[stage_in]])
+{
+    return float4(in.Color.xyz,1.0);
+}

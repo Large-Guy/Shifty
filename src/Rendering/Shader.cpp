@@ -2,15 +2,17 @@
 
 #include <stdexcept>
 
-Shader::Shader()
-= default;
-
-Shader::~Shader()
+Shader::Shader(SDL_GPUDevice* device, const std::string& path, SDL_GPUShaderStage stage, uint32_t samplers,
+               uint32_t uniforms, uint32_t storage, uint32_t textures)
 {
-}
+    this->device = device;
+    this->path = path;
+    this->stage = stage;
+    this->samplers = samplers;
+    this->uniforms = uniforms;
+    this->storage = storage;
+    this->textures = textures;
 
-void Shader::load(const std::string& path)
-{
     const char* entrypoint;
     SDL_GPUShaderFormat backendFormat = SDL_GetGPUShaderFormats(device);
     SDL_GPUShaderFormat format = SDL_GPU_SHADERFORMAT_INVALID;
@@ -18,7 +20,10 @@ void Shader::load(const std::string& path)
     if (backendFormat & SDL_GPU_SHADERFORMAT_MSL)
     {
         format = SDL_GPU_SHADERFORMAT_MSL;
-        entrypoint = "main";
+        if (stage == SDL_GPU_SHADERSTAGE_VERTEX)
+            entrypoint = "main_vertex";
+        else if (stage == SDL_GPU_SHADERSTAGE_FRAGMENT)
+            entrypoint = "main_fragment";
     }
     else
     {
@@ -66,3 +71,6 @@ void Shader::load(const std::string& path)
     SDL_free(code);
 }
 
+Shader::~Shader()
+{
+}

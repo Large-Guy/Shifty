@@ -14,9 +14,9 @@ public:
     std::shared_ptr<Shader> vertex = nullptr;
     std::shared_ptr<Shader> fragment = nullptr;
 
-    void load()
-    {
-    }
+    Pipeline(SDL_GPUDevice* device, SDL_GPUTextureFormat format, SDL_GPURasterizerState state,
+             std::shared_ptr<Shader> vertex,
+             std::shared_ptr<Shader> fragment);
 };
 
 

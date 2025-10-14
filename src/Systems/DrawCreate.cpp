@@ -19,10 +19,10 @@ void DrawCreate::process(const OnComponentCreate<Draw>& component)
     auto app = entity.get<App>();
 
     int w, h;
-    SDL_GetWindowSize(app->window.window, &w, &h);
+    SDL_GetWindowSize(app->window->window, &w, &h);
 
     //Calculate DPI scale factor
-    draw->renderer = SDL_CreateRenderer(app->window.window, nullptr);
+    draw->renderer = SDL_CreateRenderer(app->window->window, nullptr);
 
     SDL_SetRenderVSync(draw->renderer, SDL_RENDERER_VSYNC_ADAPTIVE);
 
@@ -44,6 +44,7 @@ void DrawCreate::process(const OnComponentCreate<Draw>& component)
     draw->width = w;
     draw->height = h;
     draw->renderTexture = SDL_CreateGPUTexture(draw->gpuDevice, &info);
+    draw->format = info.format;
 
     SDL_GPUTransferBufferCreateInfo createInfo{};
     createInfo.usage = SDL_GPU_TRANSFERBUFFERUSAGE_DOWNLOAD;

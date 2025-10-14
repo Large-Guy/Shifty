@@ -5,7 +5,7 @@
 #include <stdexcept>
 #import <Cocoa/Cocoa.h>
 
-void injectMacVibrancy(SDL_Window *window) {
+void* injectMacVibrancy(SDL_Window *window) {
     SDL_PropertiesID properties = SDL_GetWindowProperties(window);
     auto *win = (__bridge NSWindow *) SDL_GetPointerProperty(properties, "SDL.window.cocoa.window", nullptr);
 
@@ -17,7 +17,7 @@ void injectMacVibrancy(SDL_Window *window) {
 
     NSVisualEffectView *blurView = [[NSVisualEffectView alloc] initWithFrame:win.contentView.bounds];
     blurView.material = NSVisualEffectMaterialUnderWindowBackground;
-    blurView.blendingMode = NSVisualEffectBlendingModeBehindWindow;
+    blurView.blendingMode = NSVisualEffectBlendingModeWithinWindow;
     blurView.state = NSVisualEffectStateActive;
     blurView.translatesAutoresizingMaskIntoConstraints = NO; 
 
@@ -29,4 +29,6 @@ void injectMacVibrancy(SDL_Window *window) {
             [blurView.topAnchor constraintEqualToAnchor:win.contentView.topAnchor],
             [blurView.bottomAnchor constraintEqualToAnchor:win.contentView.bottomAnchor]
     ]];
+    
+    return (void *) blurView;
 }

@@ -1,0 +1,30 @@
+#include <metal_stdlib>
+using namespace metal;
+
+struct Output {
+    float4 Color [[user(locn0)]];
+    float4 Position [[position]];
+};
+
+vertex Output main_vertex(uint vertexId [[vertex_id]])
+{
+    Output output;
+    float2 pos;
+    if (vertexId == 0)
+    {
+        pos = float2(-1.0, -1.0);
+        output.Color = float4(1.0, 0.0, 1.0, 1.0);
+    }
+    else if (vertexId == 1)
+    {
+        pos = float2(1.0, -1.0);
+        output.Color = float4(0.0, 1.0, 1.0, 1.0);
+    }
+    else
+    {
+        pos = float2(0.0, 1.0);
+        output.Color = float4(1.0, 1.0, 0.0, 1.0);
+    }
+    output.Position = float4(pos, 0.0, 1.0);
+    return output;
+}
