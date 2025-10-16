@@ -9,6 +9,76 @@
 #include "Components/Panel.h"
 #include "ECS/Entity.h"
 
+//Temporary coloring functions
+static void RGBtoHSL(float r, float g, float b, float* h, float* s, float* l)
+{
+    float max = fmaxf(r, fmaxf(g, b));
+    float min = fminf(r, fminf(g, b));
+    *l = (max + min) * 0.5f;
+
+    if (max == min)
+    {
+        *h = *s = 0.0f; // Gray
+        return;
+    }
+
+    float d = max - min;
+    *s = (*l > 0.5f) ? d / (2.0f - max - min) : d / (max + min);
+
+    if (max == r)
+        *h = fmodf(((g - b) / d + (g < b ? 6.0f : 0.0f)), 6.0f);
+    else if (max == g)
+        *h = ((b - r) / d) + 2.0f;
+    else
+        *h = ((r - g) / d) + 4.0f;
+
+    *h /= 6.0f;
+}
+
+// Helper: HSL → RGB
+static float hueToRGB(float p, float q, float t)
+{
+    if (t < 0.0f) t += 1.0f;
+    if (t > 1.0f) t -= 1.0f;
+    if (t < 1.0f / 6.0f) return p + (q - p) * 6.0f * t;
+    if (t < 1.0f / 2.0f) return q;
+    if (t < 2.0f / 3.0f) return p + (q - p) * (2.0f / 3.0f - t) * 6.0f;
+    return p;
+}
+
+static void HSLtoRGB(float h, float s, float l, float* r, float* g, float* b)
+{
+    if (s == 0.0f)
+    {
+        *r = *g = *b = l;
+        return;
+    }
+
+    float q = (l < 0.5f) ? (l * (1.0f + s)) : (l + s - l * s);
+    float p = 2.0f * l - q;
+
+    *r = hueToRGB(p, q, h + 1.0f / 3.0f);
+    *g = hueToRGB(p, q, h);
+    *b = hueToRGB(p, q, h - 1.0f / 3.0f);
+}
+
+// Main function
+SDL_FColor makeShadowColor(SDL_FColor base)
+{
+    float h, s, l;
+    RGBtoHSL(base.r, base.g, base.b, &h, &s, &l);
+
+    // Adjust for more natural shadow
+    h = fmodf(h + 0.05f, 1.0f); // small hue shift toward cooler tones (≈ +18°)
+    s *= 0.9f; // slightly less saturated
+    l *= 0.9f; // darker
+
+    SDL_FColor shadow;
+    HSLtoRGB(h, s, l, &shadow.r, &shadow.g, &shadow.b);
+    shadow.a = base.a; // preserve alpha
+    return shadow;
+}
+
 TabDraw::Command::Command(ComRef<RenderTransform> renderTransform, ComRef<Tab> tab, int layer) :
     Draw::Command(30 - layer),
     tab(tab),
@@ -36,8 +106,9 @@ void TabDraw::Command::execute(SDL_Renderer* renderer)
     g /= length;
     b /= length;
 
-    SDL_SetRenderDrawColorFloat(renderer, r, g, b, 1.0f);
-    SDL_RenderFillRect(renderer, &rect);
+    SDL_FColor color = {r, g, b, 1.0f};
+    SDL_FColor shadow = makeShadowColor(color);
+
     ComRef<Draw> draw = Entity::find<Draw>();
     Drawing::drawUIRect(draw, {
                             .screenSize = {static_cast<float>(draw->width), static_cast<float>(draw->height)},
@@ -45,9 +116,9 @@ void TabDraw::Command::execute(SDL_Renderer* renderer)
                             .rect = {rect.x, rect.y, rect.w, rect.h},
                             .rounding = {16.0f, 16.0f, 16.0f, 16.0f},
 
-                            .fillStart = {0.1f, 0.1f, 0.1f, 1.0f},
-                            .fillEnd = {0.05f, 0.05f, 0.05f, 1.0f},
-                            .end = {1.0f, 1.0f},
+                            .fillStart = {color.r, color.g, color.b, 1.0f},
+                            .fillEnd = {shadow.r, shadow.g, shadow.b, 1.0f},
+                            .end = {0.0f, 1.0f},
 
                             .thickness = 4.0f
                         });
