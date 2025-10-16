@@ -45,12 +45,16 @@ void AppUpdate::process(const OnUpdate& _update)
             break;
         case SDL_EVENT_TEXT_INPUT:
             EventBus::emit(OnTextInput{handler, e.text.text});
+            break;
         case SDL_EVENT_MOUSE_BUTTON_DOWN:
             EventBus::emit(OnMouseButtonPress{handler, e.button.x, e.button.y, e.button.button});
+            break;
         case SDL_EVENT_MOUSE_BUTTON_UP:
             EventBus::emit(OnMouseButtonRelease{handler, e.button.x, e.button.y, e.button.button});
+            break;
         case SDL_EVENT_WINDOW_RESIZED:
             EventBus::emit(OnWindowResize{SDL_GetWindowFromID(e.window.windowID), e.window.data1, e.window.data2});
+            break;
         default:
             break;
         }

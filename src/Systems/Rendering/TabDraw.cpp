@@ -3,6 +3,7 @@
 #include <iostream>
 #include <random>
 
+#include "Drawing.h"
 #include "Components/RenderTransform.h"
 #include "Components/Transform.h"
 #include "Components/Panel.h"
@@ -37,6 +38,19 @@ void TabDraw::Command::execute(SDL_Renderer* renderer)
 
     SDL_SetRenderDrawColorFloat(renderer, r, g, b, 1.0f);
     SDL_RenderFillRect(renderer, &rect);
+    ComRef<Draw> draw = Entity::find<Draw>();
+    Drawing::drawUIRect(draw, {
+                            .screenSize = {static_cast<float>(draw->width), static_cast<float>(draw->height)},
+                            .start = {0.0f, 0.0f},
+                            .rect = {rect.x, rect.y, rect.w, rect.h},
+                            .rounding = {16.0f, 16.0f, 16.0f, 16.0f},
+
+                            .fillStart = {0.1f, 0.1f, 0.1f, 1.0f},
+                            .fillEnd = {0.05f, 0.05f, 0.05f, 1.0f},
+                            .end = {1.0f, 1.0f},
+
+                            .thickness = 4.0f
+                        });
 }
 
 void TabDraw::process(const OnDraw& draw)

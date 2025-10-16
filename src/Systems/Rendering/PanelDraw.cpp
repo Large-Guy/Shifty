@@ -2,6 +2,7 @@
 
 #include <random>
 
+#include "Drawing.h"
 #include "Tween.h"
 #include "Components/Animation.h"
 #include "Components/Focus.h"

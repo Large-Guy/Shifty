@@ -40,32 +40,10 @@ void DrawRender::process(const OnRender&)
 
         SDL_SetGPUViewport(renderPass, &viewport);
 
-        Drawing::drawUIRect(draw, {
-                                .screenSize = {static_cast<float>(draw->width), static_cast<float>(draw->height)},
-                                .start = {0.0f, 0.0f},
-                                .rect = {128.0f, 128.0f, 112.0f, 512.0f},
-                                .rounding = {16.0f, 16.0f, 16.0f, 16.0f},
-
-                                .fillStart = {0.1f, 0.1f, 0.1f, 1.0f},
-                                .fillEnd = {0.05f, 0.05f, 0.05f, 1.0f},
-                                .end = {1.0f, 1.0f},
-
-                                .thickness = 4.0f
-                            });
-
-        Drawing::drawUIRect(draw, {
-                                .screenSize = {static_cast<float>(draw->width), static_cast<float>(draw->height)},
-                                .start = {0.0f, 0.0f},
-                                .rect = {256.0f, 128.0f, 512.0f, 512.0f},
-                                .rounding = {16.0f, 16.0f, 16.0f, 16.0f},
-
-                                .fillStart = {0.1f, 0.1f, 0.1f, 1.0f},
-                                .fillEnd = {0.05f, 0.05f, 0.05f, 1.0f},
-                                .end = {1.0f, 1.0f},
-
-                                .thickness = 4.0f
-                            });
-
+        for (const auto& command : draw->commands)
+        {
+            command->execute(draw->renderer);
+        }
 
         SDL_EndGPURenderPass(renderPass);
 
@@ -107,19 +85,6 @@ void DrawRender::process(const OnRender&)
 #endif
 
         SDL_RenderClear(draw->renderer);
-        std::string debug = "";
-        for (const auto& command : draw->commands)
-        {
-#ifdef DEBUG
-            std::string text = typeid(*command.get()).name();
-            debug += text + "\n";
-#endif
-            //command->execute(draw->renderer);
-        }
-
-#ifdef DEBUG
-        SDL_RenderDebugText(draw.renderer, 32, 32, debug.c_str());
-#endif
 
         SDL_RenderTexture(draw->renderer, draw->outputTexture, nullptr, nullptr);
 
