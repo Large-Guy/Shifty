@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 4.0)
 cmake_policy(SET CMP0074 NEW)
-project(Shifty LANGUAGES C CXX OBJCXX)
-
+if (APPLE)
+    project(Shifty LANGUAGES C CXX OBJCXX)
+else ()
+    project(Shifty LANGUAGES C CXX)
+endif ()
 set(CMAKE_CXX_STANDARD 23)
 
 set(CORE_SOURCES
@@ -103,14 +106,16 @@ set(CORE_SOURCES
         src/Rendering/Shader.h
         src/Systems/DrawResize.cpp
         src/Systems/DrawResize.h
+        src/Rendering/Pipeline.cpp
+        src/Rendering/Pipeline.h
+        src/Drawing.cpp
+        src/Drawing.h
 )
 
 if (APPLE)
     set(PLATFORM_SOURCES
             src/Rendering/Mac/Compatibility.hpp
             src/Rendering/Mac/Compatibility.mm
-            src/Rendering/Pipeline.cpp
-            src/Rendering/Pipeline.h
     )
 endif ()
 

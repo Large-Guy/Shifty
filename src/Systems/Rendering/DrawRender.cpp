@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "Drawing.h"
 #include "../../Components/Draw.h"
 #include "../../ECS/Entity.h"
 
@@ -17,23 +18,18 @@ void DrawRender::process(const OnRender&)
 
 
         //GPU rendering
-        SDL_GPUCommandBuffer* cmdBuf = SDL_AcquireGPUCommandBuffer(draw->gpuDevice);
+        draw->currentCmdBuf = SDL_AcquireGPUCommandBuffer(draw->gpuDevice);
         SDL_GPUColorTargetInfo colorTargetInfo{};
         colorTargetInfo.texture = draw->renderTexture;
         colorTargetInfo.clear_color = (SDL_FColor){0.0f, 0.0f, 0.0f, 0.0f};
         colorTargetInfo.load_op = SDL_GPU_LOADOP_CLEAR;
         colorTargetInfo.store_op = SDL_GPU_STOREOP_STORE;
 
-        //Other
-        auto vertShader = draw->loadShader("res/shaders/triangle.vert.msl", SDL_GPU_SHADERSTAGE_VERTEX, 0, 0, 0, 0);
-        auto fragShader = draw->loadShader("res/shaders/triangle.frag.msl", SDL_GPU_SHADERSTAGE_FRAGMENT, 0, 0, 0, 0);
 
-        SDL_GPURasterizerState rasterizer{};
-        rasterizer.fill_mode = SDL_GPU_FILLMODE_FILL;
+        SDL_GPURenderPass* renderPass = SDL_BeginGPURenderPass(draw->currentCmdBuf, &colorTargetInfo, 1, nullptr);
 
-        auto pipeline = draw->loadPipeline(vertShader, fragShader, rasterizer);
+        draw->currentPass = renderPass;
 
-        SDL_GPURenderPass* renderPass = SDL_BeginGPURenderPass(cmdBuf, &colorTargetInfo, 1, nullptr);
         SDL_GPUViewport viewport{};
         viewport.x = 0.0f;
         viewport.y = 0.0f;
@@ -42,13 +38,38 @@ void DrawRender::process(const OnRender&)
         viewport.min_depth = 0.0f;
         viewport.max_depth = 1.0f;
 
-        SDL_BindGPUGraphicsPipeline(renderPass, pipeline->pipeline);
         SDL_SetGPUViewport(renderPass, &viewport);
-        SDL_DrawGPUPrimitives(renderPass, 3, 1, 0, 0);
+
+        Drawing::drawUIRect(draw, {
+                                .screenSize = {static_cast<float>(draw->width), static_cast<float>(draw->height)},
+                                .start = {0.0f, 0.0f},
+                                .rect = {128.0f, 128.0f, 112.0f, 512.0f},
+                                .rounding = {16.0f, 16.0f, 16.0f, 16.0f},
+
+                                .fillStart = {0.1f, 0.1f, 0.1f, 1.0f},
+                                .fillEnd = {0.05f, 0.05f, 0.05f, 1.0f},
+                                .end = {1.0f, 1.0f},
+
+                                .thickness = 4.0f
+                            });
+
+        Drawing::drawUIRect(draw, {
+                                .screenSize = {static_cast<float>(draw->width), static_cast<float>(draw->height)},
+                                .start = {0.0f, 0.0f},
+                                .rect = {256.0f, 128.0f, 512.0f, 512.0f},
+                                .rounding = {16.0f, 16.0f, 16.0f, 16.0f},
+
+                                .fillStart = {0.1f, 0.1f, 0.1f, 1.0f},
+                                .fillEnd = {0.05f, 0.05f, 0.05f, 1.0f},
+                                .end = {1.0f, 1.0f},
+
+                                .thickness = 4.0f
+                            });
+
 
         SDL_EndGPURenderPass(renderPass);
 
-        SDL_GPUCopyPass* pCopyPass = SDL_BeginGPUCopyPass(cmdBuf);
+        SDL_GPUCopyPass* pCopyPass = SDL_BeginGPUCopyPass(draw->currentCmdBuf);
 
         SDL_GPUTextureRegion transferSource{};
         transferSource.texture = draw->renderTexture;
@@ -64,7 +85,7 @@ void DrawRender::process(const OnRender&)
 
         SDL_EndGPUCopyPass(pCopyPass);
 
-        const auto pSubmitFence = SDL_SubmitGPUCommandBufferAndAcquireFence(cmdBuf);
+        const auto pSubmitFence = SDL_SubmitGPUCommandBufferAndAcquireFence(draw->currentCmdBuf);
         SDL_WaitForGPUFences(draw->gpuDevice, true, &pSubmitFence, 1);
         SDL_ReleaseGPUFence(draw->gpuDevice, pSubmitFence);
 

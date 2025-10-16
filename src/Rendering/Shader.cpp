@@ -21,9 +21,13 @@ Shader::Shader(SDL_GPUDevice* device, const std::string& path, SDL_GPUShaderStag
     {
         format = SDL_GPU_SHADERFORMAT_MSL;
         if (stage == SDL_GPU_SHADERSTAGE_VERTEX)
-            entrypoint = "main_vertex";
-        else if (stage == SDL_GPU_SHADERSTAGE_FRAGMENT)
-            entrypoint = "main_fragment";
+        {
+            entrypoint = "vertex";
+        }
+        if (stage == SDL_GPU_SHADERSTAGE_FRAGMENT)
+        {
+            entrypoint = "fragment";
+        }
     }
     else
     {
@@ -33,7 +37,14 @@ Shader::Shader(SDL_GPUDevice* device, const std::string& path, SDL_GPUShaderStag
     if (backendFormat & SDL_GPU_SHADERFORMAT_SPIRV)
     {
         format = SDL_GPU_SHADERFORMAT_SPIRV;
-        entrypoint = "main";
+        if (stage == SDL_GPU_SHADERSTAGE_VERTEX)
+        {
+            entrypoint = "vertex";
+        }
+        if (stage == SDL_GPU_SHADERSTAGE_FRAGMENT)
+        {
+            entrypoint = "fragment";
+        }
     }
     else
     {

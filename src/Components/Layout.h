@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "ECS/Entity.h"
+#include <algorithm>
 
 /**
  * @class Layout

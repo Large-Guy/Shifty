@@ -1,6 +1,7 @@
 #ifndef SHIFTY_DRAW_H
 #define SHIFTY_DRAW_H
 
+#include <cstring>
 #include <memory>
 #include <queue>
 #include <vector>
@@ -32,6 +33,9 @@ struct Draw
     SDL_GPUDevice* gpuDevice;
     SDL_GPUTexture* renderTexture;
     SDL_GPUTextureFormat format;
+
+    SDL_GPUCommandBuffer* currentCmdBuf;
+    SDL_GPURenderPass* currentPass;
 
     SDL_GPUTransferBuffer* dataTransferBuffer;
     SDL_Texture* outputTexture;

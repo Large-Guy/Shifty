@@ -21,6 +21,7 @@
 #include "Systems/CommandPaletteExpansionUpdate.h"
 #include "Systems/CommandPaletteUpdate.h"
 #include "Systems/DrawCreate.h"
+#include "Systems/DrawResize.h"
 #include "Systems/FocusUpdate.h"
 #include "Systems/Rendering/DrawRender.h"
 #include "Systems/TabviewUpdate.h"
@@ -73,6 +74,7 @@ int main(int argc, char* argv[])
 
     DrawCreate drawCreate{};
     DrawRender drawRender{};
+    DrawResize drawResize{};
 
     FocusUpdate focusUpdate{};
 

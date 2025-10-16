@@ -4,6 +4,7 @@
 #include <SDL3/SDL_render.h>
 
 #include "Tab.h"
+#include <algorithm>
 
 struct Panel
 {

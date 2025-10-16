@@ -1,5 +1,6 @@
 #include "Entity.h"
 
+#include <algorithm>
 #include <stdexcept>
 #include <utility>
 
