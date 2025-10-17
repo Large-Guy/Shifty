@@ -23,6 +23,7 @@
 #include "Systems/DrawCreate.h"
 #include "Systems/DrawResize.h"
 #include "Systems/FocusUpdate.h"
+#include "Systems/MotionUpdate.h"
 #include "Systems/Rendering/DrawRender.h"
 #include "Systems/TabviewUpdate.h"
 #include "Systems/OnStart.h"
@@ -75,6 +76,8 @@ int main(int argc, char* argv[])
     DrawCreate drawCreate{};
     DrawRender drawRender{};
     DrawResize drawResize{};
+
+    MotionUpdate motionUpdate{};
 
     FocusUpdate focusUpdate{};
 

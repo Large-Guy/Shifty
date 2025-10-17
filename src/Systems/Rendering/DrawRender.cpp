@@ -81,7 +81,7 @@ void DrawRender::process(const OnRender&)
         SDL_SetRenderDrawColor(draw->renderer, 0, 0, 0, 0);
 #else
 
-        SDL_SetRenderDrawColor(draw->renderer, 0, 0, 0, 64); //Darken
+        SDL_SetRenderDrawColor(draw->renderer, 32, 32, 32, 64); //Darken
 #endif
 
         SDL_RenderClear(draw->renderer);

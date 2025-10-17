@@ -15,7 +15,7 @@ void PanelAnimationUpdate::process(const OnUpdate&)
     Entity::multiEach<Animation, Layout, Panel, Transform>(
         [&](ComRef<Animation> animation, ComRef<Layout> layout, ComRef<Panel> view, ComRef<Transform> transform)
         {
-            if (animation->time > 1.0f)
+            if (animation->tracks["open"].time > 1.0f)
                 return;
             if (layout->parent != Entity::null)
             {
@@ -23,13 +23,13 @@ void PanelAnimationUpdate::process(const OnUpdate&)
                 {
                     transform->hMode = Transform::Mode::Auto;
                     transform->wMode = Transform::Mode::Percent;
-                    transform->w = Tween::Lerp(0.0f, 1.0f, Tween::easeOutElastic(animation->time));
+                    transform->w = Tween::Lerp(0.0f, 1.0f, Tween::easeOutElastic(animation->tracks["open"].time));
                 }
                 else if (layout->parent.get<Layout>()->type == Layout::Type::VERTICAL)
                 {
                     transform->wMode = Transform::Mode::Auto;
                     transform->hMode = Transform::Mode::Percent;
-                    transform->h = Tween::Lerp(0.0f, 1.0f, Tween::easeOutElastic(animation->time));
+                    transform->h = Tween::Lerp(0.0f, 1.0f, Tween::easeOutElastic(animation->tracks["open"].time));
                 }
             }
         });

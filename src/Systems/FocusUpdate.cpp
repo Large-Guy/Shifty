@@ -12,7 +12,7 @@ void FocusUpdate::process(const OnUpdate& update)
         {
             focus->previousFocused = focus->focusChanged;
             focus->focusChanged = focus->focused;
-            animation->time = 0.0f;
+            animation->tracks["focus"].time = 0.0f;
         }
     });
 }

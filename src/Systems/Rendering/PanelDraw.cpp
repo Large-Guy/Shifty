@@ -30,12 +30,24 @@ void PanelDraw::Command::execute(SDL_Renderer* renderer)
 
     if (Entity::find<Focus>()->focused == renderTransform.owner)
     {
-        SDL_SetRenderDrawColorFloat(renderer, r, g, b,
-                                    Tween::easeOutQuint(Entity::findEntity<Focus>().get<Animation>()->time) * 0.4f);
-        SDL_RenderFillRect(renderer, &rect);
+        float tween = Tween::easeOutQuint(Entity(renderTransform.owner).get<Animation>()->tracks["focus"].time);
 
-        SDL_SetRenderDrawColorFloat(renderer, 1.0f, 1.0f, 1.0f, 0.67f);
-        SDL_RenderRect(renderer, &rect);
+        float thicknessTween =
+            Tween::easeInOutQuart(Entity(renderTransform.owner).get<Animation>()->tracks["focus"].time);
+
+        ComRef<Draw> draw = Entity::find<Draw>();
+        Drawing::drawUIRect(draw, {
+                                .screenSize = {static_cast<float>(draw->width), static_cast<float>(draw->height)},
+                                .start = {0.0f, 0.0f},
+                                .rect = {rect.x, rect.y, rect.w, rect.h},
+                                .rounding = {8.0f, 8.0f, 8.0f, 8.0f},
+
+                                .fillStart = {1.0f, 1.0f, 1.0f, 0.5f * tween},
+                                .fillEnd = {1.0f, 1.0f, 1.0f, 0.67f * tween},
+                                .end = {0.5f, 1.0f},
+
+                                .thickness = 8.0f * thicknessTween,
+                            });
     }
     else
     {

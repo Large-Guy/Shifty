@@ -59,7 +59,7 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
                 if (elapsed < 200)
                 {
                     commandPalette->open = true;
-                    animation->time = 0;
+                    animation->tracks["open"].time = 0;
                     edit->highlightStart = 0;
                     edit->cursor = text->text.length();
                     EditShared::deleteSelection(text, edit);
@@ -91,7 +91,7 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
                 Entity::find<App>()->state = App::State::Normal;
 
                 commandPalette->open = false;
-                animation->time = 0;
+                animation->tracks["open"].time = 0;
                 Entity::find<Focus>()->focused = layout->parent;
             });
     }
@@ -114,7 +114,7 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
                 });
 
                 commandPalette->open = false;
-                animation->time = 0;
+                animation->tracks["open"].time = 0;
             });
     }
     else

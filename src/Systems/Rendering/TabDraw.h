@@ -3,6 +3,7 @@
 #include "Components/Draw.h"
 #include "Components/Draw.h"
 #include "Components/Draw.h"
+#include "Components/Motion.h"
 #include "Components/RenderTransform.h"
 #include "Components/Tab.h"
 #include "Components/Panel.h"
@@ -15,8 +16,9 @@ class TabDraw final : System<OnDraw>
     {
         ComRef<Tab> tab;
         ComRef<RenderTransform> renderTransform;
+        ComRef<Motion> motion;
 
-        Command(ComRef<RenderTransform> renderTransform, ComRef<Tab> tab, int layer);
+        Command(ComRef<RenderTransform> renderTransform, ComRef<Motion> motion, ComRef<Tab> tab, int layer);
 
         void execute(SDL_Renderer* renderer) override;
     };

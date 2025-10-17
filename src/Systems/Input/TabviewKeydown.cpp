@@ -17,7 +17,7 @@ void TabviewKeydown::process(const OnKeyPress& event)
         return;
 
     //This is a hacky solution to the immediate selection bug
-    if (Entity::findEntity<TabviewState>().get<Animation>()->time <= 0.f)
+    if (Entity::findEntity<TabviewState>().get<Animation>()->tracks["open"].time <= 0.f)
         return;
 
     bool ctrl = event.handler->isPressed(SDLK_LCTRL) || event.handler->isPressed(SDLK_RCTRL);

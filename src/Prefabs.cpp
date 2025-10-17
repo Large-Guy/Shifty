@@ -7,6 +7,7 @@
 #include "Components/Edit.h"
 #include "Components/Focus.h"
 #include "Components/Layout.h"
+#include "Components/Motion.h"
 #include "Components/RenderTransform.h"
 #include "Components/Selectable.h"
 #include "Components/Tab.h"
@@ -21,7 +22,7 @@ Entity Prefabs::createView()
     view.add<Panel>();
     view.add<Layout>({.type = Layout::Type::FREE});
     view.add<RenderTransform>();
-    view.add<Animation>({.time = 0.f});
+    view.add<Animation>({.tracks = {{"open", {}}}});
     view.add<Selectable>();
 
     Entity commandPalette = Entity::create();
@@ -34,7 +35,7 @@ Entity Prefabs::createView()
     commandPalette.add<Layout>({.type = Layout::Type::FULL});
     commandPalette.add<RenderTransform>();
     commandPalette.add<CommandPalette>();
-    commandPalette.add<Animation>({.speed = 3.0f});
+    commandPalette.add<Animation>({.tracks = {{"open", {.speed = 3.0f}}}});
     commandPalette.add<Text>({
         .text = "",
         .font = Font::load("res/fonts/Quicksand-SemiBold.ttf"),
@@ -62,6 +63,7 @@ Entity Prefabs::createTab(const std::string& url, Entity view)
 {
     Entity tab = Entity::create();
     tab.add<RenderTransform>();
+    tab.add<Motion>();
     tab.add<Tab>({.url = url});
     Panel::addTab(view, tab);
     return tab;

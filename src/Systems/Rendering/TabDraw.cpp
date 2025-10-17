@@ -4,6 +4,9 @@
 #include <random>
 
 #include "Drawing.h"
+#include "Tween.h"
+#include "Components/Animation.h"
+#include "Components/Focus.h"
 #include "Components/RenderTransform.h"
 #include "Components/Transform.h"
 #include "Components/Panel.h"
@@ -79,10 +82,10 @@ SDL_FColor makeShadowColor(SDL_FColor base)
     return shadow;
 }
 
-TabDraw::Command::Command(ComRef<RenderTransform> renderTransform, ComRef<Tab> tab, int layer) :
+TabDraw::Command::Command(ComRef<RenderTransform> renderTransform, ComRef<Motion> motion, ComRef<Tab> tab, int layer) :
     Draw::Command(30 - layer),
     tab(tab),
-    renderTransform(renderTransform)
+    renderTransform(renderTransform), motion(motion)
 {
 }
 
@@ -92,6 +95,12 @@ void TabDraw::Command::execute(SDL_Renderer* renderer)
     float y = renderTransform->y;
     float w = renderTransform->w;
     float h = renderTransform->h;
+
+    float deltaX = motion->deltaX;
+    float deltaY = motion->deltaY;
+    float deltaW = motion->deltaW;
+    float deltaH = motion->deltaH;
+
     SDL_FRect rect = {x, y, w, h};
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     std::mt19937 gen((size_t)renderTransform.get());
@@ -109,6 +118,14 @@ void TabDraw::Command::execute(SDL_Renderer* renderer)
     SDL_FColor color = {r, g, b, 1.0f};
     SDL_FColor shadow = makeShadowColor(color);
 
+    float tween = 0.0f;
+
+    if (Entity::find<Focus>()->focused.has<Panel>())
+    {
+        if (Entity::find<Focus>()->focused.get<Panel>()->holdingTabs.front() == tab.owner)
+            tween = Tween::easeOutQuint(Entity::findEntity<Focus>().get<Animation>()->tracks["focus"].time);
+    }
+
     ComRef<Draw> draw = Entity::find<Draw>();
     Drawing::drawUIRect(draw, {
                             .screenSize = {static_cast<float>(draw->width), static_cast<float>(draw->height)},
@@ -120,22 +137,28 @@ void TabDraw::Command::execute(SDL_Renderer* renderer)
                             .fillEnd = {shadow.r, shadow.g, shadow.b, 1.0f},
                             .end = {0.0f, 1.0f},
 
-                            .thickness = 4.0f
+                            .thickness = 1.0f,
+                            .motion = {deltaX, deltaY, deltaW, deltaH},
+                            .shadow = 32.0f,
+                            .startShadow = Tween::Lerp(0.2f, 0.9f, tween),
+                            .endShadow = 0.0
                         });
 }
 
 void TabDraw::process(const OnDraw& draw)
 {
-    Entity::multiEach<RenderTransform, Panel>([draw](ComRef<RenderTransform> transform, ComRef<Panel> view)
-    {
-        if (view->holdingTabs.empty())
-            return;
-
-        for (int i = 0; i < view->holdingTabs.size(); ++i)
+    Entity::multiEach<RenderTransform, Panel>(
+        [draw](ComRef<RenderTransform> transform, ComRef<Panel> view)
         {
-            draw.draw->pushCommand(
-                std::make_shared<Command>(view->holdingTabs[i].get<RenderTransform>(),
-                                          view->holdingTabs[i].get<Tab>(), i));
-        }
-    });
+            if (view->holdingTabs.empty())
+                return;
+
+            for (int i = 0; i < view->holdingTabs.size(); ++i)
+            {
+                draw.draw->pushCommand(
+                    std::make_shared<Command>(view->holdingTabs[i].get<RenderTransform>(),
+                                              view->holdingTabs[i].get<Motion>(),
+                                              view->holdingTabs[i].get<Tab>(), i));
+            }
+        });
 }

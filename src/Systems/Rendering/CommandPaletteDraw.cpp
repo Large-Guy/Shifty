@@ -19,11 +19,14 @@ void CommandPaletteDraw::Command::execute(SDL_Renderer* renderer)
                             .rect = {rect.x, rect.y, rect.w, rect.h},
                             .rounding = {16.0f, 0.0f, 16.0f, 0.0f},
 
-                            .fillStart = {0.93f, 0.93f, 0.93f, 1.0f},
-                            .fillEnd = {0.88f, 0.88f, 0.88f, 0.5f},
+                            .fillStart = {0.93f, 0.93f, 0.93f, 0.8f},
+                            .fillEnd = {0.93f, 0.93f, 0.93f, 1.0f},
                             .end = {0.0f, 1.0f},
 
-                            .thickness = 8.0f
+                            .thickness = 2.0f,
+                            .shadow = 24.0f,
+                            .startShadow = 0.2,
+                            .endShadow = 0.0
                         });
 }
 

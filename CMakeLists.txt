@@ -110,6 +110,9 @@ set(CORE_SOURCES
         src/Rendering/Pipeline.h
         src/Drawing.cpp
         src/Drawing.h
+        src/Components/Motion.h
+        src/Systems/MotionUpdate.cpp
+        src/Systems/MotionUpdate.h
 )
 
 if (APPLE)

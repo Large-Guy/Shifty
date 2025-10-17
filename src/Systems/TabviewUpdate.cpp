@@ -96,9 +96,10 @@ void TabviewUpdate::process(const OnUpdate& update)
 
         if (Entity::find<TabviewState>()->active)
         {
-            float elastic = Tween::Lerp(Tween::easeInCubic(viewAnimation->time),
-                                        Tween::easeOutBack(viewAnimation->time), viewAnimation->time);
-            float back = Tween::easeOutBack(viewAnimation->time);
+            float elastic = Tween::Lerp(Tween::easeInCubic(viewAnimation->tracks["open"].time),
+                                        Tween::easeOutBack(viewAnimation->tracks["open"].time),
+                                        viewAnimation->tracks["open"].time);
+            float back = Tween::easeOutBack(viewAnimation->tracks["open"].time);
 
             transform->x = Tween::Lerp(viewRenderTransform->x, tx, back);
             transform->y = Tween::Lerp(viewRenderTransform->y, ty, back);
@@ -107,20 +108,20 @@ void TabviewUpdate::process(const OnUpdate& update)
         }
         else
         {
-            float elastic = Tween::easeInOutBack(viewAnimation->time);
-            float back = Tween::Lerp(Tween::easeInOutCubic(viewAnimation->time),
-                                     Tween::easeOutBack(viewAnimation->time),
-                                     viewAnimation->time);
+            float elastic = Tween::easeInOutBack(viewAnimation->tracks["open"].time);
+            float back = Tween::Lerp(Tween::easeInOutCubic(viewAnimation->tracks["open"].time),
+                                     Tween::easeOutBack(viewAnimation->tracks["open"].time),
+                                     viewAnimation->tracks["open"].time);
 
             float x = viewRenderTransform->x;
             float y = viewRenderTransform->y;
             float w = viewRenderTransform->w;
             float h = viewRenderTransform->h;
 
-            x += 8;
-            y += 8;
-            w -= 16;
-            h -= 16;
+            x += GlobalConfig::tabPadding;
+            y += GlobalConfig::tabPadding;
+            w -= GlobalConfig::tabPadding * 2;
+            h -= GlobalConfig::tabPadding * 2;
 
             transform->x = Tween::Lerp(tx, x, back);
             transform->y = Tween::Lerp(ty, y, back);

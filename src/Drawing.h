@@ -24,6 +24,12 @@ public:
         float end[2];
         float thickness;
         float pad0;
+
+        float motion[4];
+
+        float shadow;
+        float startShadow;
+        float endShadow;
     };
 
     static void drawUIRect(ComRef<Draw> draw, const UIRectInfo& info);

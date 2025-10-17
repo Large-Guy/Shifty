@@ -35,7 +35,7 @@ void OnStart::process(const OnReady&)
 
     Entity tabViewState = Entity::create();
     tabViewState.add<TabviewState>();
-    tabViewState.add<Animation>({.speed = 2.f});
+    tabViewState.add<Animation>({.tracks = {{"open", {.speed = 2.f}}}});
     tabViewState.add<RenderTransform>();
 
     world.get<Focus>()->focused = mainView;

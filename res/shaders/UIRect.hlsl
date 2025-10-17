@@ -19,95 +19,85 @@ struct Output
 //const float2 end = float2(1.0f, 1.0f);
 //const float thickness = 4.0;
 
-cbuffer vert : register(b0, space1)
+struct RectInfo
 {
     // Positioning
-    float2 v_screenSize;
-    float2 v_start;
+    float2 screenSize;
+    float2 start;
 
-    float4 v_rect;
-    float4 v_rounding;
+    float4 rect;
+    float4 rounding;
 
-    // Colors
-    float4 v_fillStart;
-    float4 v_fillEnd;
+    // Color
+    float4 fillStart;
+    float4 fillEnd;
 
-    float2 v_end;
+    float2 end;
 
     // Outline
-    float v_thickness;
-    float v_pad0;
+    float thickness;
+    float pad0;
+
+    //Motion
+    float4 motion;
+
+    //  Effects
+
+    //Border/shadow
+
+    float shadow;
+    float startShadow;
+    float endShadow;
+};
+
+cbuffer vert : register(b0, space1)
+{
+    RectInfo vertInfo;
 }
+
 
 cbuffer frag : register(b0, space3)
 {
-    // Positioning
-    float2 f_screenSize;
-    float2 f_start;
-
-    float4 f_rect;
-    float4 f_rounding;
-
-    // Colors
-    float4 f_fillStart;
-    float4 f_fillEnd;
-
-    float2 f_end;
-
-    // Outline
-    float f_thickness;
-    float f_pad0;
+    RectInfo fragInfo;
 }
+
 
 //vertex
 
+const float2 tl = float2(0.0f, 0.0f);
+const float2 tr = float2(1.0f, 0.0f);
+const float2 bl = float2(0.0f, 1.0f);
+const float2 br = float2(1.0f, 1.0f);
+
+const float2 vertices[6] = {
+    tl, tr, bl,
+    bl, tr, br,
+};
+
 Output vertex(Input input)
 {
-    //Corners
-    float2 tl = float2(0.0f, 0.0f);
-    float2 tr = float2(1.0f, 0.0f);
-    float2 bl = float2(0.0f, 1.0f);
-    float2 br = float2(1.0f, 1.0f);
+    RectInfo info = vertInfo;
 
+    //Corners
     Output output;
     float2 pos;
-    if (input.VertexIndex == 0)
+
+    pos = vertices[input.VertexIndex];
+    output.UV = vertices[input.VertexIndex];
+
+    float2 ss = max(info.screenSize, float2(1.0f, 1.0f)); // avoid div by 0
+
+    float shadow = info.shadow;
+
+    if(shadow > 0)
     {
-        pos = tl;
-        output.UV = tl;
-    }
-    if (input.VertexIndex == 1)
-    {
-        pos = tr;
-        output.UV = tr;
-    }
-    if (input.VertexIndex == 2)
-    {
-        pos = bl;
-        output.UV = bl;
-    }
-    if(input.VertexIndex == 3)
-    {
-        pos = bl;
-        output.UV = bl;
-    }
-    if(input.VertexIndex == 4)
-    {
-        pos = tr;
-        output.UV = tr;
-    }
-    if(input.VertexIndex == 5)
-    {
-        pos = br;
-        output.UV = br;
+        output.UV.y *= (info.rect.w + shadow) / info.rect.w;
     }
 
-    float2 ss = max(v_screenSize, float2(1.0f, 1.0f)); // avoid div by 0
-
-    pos *= v_rect.zw;
+    pos *= (info.rect.zw + float2(0.0f, shadow));
     pos /= (ss * 0.5f);
     pos -= float2(1.0f, 1.0f);
-    pos += v_rect.xy / (ss * 0.5);
+    pos += (info.rect.xy) / (ss * 0.5);
     pos.y *= -1.0f;
 
     output.Position = float4(pos, 0.0f, 1.0f);
@@ -131,42 +121,55 @@ float sdfRoundedBox(in float2 p, in float2 b, in float4 r)
 
 float4 fragment(Output output) : SV_TARGET
 {
-    const float4 outlineStart = float4(0.4, 0.4f, 0.4f, 1.0f);
-    const float4 outlineEnd = float4(0.2f, 0.2f, 0.2f, 1.0f);
+    RectInfo info = fragInfo;
+
+    float shadow = info.shadow;
+
+    const float4 outlineStart = float4(1.0, 1.0f, 1.0f, 1.0f);
+    const float4 outlineEnd = float4(0.9f, 0.9f, 0.9f, 1.0f);
     const float4 background = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
     //gradient
-    float2 ab = f_end - f_start;
-    float2 ap = output.UV - f_start;
+    float2 ab = info.end - info.start;
+    float2 ap = output.UV - info.start;
     float t = dot(ap, ab) / dot(ab, ab);
-    float4 fill = lerp(f_fillStart, f_fillEnd, saturate(t));
+    float4 fill = lerp(info.fillStart, info.fillEnd, saturate(t));
     float4 outline = lerp(outlineStart, outlineEnd, saturate(t));
 
-    float noise = (rand(output.UV * f_screenSize) - 0.5f) / 255.0f;
+    float noise = (rand(output.UV * info.screenSize - float2(0.0f, shadow)) - 0.5f) / 255.0f;
 
     fill += noise;
 
     float4 color = background;
 
-    float2 pixelUV = (output.UV * f_rect.zw) - (f_rect.zw * 0.5f);
+    float2 pixelUV = (output.UV * info.rect.zw);
 
-    float sdf = sdfRoundedBox(pixelUV * 2.0f, f_rect.zw, f_rounding);
+    float sdf = sdfRoundedBox((pixelUV - info.rect.zw * 0.5f) * 2.0f, info.rect.zw, info.rounding);
 
-    float smoothness = 0.9f;
+    float smoothness = 0.0f;
 
-    if(sdf < -f_thickness)
+    if(sdf < -info.thickness * 2.0)
     {
         color = fill;
     }
     else if(sdf < 0.0f)
     {
-        float t = smoothstep(0.0, -f_thickness, sdf);
-        color = lerp(outline, fill, t);
+        float edge = 0.5;
+        float aa = fwidth(sdf) * info.thickness * 2.0;  // approximate pixel width in distance space
+        float alpha = smoothstep(edge - aa, edge + aa, sdf);
+        color = lerp(outline, fill, alpha);
     }
     else
     {
         color = background;
+        if(pixelUV.y > info.rect.w - max(info.rounding.x, info.rounding.z))
+        {
+            float shadowPos = 1.0f - clamp((pixelUV.y - info.rect.w) / shadow, 0.0f, 1.0f);
+            float edgeFade = 1.0f - clamp((abs(pixelUV.x - info.rect.z / 2.0f) - (info.rect.z / 2.0f - shadow)) / shadow, 0.0f, 1.0f);
+            color = float4(0.0f, 0.0f, 0.0f, lerp(info.endShadow, info.startShadow, edgeFade * shadowPos));
+        }
     }
+
 
     return color;
 }

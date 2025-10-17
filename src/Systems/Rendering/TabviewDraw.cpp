@@ -26,8 +26,8 @@ void TabviewDraw::process(const OnDraw& draw)
 {
     Entity state = Entity::findEntity<TabviewState>();
 
-    float alpha = state.get<Animation>()->time;
+    float alpha = state.get<Animation>()->tracks["open"].time;
     if (!state.get<TabviewState>()->active)
-        alpha = 1.f - state.get<Animation>()->time;
+        alpha = 1.f - state.get<Animation>()->tracks["open"].time;
     draw.draw->pushCommand(std::make_shared<Command>(state.get<RenderTransform>(), alpha));
 }

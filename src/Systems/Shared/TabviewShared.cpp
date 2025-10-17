@@ -17,7 +17,7 @@ void TabviewShared::show()
     Entity::find<TabviewState>()->active = true;
     Entity::find<TabviewState>()->targetView = Entity::find<Focus>()->focused;
     Entity::find<TabviewState>()->focusedTab = Entity::find<Focus>()->focused.get<Panel>()->holdingTabs.front();
-    Entity::findEntity<TabviewState>().get<Animation>()->time = 0.f;
+    Entity::findEntity<TabviewState>().get<Animation>()->tracks["open"].time = 0.f;
     Entity::multiEach<Tab, RenderTransform>(
         [&](ComRef<Tab> tab, ComRef<RenderTransform> renderTransform)
         {
@@ -32,7 +32,7 @@ void TabviewShared::show()
 void TabviewShared::hide()
 {
     Entity::find<TabviewState>()->active = false;
-    Entity::findEntity<TabviewState>().get<Animation>()->time = 0.f;
+    Entity::findEntity<TabviewState>().get<Animation>()->tracks["open"].time = 0.f;
     Entity::find<App>()->state = App::State::Normal;
 }
 
