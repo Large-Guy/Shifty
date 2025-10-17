@@ -11,8 +11,16 @@ void FocusUpdate::process(const OnUpdate& update)
         if (focus->focused != focus->focusChanged)
         {
             focus->previousFocused = focus->focusChanged;
+            if (focus->previousFocused != Entity::null && focus->previousFocused.has<Animation>())
+            {
+                focus->previousFocused.get<Animation>()->tracks["focusEnd"].time = 0.0f;
+            }
             focus->focusChanged = focus->focused;
-            animation->tracks["focus"].time = 0.0f;
+
+            if (focus->focused.has<Animation>())
+            {
+                focus->focused.get<Animation>()->tracks["focusStart"].time = 0.0f;
+            }
         }
     });
 }

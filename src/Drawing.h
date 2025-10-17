@@ -12,24 +12,27 @@ class Drawing
 public:
     struct alignas(16) UIRectInfo
     {
-        float screenSize[2];
-        float start[2];
+        float screenSize[2] = {1.0f, 1.0f};
+        float start[2] = {0.0f, 0.0f};
 
-        float rect[4];
-        float rounding[4];
+        float rect[4] = {0.0f, 0.0f, 1.0f, 1.0f};
+        float rounding[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 
-        float fillStart[4];
-        float fillEnd[4];
+        float fillStart[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+        float fillEnd[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 
-        float end[2];
-        float thickness;
-        float pad0;
+        float outlineStart[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+        float outlineEnd[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 
-        float motion[4];
+        float end[2] = {1.0f, 1.0f};
+        float thickness = 1.0f;
+        float pad0 = 0.0f;
 
-        float shadow;
-        float startShadow;
-        float endShadow;
+        float motion[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+
+        float shadow = 0.0f;
+        float startShadow = 0.0f;
+        float endShadow = 0.0f;
     };
 
     static void drawUIRect(ComRef<Draw> draw, const UIRectInfo& info);

@@ -101,7 +101,6 @@ void TabDraw::Command::execute(SDL_Renderer* renderer)
     float deltaW = motion->deltaW;
     float deltaH = motion->deltaH;
 
-    SDL_FRect rect = {x, y, w, h};
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     std::mt19937 gen((size_t)renderTransform.get());
     std::uniform_real_distribution<float> dist(0.0f, 1.0f);
@@ -120,11 +119,25 @@ void TabDraw::Command::execute(SDL_Renderer* renderer)
 
     float tween = 0.0f;
 
-    if (Entity::find<Focus>()->focused.has<Panel>())
+    if (Entity::find<Focus>()->focused != Entity::null &&
+        Entity::find<Focus>()->focused.has<Panel>() &&
+        Entity::find<Focus>()->focused.get<Panel>()->holdingTabs.front() == tab.owner)
     {
-        if (Entity::find<Focus>()->focused.get<Panel>()->holdingTabs.front() == tab.owner)
-            tween = Tween::easeOutQuint(Entity::findEntity<Focus>().get<Animation>()->tracks["focus"].time);
+        auto animation = Entity(tab->viewer).get<Animation>();
+        tween = Tween::easeOutQuint(animation->tracks["focusStart"].time);
     }
+    else
+    {
+        auto animation = Entity(tab->viewer).get<Animation>();
+        tween = 1.0f - Tween::easeOutQuint(animation->tracks["focusEnd"].time);
+    }
+
+    SDL_FRect rect = {
+        x + Tween::Lerp(8.0f, 0.0f, tween),
+        y + Tween::Lerp(8.0f, 0.0f, tween),
+        w - Tween::Lerp(16.0f, 0.0f, tween),
+        h - Tween::Lerp(16.0f, 0.0f, tween)
+    };
 
     ComRef<Draw> draw = Entity::find<Draw>();
     Drawing::drawUIRect(draw, {
@@ -134,7 +147,7 @@ void TabDraw::Command::execute(SDL_Renderer* renderer)
                             .rounding = {16.0f, 16.0f, 16.0f, 16.0f},
 
                             .fillStart = {color.r, color.g, color.b, 1.0f},
-                            .fillEnd = {shadow.r, shadow.g, shadow.b, 1.0f},
+                            .fillEnd = {color.r, color.g, color.b, 1.0f},
                             .end = {0.0f, 1.0f},
 
                             .thickness = 1.0f,

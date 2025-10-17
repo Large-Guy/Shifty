@@ -22,7 +22,7 @@ Entity Prefabs::createView()
     view.add<Panel>();
     view.add<Layout>({.type = Layout::Type::FREE});
     view.add<RenderTransform>();
-    view.add<Animation>({.tracks = {{"open", {}}}});
+    view.add<Animation>({.tracks = {{"open", {}}, {"focusStart", {.speed = 2.0f}}, {"focusEnd", {.speed = 2.0f}}}});
     view.add<Selectable>();
 
     Entity commandPalette = Entity::create();

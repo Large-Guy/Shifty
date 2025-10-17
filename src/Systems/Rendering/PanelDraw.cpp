@@ -28,32 +28,35 @@ void PanelDraw::Command::execute(SDL_Renderer* renderer)
     float g = 0.0f;
     float b = 0.0f;
 
+    float tween = 0.0f;
+    float thicknessTween = 0.0f;
+
     if (Entity::find<Focus>()->focused == renderTransform.owner)
     {
-        float tween = Tween::easeOutQuint(Entity(renderTransform.owner).get<Animation>()->tracks["focus"].time);
-
-        float thicknessTween =
-            Tween::easeInOutQuart(Entity(renderTransform.owner).get<Animation>()->tracks["focus"].time);
-
-        ComRef<Draw> draw = Entity::find<Draw>();
-        Drawing::drawUIRect(draw, {
-                                .screenSize = {static_cast<float>(draw->width), static_cast<float>(draw->height)},
-                                .start = {0.0f, 0.0f},
-                                .rect = {rect.x, rect.y, rect.w, rect.h},
-                                .rounding = {8.0f, 8.0f, 8.0f, 8.0f},
-
-                                .fillStart = {1.0f, 1.0f, 1.0f, 0.5f * tween},
-                                .fillEnd = {1.0f, 1.0f, 1.0f, 0.67f * tween},
-                                .end = {0.5f, 1.0f},
-
-                                .thickness = 8.0f * thicknessTween,
-                            });
+        float time = Entity(renderTransform.owner).get<Animation>()->tracks["focusStart"].time;
+        tween = Tween::easeOutQuint(time);
+        thicknessTween = Tween::easeInOutQuart(time);
     }
     else
     {
-        SDL_SetRenderDrawColorFloat(renderer, 1.0f, 1.0f, 1.0f, 0.2f);
-        SDL_RenderRect(renderer, &rect);
+        float time = Entity(renderTransform.owner).get<Animation>()->tracks["focusEnd"].time;
+        tween = 1.0f - Tween::easeOutQuint(time);
+        thicknessTween = 1.0f - Tween::easeInOutQuart(time);
     }
+
+    ComRef<Draw> draw = Entity::find<Draw>();
+    Drawing::drawUIRect(draw, {
+                            .screenSize = {static_cast<float>(draw->width), static_cast<float>(draw->height)},
+                            .start = {0.0f, 0.0f},
+                            .rect = {rect.x, rect.y, rect.w, rect.h},
+                            .rounding = {32.0f, 32.0f, 32.0f, 32.0f},
+
+                            .fillStart = {1.0f, 1.0f, 1.0f, 0.6f * tween},
+                            .fillEnd = {1.0f, 1.0f, 1.0f, 0.67f * tween},
+                            .end = {0.5f, 1.0f},
+
+                            .thickness = 8.0f * thicknessTween,
+                        });
 }
 
 

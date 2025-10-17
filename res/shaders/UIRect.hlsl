@@ -32,6 +32,9 @@ struct RectInfo
     float4 fillStart;
     float4 fillEnd;
 
+    float4 outlineStart;
+    float4 outlineEnd;
+
     float2 end;
 
     // Outline
@@ -125,8 +128,6 @@ float4 fragment(Output output) : SV_TARGET
 
     float shadow = info.shadow;
 
-    const float4 outlineStart = float4(1.0, 1.0f, 1.0f, 1.0f);
-    const float4 outlineEnd = float4(0.9f, 0.9f, 0.9f, 1.0f);
     const float4 background = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
     //gradient
@@ -134,7 +135,7 @@ float4 fragment(Output output) : SV_TARGET
     float2 ap = output.UV - info.start;
     float t = dot(ap, ab) / dot(ab, ab);
     float4 fill = lerp(info.fillStart, info.fillEnd, saturate(t));
-    float4 outline = lerp(outlineStart, outlineEnd, saturate(t));
+    float4 outline = lerp(info.outlineStart, info.outlineEnd, saturate(t));
 
     float noise = (rand(output.UV * info.screenSize - float2(0.0f, shadow)) - 0.5f) / 255.0f;
 
