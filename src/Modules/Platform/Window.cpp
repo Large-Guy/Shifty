@@ -7,7 +7,9 @@
 #include <execinfo.h>
 #include "SDL3/SDL_init.h"
 
-#include "LLR/Mac/Compatibility.hpp"
+#ifdef __APPLE__
+#include "Platform/Mac/Compatibility.hpp"
+#endif
 
 Window::Window(const std::string& name, int width, int height)
 {

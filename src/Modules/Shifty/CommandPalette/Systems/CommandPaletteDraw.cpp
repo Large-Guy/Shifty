@@ -1,6 +1,6 @@
 #include "CommandPaletteDraw.h"
 
-#include "Drawing/DrawSystem.h"
+#include "Drawing/Systems/DrawSystem.h"
 #include "Shifty/CommandPalette/Components/CommandPalette.h"
 
 CommandPaletteDraw::Command::Command(ComRef<RenderTransform> transform) : Draw::Command(150)

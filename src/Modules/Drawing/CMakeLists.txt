@@ -7,8 +7,8 @@ add_library(ShiftyDrawing STATIC
         Systems/DrawRender.h
         Systems/DrawResize.cpp
         Systems/DrawResize.h
-        DrawSystem.cpp
-        DrawSystem.h
+        Systems/DrawSystem.cpp
+        Systems/DrawSystem.h
         Tween.cpp
         Tween.h
         TextRenderer.cpp
