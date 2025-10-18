@@ -49,5 +49,5 @@ with software architecture as well.
 ### 2. Event Buses
 
 All application operations happen through events. This is most visible
-in [TextEditSystems.h](src/Systems/TextEditSystems.h). Each ECS System only handles ONE event.
+in [TextEditSystems.h](src/Modules/UI/Systems/TextEditSystems.h). Each ECS System only handles ONE event.
 This keeps things simple and modular.

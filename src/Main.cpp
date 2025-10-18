@@ -2,60 +2,38 @@
 #include <SDL3_ttf/SDL_ttf.h>
 
 #include "ECS/Entity.h"
-#include "EventBus.h"
-#include "Events.h"
+#include "Modules/EventBus/EventBus.h"
 
-#include "Components/App.h"
-#include <iostream>
+#include "Modules/Shifty/App/Components/App.h"
 #include <chrono>
 
-#include "Components/CommandPalette.h"
-#include "Events.h"
-#include "Components/Draw.h"
-#include "Components/InputHandler.h"
-#include "Components/Panel.h"
-#include "Systems/AnimationUpdate.h"
-#include "Systems/AppCreate.h"
-#include "Systems/AppUpdate.h"
-#include "Systems/Rendering/ColorRectDraw.h"
-#include "Systems/CommandPaletteExpansionUpdate.h"
-#include "Systems/CommandPaletteUpdate.h"
-#include "Systems/DrawCreate.h"
-#include "Systems/DrawResize.h"
-#include "Systems/FocusUpdate.h"
-#include "Systems/MotionUpdate.h"
-#include "Systems/Rendering/DrawRender.h"
-#include "Systems/TabviewUpdate.h"
-#include "Systems/OnStart.h"
-#include "Systems/RenderTransformsCompute.h"
-#include "Systems/Commands/TabCommand.h"
-#include "Systems/Rendering/TextDraw.h"
-#include "Systems/TextEditSystems.h"
-#include "Systems/PanelAnimationUpdate.h"
-#include "Systems/Groups/EditSystemGroup.h"
-#include "Systems/Groups/TabViewSystemGroup.h"
-#include "Systems/Input/CommandPaletteKeydown.h"
-#include "Systems/Input/SelectableMousePress.h"
-#include "Systems/Rendering/CommandPaletteDraw.h"
-#include "Systems/Rendering/PanelDraw.h"
-#include "Systems/Rendering/TabDraw.h"
-#include "Systems/Rendering/TabviewDraw.h"
-
-struct ClearCommand : public Draw::Command
-{
-    SDL_Color color;
-
-    ClearCommand(SDL_Color color, int priority) : Draw::Command(priority)
-    {
-        this->color = color;
-    }
-
-    void execute(SDL_Renderer* renderer) override
-    {
-        SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-        SDL_RenderClear(renderer);
-    }
-};
+#include "Modules/Drawing/Components/Draw.h"
+#include "Drawing/Systems/DrawCreate.h"
+#include "Modules/UI/Systems/AnimationUpdate.h"
+#include "Modules/Shifty/App/Systems/AppCreate.h"
+#include "Modules/Shifty/App/Systems/AppUpdate.h"
+#include "Modules/Shifty/CommandPalette/Systems/CommandPaletteExpansionUpdate.h"
+#include "Modules/Shifty/CommandPalette/Systems/CommandPaletteUpdate.h"
+#include "Modules/Drawing/Systems/DrawResize.h"
+#include "Modules/UI/Systems/MotionUpdate.h"
+#include "Modules/Drawing/Systems/DrawRender.h"
+#include "Modules/Shifty/Tabs/Systems/TabviewUpdate.h"
+#include "Modules/Shifty/Systems/OnStart.h"
+#include "Modules/UI/Systems/RenderTransformsCompute.h"
+#include "Modules/Shifty/Systems/TabCommand.h"
+#include "Modules/UI/Systems/TextDraw.h"
+#include "Modules/Shifty/Panes/Systems/PaneAnimationUpdate.h"
+#include "Modules/Shifty/CommandPalette/Systems/CommandPaletteKeydown.h"
+#include "Modules/UI/Systems/SelectableMousePress.h"
+#include "Modules/Shifty/CommandPalette/Systems/CommandPaletteDraw.h"
+#include "Modules/Shifty/Panes/Systems/PaneDraw.h"
+#include "Modules/Shifty/Tabs/Systems/TabDraw.h"
+#include "Modules/Shifty/Tabs/Systems/TabviewDraw.h"
+#include "Shifty/App/Systems/AppClose.h"
+#include "Shifty/Tabs/Systems/TabviewClick.h"
+#include "Shifty/Tabs/Systems/TabviewKeydown.h"
+#include "UI/Systems/FocusUpdate.h"
+#include "UI/Systems/TextEditSystems.h"
 
 int main(int argc, char* argv[])
 {
@@ -72,6 +50,7 @@ int main(int argc, char* argv[])
     //Create all the systems
     AppCreate appCreate{};
     AppUpdate appUpdate{};
+    AppClose appClose{};
 
     DrawCreate drawCreate{};
     DrawRender drawRender{};
@@ -86,8 +65,9 @@ int main(int argc, char* argv[])
     //ColorRectDraw colorRectDraw{}; //Debugging purposes
 
     TabDraw viewDraw{};
-    PanelDraw panelDraw{};
-    PanelAnimationUpdate viewAnimationUpdate{};
+
+    PaneDraw panelDraw{};
+    PaneAnimationUpdate viewAnimationUpdate{};
 
     SelectableMousePress selectableMousePress{};
 
@@ -98,12 +78,17 @@ int main(int argc, char* argv[])
     CommandPaletteExpansionUpdate commandPaletteExpansion{};
     CommandPaletteDraw commandPaletteDraw{};
 
-    TabViewSystemGroup tabbing{};
     TabviewDraw tabviewDraw{};
+    TabviewKeydown tabKeydown{};
+    TabviewUpdate tabViewUpdate{};
+    TabviewClick tabViewClick{};
 
     TextDraw textDraw{};
 
-    EditSystemGroup editSystemGroup{};
+    EditProcess editProcess{};
+    EditInput editInput{};
+    EditKeydown editKeydown{};
+    EditDraw editDraw{};
 
     OnStart onStart{};
 
