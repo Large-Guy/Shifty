@@ -10,3 +10,6 @@
 	path = external/SDL_ttf
 	url = https://github.com/libsdl-org/SDL_ttf.git
 	branch = main
+[submodule "external/sj.h"]
+	path = external/sj.h
+	url = https://github.com/rxi/sj.h.git

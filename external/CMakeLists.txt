@@ -8,6 +8,11 @@ if (APPLE)
     find_library(COCOA_FRAMEWORK Cocoa)
 endif ()
 
+add_library(sj STATIC
+        sj.h/sj.h
+        sj.c
+)
+
 add_library(ShiftyDependencies INTERFACE)
 target_link_libraries(ShiftyDependencies INTERFACE SDL3::SDL3 SDL3_image::SDL3_image SDL3_ttf::SDL3_ttf ${COCOA_FRAMEWORK})
 
