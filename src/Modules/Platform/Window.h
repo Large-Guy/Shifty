@@ -3,12 +3,13 @@
 #include <string>
 
 #include "EventHandler.h"
-#include "SDL3/SDL_gpu.h"
+#include "IBlurManager.h"
 
 class Window
 {
 public:
     SDL_Window* window = nullptr;
+    std::unique_ptr<IBlurManager> blur;
 
     Window() = default;
     Window(const std::string& name, int width, int height);

@@ -49,8 +49,10 @@ void EventHandler::pollEvents()
             });
             break;
         case SDL_EVENT_WINDOW_RESIZED:
-            EventBus::emit(OnWindowResize{SDL_GetWindowFromID(e.window.windowID), e.window.data1, e.window.data2});
+            EventBus::emit(OnWindowResize{window, e.window.data1, e.window.data2});
             break;
+        case SDL_EVENT_WINDOW_MOVED:
+            EventBus::emit(OnWindowMove{window, e.window.data1, e.window.data2});
         default:
             break;
         }

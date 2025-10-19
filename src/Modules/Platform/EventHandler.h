@@ -24,6 +24,12 @@ struct OnWindowResize
     int width, height;
 };
 
+struct OnWindowMove
+{
+    SDL_Window* window;
+    int x, y;
+};
+
 struct OnWindowClose
 {
     SDL_Window* window;
