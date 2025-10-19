@@ -71,27 +71,27 @@ void TabviewKeydown::process(const OnKeyPress& event)
             tabs.push_back(entity);
         });
 
-        int currentX = currentIndex % GlobalConfig::tabsPerPageHorizontal;
-        int currentY = currentIndex / GlobalConfig::tabsPerPageHorizontal;
+        int currentX = currentIndex % GlobalConfig::TabView::horizontalTabs;
+        int currentY = currentIndex / GlobalConfig::TabView::horizontalTabs;
 
         currentX += x;
 
         //Calculate number of tabs in current row
-        int columns = tabs.size() - currentY * GlobalConfig::tabsPerPageHorizontal;
-        if (columns > GlobalConfig::tabsPerPageHorizontal)
-            columns = GlobalConfig::tabsPerPageHorizontal;
+        int columns = tabs.size() - currentY * GlobalConfig::TabView::horizontalTabs;
+        if (columns > GlobalConfig::TabView::horizontalTabs)
+            columns = GlobalConfig::TabView::horizontalTabs;
 
         if (currentX < 0 || currentX >= columns)
             currentX -= x;
 
         currentY += y;
 
-        int rows = (tabs.size() + 3) / GlobalConfig::tabsPerPageHorizontal;
+        int rows = (tabs.size() + 3) / GlobalConfig::TabView::horizontalTabs;
 
         if (currentY < 0 || currentY >= rows)
             currentY -= y;
 
-        currentIndex = currentY * GlobalConfig::tabsPerPageHorizontal + currentX;
+        currentIndex = currentY * GlobalConfig::TabView::horizontalTabs + currentX;
 
         if (currentIndex >= tabs.size())
             currentIndex = tabs.size() - 1;

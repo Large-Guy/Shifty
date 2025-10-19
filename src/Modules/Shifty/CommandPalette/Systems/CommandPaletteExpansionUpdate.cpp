@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "Config/GlobalConfig.h"
-#include "Drawing/TextRenderer.h"
+#include "../../../Text/TextRenderer.h"
 #include "Drawing/Tween.h"
 #include "Drawing/Components/RenderTransform.h"
 #include "UI/Components/Text.h"
@@ -31,7 +31,7 @@ void CommandPaletteExpansionUpdate::process(const OnUpdate& update)
             if (width > maxWidth)
             {
                 const float rate = update.deltaTime * 10.f;
-                const float x = -std::log(rate / (width - maxWidth)) / GlobalConfig::animationSpeed;
+                const float x = -std::log(rate / (width - maxWidth)) / GlobalConfig::Appearance::animationSpeed;
 
                 transform->wMode = Transform::Mode::Pixel;
                 transform->w = Tween::Lerp(transform->w, width, rate * x);

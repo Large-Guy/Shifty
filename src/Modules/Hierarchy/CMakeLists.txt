@@ -6,6 +6,7 @@ add_library(ShiftyHierarchy STATIC
 
 target_link_libraries(ShiftyHierarchy PUBLIC
         Shifty::ECS
+        Shifty::Config
 )
 
 add_library(Shifty::Hierarchy ALIAS ShiftyHierarchy)

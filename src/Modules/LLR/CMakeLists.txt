@@ -7,6 +7,7 @@ add_library(ShiftyLLR STATIC
 
 target_link_libraries(ShiftyLLR PUBLIC
         Shifty::Dependencies
+        Shifty::Config
 )
 
 add_library(Shifty::LLR ALIAS ShiftyLLR)

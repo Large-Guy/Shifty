@@ -8,6 +8,7 @@
 #include "EditShared.h"
 #include "Drawing/Components/RenderTransform.h"
 #include "Shifty/App/Components/App.h"
+#include "Text/TextRenderer.h"
 #include "UI/Components/Focus.h"
 
 

@@ -1,7 +1,7 @@
 #ifndef SHIFTY_TEXT_H
 #define SHIFTY_TEXT_H
 #include <string>
-#include "Drawing/TextRenderer.h"
+#include "Text/Font.h"
 
 struct Text
 {

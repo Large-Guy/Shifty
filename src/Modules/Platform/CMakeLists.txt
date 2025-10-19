@@ -5,7 +5,7 @@ if (APPLE)
             MacOS/MacOSBackend.cpp
             MacOS/MacOSBackend.h
     )
-elseif (LINUX)
+elseif (UNIX AND NOT APPLE)
     set(COMPATIBILITY_SOURCES
             Linux/Blur.cpp
             Linux/Blur.h
@@ -28,6 +28,7 @@ add_library(ShiftyPlatform STATIC
 target_link_libraries(ShiftyPlatform PUBLIC
         Shifty::Dependencies
         Shifty::EventBus
+        Shifty::Config
 )
 
 add_library(Shifty::Platform ALIAS ShiftyPlatform)

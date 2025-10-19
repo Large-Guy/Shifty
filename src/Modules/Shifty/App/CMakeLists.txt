@@ -13,6 +13,7 @@ target_link_libraries(ShiftyApp PUBLIC
         Shifty::EventBus
         Shifty::Platform
         Shifty::Drawing
+        Shifty::Config
 )
 
 add_library(Shifty::App ALIAS ShiftyApp)

@@ -14,6 +14,7 @@ target_link_libraries(ShiftyPanes PUBLIC
         Shifty::EventBus
         Shifty::Drawing
         Shifty::Hierarchy
+        Shifty::Config
 )
 
 add_library(Shifty::Panes ALIAS ShiftyPanes)

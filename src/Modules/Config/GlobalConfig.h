@@ -1,13 +1,28 @@
 #ifndef SHIFTY_GLOBALCONFIG_H
 #define SHIFTY_GLOBALCONFIG_H
-
+#include <string>
 
 struct GlobalConfig
 {
-    static constexpr float animationSpeed = 1.0f;
-    static constexpr int tabsPerPageHorizontal = 4;
-    static constexpr int tabsPerPageVertical = 3;
-    static constexpr float tabPadding = 16.0f;
+    struct Appearance
+    {
+        //General
+        static std::string theme;
+        static std::string font;
+        static float fontSize;
+        static float padding;
+        static float animationSpeed;
+        static bool transparency;
+        static bool blur;
+    };
+
+    struct TabView
+    {
+        static int horizontalTabs;
+        static int verticalTabs;
+    };
+
+    static void load(const std::string& path);
 };
 
 

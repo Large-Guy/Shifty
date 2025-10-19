@@ -11,8 +11,6 @@ add_library(ShiftyDrawing STATIC
         Systems/DrawSystem.h
         Tween.cpp
         Tween.h
-        TextRenderer.cpp
-        TextRenderer.h
 )
 
 target_link_libraries(ShiftyDrawing PUBLIC
@@ -20,6 +18,7 @@ target_link_libraries(ShiftyDrawing PUBLIC
         Shifty::LLR
         Shifty::ECS
         Shifty::EventBus
+        Shifty::Config
 )
 
 add_library(Shifty::Drawing ALIAS ShiftyDrawing)

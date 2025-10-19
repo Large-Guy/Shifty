@@ -1,0 +1,12 @@
+{
+  "appearance": {
+    "theme": "dark",
+    "font": "Inter",
+    "fontSize": 14,
+    "padding": 32
+  },
+  "tabview": {
+    "horizontal": 4,
+    "vertical": 3
+  }
+}

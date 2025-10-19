@@ -35,6 +35,8 @@ target_link_libraries(ShiftyUI PUBLIC
         Shifty::ECS
         Shifty::EventBus
         Shifty::Drawing
+        Shifty::Text
+        Shifty::Config
 )
 
 add_library(Shifty::UI ALIAS ShiftyUI)

@@ -7,6 +7,7 @@
 #include "Modules/Shifty/App/Components/App.h"
 #include <chrono>
 
+#include "Config/GlobalConfig.h"
 #include "Modules/Drawing/Components/Draw.h"
 #include "Drawing/Systems/DrawCreate.h"
 #include "Modules/UI/Systems/AnimationUpdate.h"
@@ -37,6 +38,7 @@
 
 int main(int argc, char* argv[])
 {
+    GlobalConfig::load("res/config.json");
     if (!SDL_Init(SDL_INIT_VIDEO))
     {
         throw std::runtime_error("SDL_Init failed");

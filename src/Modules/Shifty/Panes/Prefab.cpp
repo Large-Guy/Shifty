@@ -1,7 +1,7 @@
 #include "Prefab.h"
 
 #include "Components/Pane.h"
-#include "Drawing/TextRenderer.h"
+#include "../../Text/TextRenderer.h"
 #include "Hierarchy/Components/Hierarchy.h"
 #include "Drawing/Components/RenderTransform.h"
 #include "Shifty/CommandPalette/Components/CommandPalette.h"
@@ -37,7 +37,7 @@ Entity Prefabs::createView()
     commandPalette.add<Animation>({.tracks = {{"open", {.speed = 3.0f}}}});
     commandPalette.add<Text>({
         .text = "",
-        .font = Font::load("res/fonts/Quicksand-SemiBold.ttf"),
+        .font = Font::loadPath("res/fonts/Quicksand-SemiBold.ttf"),
         .size = 18
     });
     commandPalette.add<Edit>();

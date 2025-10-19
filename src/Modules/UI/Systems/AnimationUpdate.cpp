@@ -10,7 +10,7 @@ void AnimationUpdate::process(const OnUpdate& update)
     {
         for (auto& track : anim->tracks)
         {
-            track.second.time += update.deltaTime * GlobalConfig::animationSpeed * track.second.speed;
+            track.second.time += update.deltaTime * GlobalConfig::Appearance::animationSpeed * track.second.speed;
             if (track.second.time >= 1.0f)
             {
                 if (track.second.loop)

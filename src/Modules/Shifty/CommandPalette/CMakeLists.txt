@@ -16,6 +16,7 @@ target_link_libraries(ShiftyCommandPalette PUBLIC
         Shifty::UI
         Shifty::Platform
         Shifty::Drawing
+        Shifty::Config
 )
 
 add_library(Shifty::CommandPalette ALIAS ShiftyCommandPalette)

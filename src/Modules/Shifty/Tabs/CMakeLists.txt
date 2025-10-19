@@ -21,6 +21,7 @@ add_library(ShiftyTabs STATIC
 target_link_libraries(ShiftyTabs PUBLIC
         Shifty::ECS
         Shifty::Hierarchy
+        Shifty::Config
 )
 
 add_library(Shifty::Tabs ALIAS ShiftyTabs)

@@ -6,6 +6,7 @@
 #include <string>
 #include <execinfo.h>
 
+#include "Config/GlobalConfig.h"
 #include "Linux/LinuxBackend.h"
 #include "MacOS/MacOSBackend.h"
 #include "SDL3/SDL_init.h"
@@ -40,7 +41,8 @@ Window::Window(const std::string& name, int width, int height)
 #elif _WIN32
     //TODO: Implement Windows blur backend
 #endif
-    blur->enableBlur(this->window); //Enable blur by default
+    if (GlobalConfig::Appearance::blur)
+        blur->enableBlur(this->window);
 }
 
 Window::~Window()

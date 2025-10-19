@@ -17,12 +17,14 @@ include_directories(
 # External dependencies
 add_subdirectory(external)
 
+add_subdirectory(src/Modules/Config)
 add_subdirectory(src/Modules/ECS)
 add_subdirectory(src/Modules/Hierarchy)
 add_subdirectory(src/Modules/EventBus)
 add_subdirectory(src/Modules/Platform)
 add_subdirectory(src/Modules/LLR)
 add_subdirectory(src/Modules/Drawing)
+add_subdirectory(src/Modules/Text)
 add_subdirectory(src/Modules/UI)
 add_subdirectory(src/Modules/Shifty)
 
@@ -37,6 +39,7 @@ add_executable(Shifty
 
 target_link_libraries(Shifty PRIVATE
         Shifty::Dependencies
+        Shifty::Config
         Shifty::ECS
         Shifty::LLR
         Shifty::Drawing

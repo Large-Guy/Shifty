@@ -4,6 +4,7 @@
 
 #include "Drawing/Components/RenderTransform.h"
 #include "ECS/Entity.h"
+#include "Text/TextRenderer.h"
 #include "UI/Components/Text.h"
 
 TextDraw::Command::Command(SDL_FRect render, ComRef<Text> text) : Draw::Command(250), render(render), text(text)

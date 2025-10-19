@@ -55,8 +55,8 @@ void TabviewUpdate::process(const OnUpdate& update)
     }
 
     //Calculate tab size, 10% padding on either end
-    float tWidth = 0.8f / GlobalConfig::tabsPerPageHorizontal * width;
-    float tHeight = 0.8f / GlobalConfig::tabsPerPageVertical * height;
+    float tWidth = 0.8f / GlobalConfig::TabView::horizontalTabs * width;
+    float tHeight = 0.8f / GlobalConfig::TabView::verticalTabs * height;
 
     float pWidth = 0.1f * width;
     float pHeight = 0.1f * height;
@@ -71,16 +71,16 @@ void TabviewUpdate::process(const OnUpdate& update)
     Entity::multiEach<Tab, RenderTransform, Hierarchy>(
         [&](Entity entity, ComRef<Tab> tab, ComRef<RenderTransform> transform, ComRef<Hierarchy> hierarchy)
         {
-            if (i < GlobalConfig::tabsPerPageHorizontal * GlobalConfig::tabsPerPageVertical * viewState->page)
+            if (i < GlobalConfig::TabView::horizontalTabs * GlobalConfig::TabView::verticalTabs * viewState->page)
             {
                 i++;
                 return;
             }
             auto viewRenderTransform = hierarchy->parent.get<RenderTransform>();
 
-            int tabX = (i % GlobalConfig::tabsPerPageHorizontal);
-            int tabY = i / GlobalConfig::tabsPerPageHorizontal;
-            if (tabY >= GlobalConfig::tabsPerPageVertical)
+            int tabX = (i % GlobalConfig::TabView::horizontalTabs);
+            int tabY = i / GlobalConfig::TabView::horizontalTabs;
+            if (tabY >= GlobalConfig::TabView::verticalTabs)
             {
                 return;
             }
@@ -118,10 +118,10 @@ void TabviewUpdate::process(const OnUpdate& update)
                 float w = viewRenderTransform->w;
                 float h = viewRenderTransform->h;
 
-                x += GlobalConfig::tabPadding;
-                y += GlobalConfig::tabPadding;
-                w -= GlobalConfig::tabPadding * 2;
-                h -= GlobalConfig::tabPadding * 2;
+                x += GlobalConfig::Appearance::padding;
+                y += GlobalConfig::Appearance::padding;
+                w -= GlobalConfig::Appearance::padding * 2;
+                h -= GlobalConfig::Appearance::padding * 2;
 
                 transform->x = Tween::Lerp(tx, x, back);
                 transform->y = Tween::Lerp(ty, y, back);
