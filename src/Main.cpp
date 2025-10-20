@@ -38,7 +38,6 @@
 
 int main(int argc, char* argv[])
 {
-    GlobalConfig::load("res/config.json");
     if (!SDL_Init(SDL_INIT_VIDEO))
     {
         throw std::runtime_error("SDL_Init failed");
@@ -104,8 +103,18 @@ int main(int argc, char* argv[])
     uint64_t dt = 16;
     double deltaTime = 0.016;
 
+    double configCheckTime = 1.0f;
+
     while (Entity::findEntity<App>().get<App>()->running)
     {
+        configCheckTime += deltaTime;
+
+        if (configCheckTime >= 0.5f)
+        {
+            configCheckTime = 0.0f;
+            GlobalConfig::load();
+        }
+
         EventBus::emit(OnUpdate{
             static_cast<float>(deltaTime)
         });

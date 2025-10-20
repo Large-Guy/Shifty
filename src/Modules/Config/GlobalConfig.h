@@ -1,6 +1,8 @@
 #ifndef SHIFTY_GLOBALCONFIG_H
 #define SHIFTY_GLOBALCONFIG_H
 #include <string>
+#include <chrono>
+#include <filesystem>
 
 struct GlobalConfig
 {
@@ -22,7 +24,9 @@ struct GlobalConfig
         static int verticalTabs;
     };
 
-    static void load(const std::string& path);
+    static std::filesystem::file_time_type lastUpdate;
+
+    static void load();
 };
 
 
