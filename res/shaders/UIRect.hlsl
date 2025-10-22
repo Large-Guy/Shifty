@@ -58,7 +58,6 @@ cbuffer vert : register(b0, space1)
     RectInfo vertInfo;
 }
 
-
 cbuffer frag : register(b0, space3)
 {
     RectInfo fragInfo;
@@ -67,18 +66,20 @@ cbuffer frag : register(b0, space3)
 
 //vertex
 
-const float2 tl = float2(0.0f, 0.0f);
-const float2 tr = float2(1.0f, 0.0f);
-const float2 bl = float2(0.0f, 1.0f);
-const float2 br = float2(1.0f, 1.0f);
 
-const float2 vertices[6] = {
-    tl, tr, bl,
-    bl, tr, br,
-};
-
-Output vertex(Input input)
+Output _vertex(Input input)
 {
+    static const float2 tl = float2(0.0f, 0.0f);
+    static const float2 tr = float2(1.0f, 0.0f);
+    static const float2 bl = float2(0.0f, 1.0f);
+    static const float2 br = float2(1.0f, 1.0f);
+
+    static const float2 vertices[6] = {
+        tl, tr, bl,
+        bl, tr, br,
+    };
+
+
     RectInfo info = vertInfo;
 
     //Corners
@@ -122,7 +123,7 @@ float sdfRoundedBox(in float2 p, in float2 b, in float4 r)
     return min(max(q.x, q.y), 0.0f) + length(max(q, 0.0f)) - r.x;
 }
 
-float4 fragment(Output output) : SV_TARGET
+float4 _fragment(Output output) : SV_TARGET
 {
     RectInfo info = fragInfo;
 

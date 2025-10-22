@@ -40,7 +40,26 @@ struct Draw
     SDL_GPUTransferBuffer* dataTransferBuffer;
     SDL_Texture* outputTexture;
 
-    std::unordered_map<std::string, std::shared_ptr<Shader>> shaders;
+    struct ShaderRegistry
+    {
+        std::string name;
+        SDL_GPUShaderStage format;
+
+        bool operator==(const ShaderRegistry& other) const
+        {
+            return name == other.name && format == other.format;
+        }
+    };
+
+    struct ShaderRegistryHash
+    {
+        size_t operator()(const ShaderRegistry& shaderRegistry) const
+        {
+            return std::hash<std::string>()(shaderRegistry.name) ^ shaderRegistry.format;
+        }
+    };
+
+    std::unordered_map<ShaderRegistry, std::shared_ptr<Shader>, ShaderRegistryHash> shaders;
 
     struct PipelineInfo
     {
@@ -104,14 +123,14 @@ struct Draw
                                        int ssbos,
                                        int textures)
     {
-        if (shaders.contains(path))
+        if (shaders.contains({path, stage}))
         {
-            return shaders[path];
+            return shaders[{path, stage}];
         }
 
         std::shared_ptr<Shader> newShader = std::make_shared<Shader>(gpuDevice, path, stage, samplers, ubos, ssbos,
                                                                      textures);
-        shaders[path] = newShader;
+        shaders[{path, stage}] = newShader;
         return newShader;
     }
 

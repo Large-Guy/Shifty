@@ -13,3 +13,9 @@
 [submodule "external/sj.h"]
 	path = external/sj.h
 	url = https://github.com/rxi/sj.h.git
+[submodule "external/SDL_shadercross"]
+	path = external/SDL_shadercross
+	url = https://github.com/libsdl-org/SDL_shadercross.git
+[submodule "external/SPIRV-Cross"]
+	path = external/SPIRV-Cross
+	url = https://github.com/KhronosGroup/SPIRV-Cross.git

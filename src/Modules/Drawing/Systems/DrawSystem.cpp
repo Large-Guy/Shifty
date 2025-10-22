@@ -3,8 +3,8 @@
 void DrawSystem::drawUIRect(ComRef<Draw> draw, const UIRectInfo& info)
 {
     //Other
-    auto vertShader = draw->loadShader("res/shaders/UIRect.vert.spv", SDL_GPU_SHADERSTAGE_VERTEX, 0, 1, 0, 0);
-    auto fragShader = draw->loadShader("res/shaders/UIRect.frag.spv", SDL_GPU_SHADERSTAGE_FRAGMENT, 0, 1, 0, 0);
+    auto vertShader = draw->loadShader("res/shaders/UIRect.hlsl", SDL_GPU_SHADERSTAGE_VERTEX, 0, 1, 0, 0);
+    auto fragShader = draw->loadShader("res/shaders/UIRect.hlsl", SDL_GPU_SHADERSTAGE_FRAGMENT, 0, 1, 0, 0);
 
     SDL_GPURasterizerState rasterizer{};
     rasterizer.cull_mode = SDL_GPU_CULLMODE_NONE;

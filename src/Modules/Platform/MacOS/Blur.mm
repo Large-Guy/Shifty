@@ -1,4 +1,4 @@
-#include "Compatibility.hpp"
+#include "Blur.hpp"
 
 #include "SDL3/SDL.h"
 #include "SDL3/SDL_video.h"

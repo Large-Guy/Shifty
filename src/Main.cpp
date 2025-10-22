@@ -30,6 +30,7 @@
 #include "Modules/Shifty/Panes/Systems/PaneDraw.h"
 #include "Modules/Shifty/Tabs/Systems/TabDraw.h"
 #include "Modules/Shifty/Tabs/Systems/TabviewDraw.h"
+#include "SDL3_shadercross/SDL_shadercross.h"
 #include "Shifty/App/Systems/AppClose.h"
 #include "Shifty/Tabs/Systems/TabviewClick.h"
 #include "Shifty/Tabs/Systems/TabviewKeydown.h"
@@ -46,6 +47,11 @@ int main(int argc, char* argv[])
     if (!TTF_Init())
     {
         throw std::runtime_error("TTF_Init failed");
+    }
+
+    if (!SDL_ShaderCross_Init())
+    {
+        throw std::runtime_error("SDL_ShaderCross failed");
     }
 
     //Create all the systems

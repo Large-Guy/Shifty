@@ -11,7 +11,8 @@ if (UNIX AND NOT APPLE)
     find_package(Fontconfig REQUIRED)
     list(APPEND COMPATIBILITY_LIBRARIES Fontconfig::Fontconfig)
 elseif (APPLE)
-    # idk how to do this on macOS yet
+    find_package(Fontconfig REQUIRED)
+    list(APPEND COMPATIBILITY_LIBRARIES Fontconfig::Fontconfig)
 else (WINDOWS)
     # idk how to do this on Windows yet
 endif ()
