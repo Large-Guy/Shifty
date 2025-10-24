@@ -11,7 +11,7 @@
 
 
 PaneDraw::Command::Command(ComRef<RenderTransform> renderTransform) : Draw::Command(0),
-                                                                       renderTransform(renderTransform)
+                                                                      renderTransform(renderTransform)
 {
 }
 
@@ -51,8 +51,12 @@ void PaneDraw::Command::execute(SDL_Renderer* renderer)
                                .rect = {rect.x, rect.y, rect.w, rect.h},
                                .rounding = {32.0f, 32.0f, 32.0f, 32.0f},
 
-                               .fillStart = {1.0f, 1.0f, 1.0f, 0.6f * tween},
-                               .fillEnd = {1.0f, 1.0f, 1.0f, 0.67f * tween},
+                               .fillStart = {1.0f, 1.0f, 1.0f, 0.3f * tween},
+                               .fillEnd = {1.0f, 1.0f, 1.0f, 0.33f * tween},
+
+                               .outlineStart = {0.1f, 0.5f, 1.0f, 0.7f},
+                               .outlineEnd = {0.1f, 0.5f, 1.0f, 0.8f},
+
                                .end = {0.5f, 1.0f},
 
                                .thickness = 8.0f * thicknessTween,

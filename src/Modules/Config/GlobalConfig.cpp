@@ -86,7 +86,7 @@ void GlobalConfig::load()
 
     if (!SDL_GetPathInfo(path.c_str(), nullptr))
     {
-        std::cout << "Could not find config file" << std::endl;
+        std::cout << "Could not find config file at: " << path << std::endl;
         return;
     }
 

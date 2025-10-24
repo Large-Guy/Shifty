@@ -91,7 +91,7 @@ Output _vertex(Input input)
 
     float2 ss = max(info.screenSize, float2(1.0f, 1.0f)); // avoid div by 0
 
-    float shadow = info.shadow;
+    float shadow = min(info.shadow, info.rect.w);
 
     if(shadow > 0)
     {
@@ -127,7 +127,7 @@ float4 _fragment(Output output) : SV_TARGET
 {
     RectInfo info = fragInfo;
 
-    float shadow = info.shadow;
+    float shadow = min(info.shadow, info.rect.w);
 
     const float4 background = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
