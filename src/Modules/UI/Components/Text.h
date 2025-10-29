@@ -19,7 +19,7 @@ struct Text
     float size;
 
     std::string rendered;
-    SDL_Texture* texture = nullptr;
+    TTF_GPUAtlasDrawSequence* texture = nullptr;
 };
 
 

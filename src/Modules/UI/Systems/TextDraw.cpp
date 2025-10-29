@@ -19,9 +19,9 @@ void TextDraw::Command::execute(SDL_Renderer* renderer)
     SDL_FRect dest = {render.x, render.y, render.w / scale, render.h / scale};
     SDL_FRect src = {0, 0, render.w, render.h};
 
-    SDL_SetTextureColorMod(text->texture, 0, 0, 0);
+    //SDL_SetTextureColorMod(text->texture, 0, 0, 0);
 
-    SDL_RenderTexture(renderer, text->texture, &src, &dest);
+    //SDL_RenderTexture(renderer, text->texture, &src, &dest);
 }
 
 void TextDraw::process(const OnDraw& onDraw)
@@ -66,14 +66,9 @@ void TextDraw::process(const OnDraw& onDraw)
 
         if (text->rendered != text->text)
         {
-            if (text->texture != nullptr)
-            {
-                SDL_DestroyTexture(text->texture);
-            }
-
             text->rendered = text->text;
             text->texture =
-                TextRenderer::getTexture(onDraw.draw->renderer, text->font->size(text->size * scale), text->text);
+                TextRenderer::getTexture(onDraw.draw->device, text->font->size(text->size * scale), text->text);
         }
 
         onDraw.draw->pushCommand(std::make_shared<Command>(SDL_FRect{x, y, w * scale, h * scale}, text));

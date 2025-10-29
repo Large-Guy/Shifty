@@ -3,7 +3,7 @@
 
 #include "UI/Components/Layout.h"
 
-struct OnCommandExecute
+struct OnCommandExecute 
 {
     Entity view;
     std::vector<std::string> commands;

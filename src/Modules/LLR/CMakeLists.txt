@@ -1,8 +1,24 @@
 add_library(ShiftyLLR STATIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/Shader.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/Shader.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/Pipeline.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/Pipeline.h
+        Shader.cpp
+        Shader.h
+        Pipeline.cpp
+        Pipeline.h
+        CommandBuffer.cpp
+        CommandBuffer.h
+        RenderPass.cpp
+        RenderPass.h
+        Device.cpp
+        Device.h
+        Texture.cpp
+        Texture.h
+        Color.cpp
+        Color.h
+        Viewport.cpp
+        Viewport.h
+        Download.cpp
+        Download.h
+        TransferBuffer.cpp
+        TransferBuffer.h
 )
 
 target_link_libraries(ShiftyLLR PUBLIC

@@ -1,14 +1,19 @@
 #ifndef SHIFTY_EVENTS_H
 #define SHIFTY_EVENTS_H
 
-struct OnReady {
+#include "EventBus.h"
+
+struct OnReady 
+{
 };
 
-struct OnUpdate {
+struct OnUpdate 
+{
     float deltaTime;
 };
 
-struct OnRender {
+struct OnRender 
+{
 };
 
 #endif //SHIFTY_EVENTS_H

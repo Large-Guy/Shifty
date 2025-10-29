@@ -34,6 +34,7 @@
 #include "Shifty/App/Systems/AppClose.h"
 #include "Shifty/Tabs/Systems/TabviewClick.h"
 #include "Shifty/Tabs/Systems/TabviewKeydown.h"
+#include "Text/TextRenderer.h"
 #include "UI/Systems/FocusUpdate.h"
 #include "UI/Systems/TextEditSystems.h"
 

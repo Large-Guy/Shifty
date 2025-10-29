@@ -6,7 +6,7 @@
 
 #include "SDL3_shadercross/SDL_shadercross.h"
 
-Shader::Shader(SDL_GPUDevice* device, const std::string& path, SDL_GPUShaderStage stage, uint32_t samplers,
+Shader::Shader(std::shared_ptr<Device> device, const std::string& path, SDL_GPUShaderStage stage, uint32_t samplers,
                uint32_t uniforms, uint32_t storage, uint32_t textures)
 {
     this->device = device;
@@ -18,7 +18,7 @@ Shader::Shader(SDL_GPUDevice* device, const std::string& path, SDL_GPUShaderStag
     this->textures = textures;
 
     const char* entrypoint = nullptr;
-    SDL_GPUShaderFormat backendFormat = SDL_GetGPUShaderFormats(device);
+    SDL_GPUShaderFormat backendFormat = SDL_GetGPUShaderFormats(device->device);
     SDL_GPUShaderFormat format = SDL_GPU_SHADERFORMAT_INVALID;
 
 
@@ -131,7 +131,7 @@ Shader::Shader(SDL_GPUDevice* device, const std::string& path, SDL_GPUShaderStag
         .num_uniform_buffers = uniforms,
     };
 
-    shader = SDL_CreateGPUShader(device, &shaderInfo);
+    shader = SDL_CreateGPUShader(device->device, &shaderInfo);
 
     if (!shader)
     {

@@ -2,12 +2,18 @@
 
 #include <ostream>
 
-SDL_Texture* TextRenderer::getTexture(SDL_Renderer* renderer, TTF_Font* font, const std::string& text)
+TTF_TextEngine* TextRenderer::engine = nullptr;
+
+TTF_GPUAtlasDrawSequence* TextRenderer::getTexture(std::shared_ptr<Device> device, TTF_Font* font,
+                                                   const std::string& text)
 {
-    SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), text.length(), {255, 255, 255, 255});
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_DestroySurface(surface);
-    return texture;
+    if (!engine)
+        engine = TTF_CreateGPUTextEngine(device->getDevice());
+
+    TTF_Text* drawtext = TTF_CreateText(engine, font, text.c_str(), text.size());
+    TTF_GPUAtlasDrawSequence* atlas = TTF_GetGPUTextDrawData(drawtext);
+    TTF_DestroyText(drawtext);
+    return atlas;
 }
 
 void TextRenderer::sizeText(TTF_Font* font, const std::string& text, float* w, float* h)

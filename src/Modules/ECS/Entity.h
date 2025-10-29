@@ -40,7 +40,7 @@ struct OnComponentCreate
 };
 
 template <typename T>
-struct OnComponentDestroy
+struct OnComponentDestroy 
 {
     EntityID entity;
     ComRef<T> component;

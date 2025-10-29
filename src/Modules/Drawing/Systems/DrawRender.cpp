@@ -5,6 +5,7 @@
 #include "Drawing/Components/Draw.h"
 #include "ECS/Entity.h"
 #include "EventBus/EventBus.h"
+#include "LLR/Download.h"
 
 void DrawRender::process(const OnRender&)
 {
@@ -16,65 +17,36 @@ void DrawRender::process(const OnRender&)
         float scale = SDL_GetWindowDisplayScale(SDL_GetRenderWindow(draw->renderer));
         SDL_SetRenderScale(draw->renderer, scale, scale);
 
+        draw->device->begin();
 
         //GPU rendering
-        draw->currentCmdBuf = SDL_AcquireGPUCommandBuffer(draw->gpuDevice);
-        SDL_GPUColorTargetInfo colorTargetInfo{};
-        colorTargetInfo.texture = draw->renderTexture;
-        colorTargetInfo.clear_color = (SDL_FColor)
-        {
-            0.0f, 0.0f, 0.0f, 0.0f
-        };
-        colorTargetInfo.load_op = SDL_GPU_LOADOP_CLEAR;
-        colorTargetInfo.store_op = SDL_GPU_STOREOP_STORE;
+        draw->drawPass->clear({0.0f, 0.0f, 0.0f, 0.0f});
+        draw->drawPass->viewport({
+            0.0f, 0.0f, static_cast<float>(draw->width), static_cast<float>(draw->height), 0.0f, 1.0f
+        });
+        draw->drawPass->begin();
 
-
-        SDL_GPURenderPass* renderPass = SDL_BeginGPURenderPass(draw->currentCmdBuf, &colorTargetInfo, 1, nullptr);
-
-        draw->currentPass = renderPass;
-
-        SDL_GPUViewport viewport{};
-        viewport.x = 0.0f;
-        viewport.y = 0.0f;
-        viewport.w = draw->width;
-        viewport.h = draw->height;
-        viewport.min_depth = 0.0f;
-        viewport.max_depth = 1.0f;
-
-        SDL_SetGPUViewport(renderPass, &viewport);
 
         for (const auto& command : draw->commands)
         {
             command->execute(draw->renderer);
         }
 
-        SDL_EndGPURenderPass(renderPass);
+        draw->drawPass->end();
 
-        SDL_GPUCopyPass* pCopyPass = SDL_BeginGPUCopyPass(draw->currentCmdBuf);
+        std::shared_ptr<Download> download = std::make_shared<Download>(draw->device, draw->renderTexture);
+        download->begin();
 
-        SDL_GPUTextureRegion transferSource{};
-        transferSource.texture = draw->renderTexture;
-        transferSource.w = draw->width;
-        transferSource.h = draw->height;
-        transferSource.d = 1;
+        download->download(draw->transferBuffer);
 
-        SDL_GPUTextureTransferInfo transferDest{};
-        transferDest.transfer_buffer = draw->dataTransferBuffer;
-        transferDest.offset = 0;
+        download->end();
 
-        SDL_DownloadFromGPUTexture(pCopyPass, &transferSource, &transferDest);
+        draw->device->end();
 
-        SDL_EndGPUCopyPass(pCopyPass);
-
-        const auto pSubmitFence = SDL_SubmitGPUCommandBufferAndAcquireFence(draw->currentCmdBuf);
-        SDL_WaitForGPUFences(draw->gpuDevice, true, &pSubmitFence, 1);
-        SDL_ReleaseGPUFence(draw->gpuDevice, pSubmitFence);
-
-        auto transferData = SDL_MapGPUTransferBuffer(draw->gpuDevice, draw->dataTransferBuffer, false);
+        auto transferData = draw->transferBuffer->map();
         SDL_UpdateTexture(draw->outputTexture, nullptr, transferData, draw->width * 4);
-
         // Unmap
-        SDL_UnmapGPUTransferBuffer(draw->gpuDevice, draw->dataTransferBuffer);
+        draw->transferBuffer->unmap();
 
         SDL_SetRenderDrawBlendMode(draw->renderer, SDL_BLENDMODE_NONE);
 

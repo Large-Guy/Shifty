@@ -4,4 +4,13 @@
     <option name="pythonIntegrationState" value="YES" />
   </component>
   <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
+  <component name="CidrRootsConfiguration">
+    <excludeRoots>
+      <file path="$PROJECT_DIR$/external/SDL" />
+      <file path="$PROJECT_DIR$/external/SDL_image" />
+      <file path="$PROJECT_DIR$/external/SDL_shadercross" />
+      <file path="$PROJECT_DIR$/external/SDL_ttf" />
+      <file path="$PROJECT_DIR$/external/sj.h" />
+    </excludeRoots>
+  </component>
 </project>

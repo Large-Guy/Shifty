@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 
+#include "LLR/Device.h"
 #include "SDL3_ttf/SDL_ttf.h"
 
 
@@ -14,7 +15,9 @@
 class TextRenderer
 {
 public:
-    static SDL_Texture* getTexture(SDL_Renderer* renderer, TTF_Font* font, const std::string& text);
+    static TTF_TextEngine* engine;
+    static TTF_GPUAtlasDrawSequence*
+    getTexture(std::shared_ptr<Device> device, TTF_Font* font, const std::string& text);
     static void sizeText(TTF_Font* font, const std::string& text, float* w, float* h);
 };
 

@@ -12,10 +12,10 @@ void DrawSystem::drawUIRect(ComRef<Draw> draw, const UIRectInfo& info)
 
     auto pipeline = draw->loadPipeline(vertShader, fragShader, rasterizer);
 
-    SDL_BindGPUGraphicsPipeline(draw->currentPass, pipeline->pipeline);
+    pipeline->bind(draw->drawPass);
 
-    SDL_PushGPUVertexUniformData(draw->currentCmdBuf, 0, &info, sizeof(UIRectInfo));
-    SDL_PushGPUFragmentUniformData(draw->currentCmdBuf, 0, &info, sizeof(UIRectInfo));
+    pipeline->vertexUniform(0, info);
+    pipeline->fragmentUniform(0, info);
 
-    SDL_DrawGPUPrimitives(draw->currentPass, 6, 1, 0, 0);
+    SDL_DrawGPUPrimitives(draw->drawPass->getPass(), 6, 1, 0, 0);
 }

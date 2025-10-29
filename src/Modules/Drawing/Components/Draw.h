@@ -9,6 +9,7 @@
 #include "ECS/Entity.h"
 #include "LLR/Pipeline.h"
 #include "LLR/Shader.h"
+#include "LLR/TransferBuffer.h"
 #include "SDL3/SDL_render.h"
 
 struct Draw
@@ -30,14 +31,11 @@ struct Draw
     std::vector<std::shared_ptr<Command>> commands;
     SDL_Renderer* renderer;
 
-    SDL_GPUDevice* gpuDevice;
-    SDL_GPUTexture* renderTexture;
-    SDL_GPUTextureFormat format;
+    std::shared_ptr<Device> device;
+    std::shared_ptr<RenderPass> drawPass;
+    std::shared_ptr<Texture> renderTexture;
 
-    SDL_GPUCommandBuffer* currentCmdBuf;
-    SDL_GPURenderPass* currentPass;
-
-    SDL_GPUTransferBuffer* dataTransferBuffer;
+    std::shared_ptr<TransferBuffer> transferBuffer;
     SDL_Texture* outputTexture;
 
     struct ShaderRegistry
@@ -128,7 +126,7 @@ struct Draw
             return shaders[{path, stage}];
         }
 
-        std::shared_ptr<Shader> newShader = std::make_shared<Shader>(gpuDevice, path, stage, samplers, ubos, ssbos,
+        std::shared_ptr<Shader> newShader = std::make_shared<Shader>(device, path, stage, samplers, ubos, ssbos,
                                                                      textures);
         shaders[{path, stage}] = newShader;
         return newShader;
@@ -148,7 +146,8 @@ struct Draw
             return pipelines[pipeline];
         }
 
-        std::shared_ptr<Pipeline> newPipeline = std::make_shared<Pipeline>(gpuDevice, format, state, vertex, fragment);
+        std::shared_ptr<Pipeline> newPipeline = std::make_shared<Pipeline>(
+            device, TextureFormat::R8G8B8A8_SRGB, state, vertex, fragment);
 
         pipelines[pipeline] = newPipeline;
         return newPipeline;
