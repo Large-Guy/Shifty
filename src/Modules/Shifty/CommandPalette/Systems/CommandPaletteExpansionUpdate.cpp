@@ -12,7 +12,7 @@
 #include "ECS/Entity.h"
 #include "Shifty/CommandPalette/Components/CommandPalette.h"
 
-void CommandPaletteExpansionUpdate::process(const OnUpdate& update)
+void CommandPaletteExpansionUpdate::process(OnUpdate& update)
 {
     Entity::multiEach<CommandPalette, Transform, RenderTransform, Text, Layout>(
         [&](ComRef<CommandPalette> palette, ComRef<Transform> transform, ComRef<RenderTransform> render,

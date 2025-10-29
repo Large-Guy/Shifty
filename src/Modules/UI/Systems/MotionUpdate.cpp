@@ -4,7 +4,7 @@
 #include "ECS/Entity.h"
 #include "UI/Components/Motion.h"
 
-void MotionUpdate::process(const OnUpdate&)
+void MotionUpdate::process(OnUpdate&)
 {
     Entity::multiEach<RenderTransform, Motion>(
         [](const ComRef<RenderTransform>& transform, const ComRef<Motion>& motion)

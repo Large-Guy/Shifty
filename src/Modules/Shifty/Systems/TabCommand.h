@@ -6,7 +6,7 @@
 
 class TabCommand final : System<OnCommandExecute>
 {
-    void process(const OnCommandExecute&) override;
+    void process(OnCommandExecute&) override;
 };
 
 

@@ -12,12 +12,12 @@
 #include "UI/Components/Focus.h"
 
 
-void EditInput::process(const OnTextInput& input)
+void EditInput::process(OnTextInput& input)
 {
     EditShared::handleTextInput(input);
 }
 
-void EditKeydown::process(const OnKeyPress& input)
+void EditKeydown::process(OnKeyPress& input)
 {
     bool shift = input.handler->isPressed(SDLK_LSHIFT) || input.handler->isPressed(SDLK_RSHIFT);
     bool ctrl = input.handler->isPressed(SDLK_LCTRL) || input.handler->isPressed(SDLK_RCTRL);
@@ -213,7 +213,7 @@ void EditKeydown::process(const OnKeyPress& input)
     }
 }
 
-void EditProcess::process(const OnUpdate& onUpdate)
+void EditProcess::process(OnUpdate& onUpdate)
 {
     Entity::find<App>()->handler->textInput = false; //TODO: Maybe find a better way to do this cuz it's a little sketch
     Entity::multiEach<Edit>([](ComRef<Edit> edit)
@@ -265,7 +265,7 @@ void EditDraw::Command::execute(SDL_Renderer* renderer)
 }
 
 
-void EditDraw::process(const OnDraw& onDraw)
+void EditDraw::process(OnDraw& onDraw)
 {
     Entity::multiEach<Text, Edit, RenderTransform>(
         [&](ComRef<Text> text, ComRef<Edit> edit, ComRef<RenderTransform> renderTransform)

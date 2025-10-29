@@ -8,7 +8,7 @@
 #include "UI/Systems/RenderTransformsCompute.h"
 #include "EventBus/EventBus.h"
 
-void AppUpdate::process(const OnUpdate& _update)
+void AppUpdate::process(OnUpdate& _update)
 {
     SDL_Event e;
 

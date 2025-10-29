@@ -3,7 +3,7 @@
 #include "Drawing/Components/Draw.h"
 #include "ECS/Entity.h"
 
-void DrawResize::process(const OnWindowResize& resize)
+void DrawResize::process(OnWindowResize& resize)
 {
     Entity::each<Draw>([resize](ComRef<Draw> draw)
                        {

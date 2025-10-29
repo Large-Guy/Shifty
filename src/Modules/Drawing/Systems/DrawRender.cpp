@@ -7,7 +7,7 @@
 #include "EventBus/EventBus.h"
 #include "LLR/Download.h"
 
-void DrawRender::process(const OnRender&)
+void DrawRender::process(OnRender&)
 {
     Entity::each<Draw>([](ComRef<Draw> draw)
     {

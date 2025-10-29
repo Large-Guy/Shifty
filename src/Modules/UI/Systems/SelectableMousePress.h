@@ -7,7 +7,7 @@
 class SelectableMousePress : System<OnMouseButtonPress>
 {
 public:
-    void process(const OnMouseButtonPress&) override;
+    void process(OnMouseButtonPress&) override;
 };
 
 

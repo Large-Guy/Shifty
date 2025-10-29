@@ -6,7 +6,7 @@
 
 class AppClose : System<OnWindowClose>
 {
-    void process(const OnWindowClose&) override;
+    void process(OnWindowClose&) override;
 };
 
 

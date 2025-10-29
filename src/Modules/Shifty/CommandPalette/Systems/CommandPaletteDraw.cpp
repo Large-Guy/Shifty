@@ -31,7 +31,7 @@ void CommandPaletteDraw::Command::execute(SDL_Renderer* renderer)
 }
 
 
-void CommandPaletteDraw::process(const OnDraw& draw)
+void CommandPaletteDraw::process(OnDraw& draw)
 {
     Entity::multiEach<CommandPalette, RenderTransform>([&](ComRef<CommandPalette>, ComRef<RenderTransform> transform)
     {

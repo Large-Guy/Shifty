@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 
+#include "EventBus/EventBus.h"
 #include "SDL3/SDL_keycode.h"
 #include "SDL3/SDL_video.h"
 
@@ -18,49 +19,49 @@ public:
     void pollEvents();
 };
 
-struct OnWindowResize
+struct OnWindowResize 
 {
     SDL_Window* window;
     int width, height;
 };
 
-struct OnWindowMove
+struct OnWindowMove 
 {
     SDL_Window* window;
     int x, y;
 };
 
-struct OnWindowClose
+struct OnWindowClose 
 {
     SDL_Window* window;
 };
 
-struct OnKeyPress
+struct OnKeyPress 
 {
     std::shared_ptr<EventHandler> handler;
     SDL_Keycode key;
 };
 
-struct OnKeyRelease
+struct OnKeyRelease 
 {
     std::shared_ptr<EventHandler> handler;
     SDL_Keycode key;
 };
 
-struct OnTextInput
+struct OnTextInput 
 {
     std::shared_ptr<EventHandler> handler;
     const std::string& input;
 };
 
-struct OnMouseButtonPress
+struct OnMouseButtonPress 
 {
     std::shared_ptr<EventHandler> handler;
     float x, y;
     int button;
 };
 
-struct OnMouseButtonRelease
+struct OnMouseButtonRelease 
 {
     std::shared_ptr<EventHandler> handler;
     float x, y;

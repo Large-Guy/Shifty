@@ -37,7 +37,7 @@ std::vector<std::string> split(const std::string& txt, char ch)
     return strs;
 }
 
-void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
+void CommandPaletteKeydown::process(OnKeyPress& keyPress)
 {
     using namespace std::chrono;
     uint64_t time = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
@@ -107,6 +107,7 @@ void CommandPaletteKeydown::process(const OnKeyPress& keyPress)
                 Entity::find<Focus>()->focused = layout->parent;
 
                 EventBus::emit(OnCommandExecute{
+                    .consumed = false,
                     .view = layout->parent,
                     .commands = split(text->text, ' ')
                 });

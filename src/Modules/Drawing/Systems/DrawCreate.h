@@ -7,7 +7,7 @@
 
 class DrawCreate final : System<OnComponentCreate<Draw>>
 {
-    void process(const OnComponentCreate<Draw>&) override;
+    void process(OnComponentCreate<Draw>&) override;
 };
 
 

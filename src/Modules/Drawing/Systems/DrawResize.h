@@ -6,7 +6,7 @@
 
 class DrawResize : System<OnWindowResize>
 {
-    void process(const OnWindowResize&) override;
+    void process(OnWindowResize&) override;
 };
 
 

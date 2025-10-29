@@ -10,17 +10,17 @@
 
 class EditInput final : System<OnTextInput>
 {
-    void process(const OnTextInput&) override;
+    void process(OnTextInput&) override;
 };
 
 class EditKeydown final : System<OnKeyPress>
 {
-    void process(const OnKeyPress&) override;
+    void process(OnKeyPress&) override;
 };
 
 class EditProcess final : System<OnUpdate>
 {
-    void process(const OnUpdate&) override;
+    void process(OnUpdate&) override;
 };
 
 class EditDraw final : System<OnDraw>
@@ -35,7 +35,7 @@ class EditDraw final : System<OnDraw>
         void execute(SDL_Renderer* renderer) override;
     };
 
-    void process(const OnDraw&) override;
+    void process(OnDraw&) override;
 };
 
 #endif //SHIFTY_TEXTEDITSYSTEMS_H

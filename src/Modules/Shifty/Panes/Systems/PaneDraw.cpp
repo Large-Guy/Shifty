@@ -64,7 +64,7 @@ void PaneDraw::Command::execute(SDL_Renderer* renderer)
 }
 
 
-void PaneDraw::process(const OnDraw& draw)
+void PaneDraw::process(OnDraw& draw)
 {
     Entity::multiEach<Pane, RenderTransform>([&draw](ComRef<Pane>, ComRef<RenderTransform> transform)
     {

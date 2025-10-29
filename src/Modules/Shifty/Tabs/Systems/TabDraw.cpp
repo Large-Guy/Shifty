@@ -162,7 +162,7 @@ void TabDraw::Command::execute(SDL_Renderer* renderer)
                            });
 }
 
-void TabDraw::process(const OnDraw& draw)
+void TabDraw::process(OnDraw& draw)
 {
     Entity::multiEach<RenderTransform, Pane, Hierarchy>(
         [draw](ComRef<RenderTransform> transform, ComRef<Pane> view, ComRef<Hierarchy> hierarchy)

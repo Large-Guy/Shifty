@@ -17,7 +17,7 @@
 #include "Shifty/Tabs/Components/TabviewState.h"
 
 
-void TabviewUpdate::process(const OnUpdate& update)
+void TabviewUpdate::process(OnUpdate& update)
 {
     Entity viewStateEntity = Entity::findEntity<TabviewState>();
     ComRef<TabviewState> viewState = viewStateEntity.get<TabviewState>();

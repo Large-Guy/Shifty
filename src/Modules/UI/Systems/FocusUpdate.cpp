@@ -4,7 +4,7 @@
 #include "UI/Components/Animation.h"
 #include "UI/Components/Focus.h"
 
-void FocusUpdate::process(const OnUpdate& update)
+void FocusUpdate::process(OnUpdate& update)
 {
     Entity::multiEach<Focus, Animation>([](ComRef<Focus> focus, ComRef<Animation> animation)
     {

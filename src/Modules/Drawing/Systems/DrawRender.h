@@ -5,7 +5,7 @@
 
 class DrawRender final : System<OnRender>
 {
-    void process(const OnRender&) override;
+    void process(OnRender&) override;
 };
 
 

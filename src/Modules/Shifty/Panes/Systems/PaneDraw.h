@@ -16,7 +16,7 @@ class PaneDraw : public System<OnDraw>
     };
 
 
-    void process(const OnDraw&) override;
+    void process(OnDraw&) override;
 };
 
 #endif //SHIFTY_PANELVIEWDRAW_H

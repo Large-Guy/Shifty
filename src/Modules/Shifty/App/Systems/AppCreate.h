@@ -7,7 +7,7 @@
 
 class AppCreate final : System<OnComponentCreate<App>>
 {
-    void process(const OnComponentCreate<App>&) override;
+    void process(OnComponentCreate<App>&) override;
 };
 
 

@@ -5,7 +5,7 @@
 
 class OnStart final : System<OnReady>
 {
-    void process(const OnReady&) override;
+    void process(OnReady&) override;
 };
 
 

@@ -9,7 +9,7 @@
 #include "Shifty/CommandPalette/Components/CommandPalette.h"
 #include "UI/Components/Focus.h"
 
-void CommandPaletteUpdate::process(const OnUpdate& onUpdate)
+void CommandPaletteUpdate::process(OnUpdate& onUpdate)
 {
     Entity::multiEach<CommandPalette, Animation, Transform>(
         [onUpdate](Entity entity, ComRef<CommandPalette> palette, ComRef<Animation> animation,

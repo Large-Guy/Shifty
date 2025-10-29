@@ -3,8 +3,9 @@
 
 #include "UI/Components/Layout.h"
 
-struct OnCommandExecute 
+struct OnCommandExecute
 {
+    bool consumed;
     Entity view;
     std::vector<std::string> commands;
 };

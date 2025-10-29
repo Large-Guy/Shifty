@@ -6,7 +6,7 @@
 
 class TabviewUpdate : System<OnUpdate>
 {
-    void process(const OnUpdate&) override;
+    void process(OnUpdate&) override;
 };
 
 

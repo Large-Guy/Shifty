@@ -7,7 +7,7 @@
 #include "LLR/TransferBuffer.h"
 #include "Shifty/App/Components/App.h"
 
-void DrawCreate::process(const OnComponentCreate<Draw>& component)
+void DrawCreate::process(OnComponentCreate<Draw>& component)
 {
     Entity entity = component.entity;
     auto draw = component.component;

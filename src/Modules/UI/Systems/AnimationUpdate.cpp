@@ -4,7 +4,7 @@
 #include "ECS/Entity.h"
 #include "UI/Components/Animation.h"
 
-void AnimationUpdate::process(const OnUpdate& update)
+void AnimationUpdate::process(OnUpdate& update)
 {
     Entity::each<Animation>([&](const ComRef<Animation>& anim)
     {

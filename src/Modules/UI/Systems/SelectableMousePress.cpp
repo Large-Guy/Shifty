@@ -8,7 +8,7 @@
 #include "UI/Components/Focus.h"
 #include "UI/Components/Selectable.h"
 
-void SelectableMousePress::process(const OnMouseButtonPress& press)
+void SelectableMousePress::process(OnMouseButtonPress& press)
 {
     if (press.button == SDL_BUTTON_LEFT)
     {

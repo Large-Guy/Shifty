@@ -18,7 +18,7 @@ class TabviewDraw : public System<OnDraw>
     };
 
 
-    void process(const OnDraw&) override;
+    void process(OnDraw&) override;
 };
 
 

@@ -10,7 +10,7 @@
 #include "ECS/Entity.h"
 #include "Shifty/Panes/Components/Pane.h"
 
-void PaneAnimationUpdate::process(const OnUpdate&)
+void PaneAnimationUpdate::process(OnUpdate&)
 {
     Entity::multiEach<Animation, Layout, Pane, Transform>(
         [&](ComRef<Animation> animation, ComRef<Layout> layout, ComRef<Pane> view, ComRef<Transform> transform)

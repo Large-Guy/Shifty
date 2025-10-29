@@ -232,7 +232,7 @@ void RenderTransformsCompute::computeLayout(ComRef<Transform> transform, ComRef<
 }
 
 
-void RenderTransformsCompute::process(const OnLayout& onLayout)
+void RenderTransformsCompute::process(OnLayout& onLayout)
 {
     Entity::multiEach<Transform, RenderTransform, Layout>(
         [&](Entity entity, ComRef<Transform> transform, ComRef<RenderTransform> output, ComRef<Layout> layout)

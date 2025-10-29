@@ -5,7 +5,7 @@
 
 class TabviewKeydown : System<OnKeyPress>
 {
-    void process(const OnKeyPress&) override;
+    void process(OnKeyPress&) override;
 };
 
 #endif //SHIFTY_TABVIEWKEYDOWN_H

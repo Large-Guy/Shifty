@@ -14,7 +14,7 @@
 #include "Shifty/Tabs/Prefab.h"
 #include "Shifty/Tabs/Components/TabviewState.h"
 
-void OnStart::process(const OnReady&)
+void OnStart::process(OnReady&)
 {
     Entity world = Entity::create();
     world.add<App>();

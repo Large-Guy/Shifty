@@ -5,7 +5,7 @@
 
 class TabviewClick : System<OnMouseButtonPress>
 {
-    void process(const OnMouseButtonPress&) override;
+    void process(OnMouseButtonPress&) override;
 };
 
 #endif //SHIFTY_TABVIEWCLICK_H

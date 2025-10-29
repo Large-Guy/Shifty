@@ -21,7 +21,7 @@ class RenderTransformsCompute final : System<OnLayout>
     static float computePositionProperty(Transform::Mode mode, float property, float start, float relativeTo);
     static void computeLayout(ComRef<Transform> transform, ComRef<RenderTransform> output, ComRef<Layout> layout,
                               int depth = 0);
-    void process(const OnLayout&) override;
+    void process(OnLayout&) override;
 };
 
 

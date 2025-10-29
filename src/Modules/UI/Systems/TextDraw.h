@@ -18,7 +18,7 @@ public:
         void execute(SDL_Renderer* renderer) override;
     };
 
-    void process(const OnDraw&) override;
+    void process(OnDraw&) override;
 };
 
 

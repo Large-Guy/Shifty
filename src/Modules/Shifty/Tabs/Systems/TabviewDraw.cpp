@@ -38,7 +38,7 @@ void TabviewDraw::Command::execute(SDL_Renderer* renderer)
                            });
 }
 
-void TabviewDraw::process(const OnDraw& draw)
+void TabviewDraw::process(OnDraw& draw)
 {
     Entity state = Entity::findEntity<TabviewState>();
 

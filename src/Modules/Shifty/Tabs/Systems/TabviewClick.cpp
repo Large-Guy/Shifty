@@ -8,7 +8,7 @@
 #include "Shifty/Tabs/Components/Tab.h"
 #include "Shifty/Tabs/Components/TabviewState.h"
 
-void TabviewClick::process(const OnMouseButtonPress& press)
+void TabviewClick::process(OnMouseButtonPress& press)
 {
     if (!Entity::find<TabviewState>()->active)
         return;

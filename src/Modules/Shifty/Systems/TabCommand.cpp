@@ -12,7 +12,6 @@
 
 static void split(Layout::Type type, Entity view)
 {
-    //We need to repeatedly use .get because creating entities can move components around
     if (view.get<Layout>()->parent != Entity::null)
     {
         auto parentLayout = view.get<Layout>()->parent.get<Layout>();
@@ -40,13 +39,14 @@ static void split(Layout::Type type, Entity view)
     }
 }
 
-void TabCommand::process(const OnCommandExecute& command)
+void TabCommand::process(OnCommandExecute& command)
 {
     if (command.commands.empty())
         return;
 
     if (command.commands.front() == ":split" || command.commands.front() == ":sp")
     {
+        command.consumed = true;
         //Splits the panel the long way
         auto transform = command.view.get<RenderTransform>();
 
@@ -62,11 +62,13 @@ void TabCommand::process(const OnCommandExecute& command)
     }
     if (command.commands.front() == ":tab" || command.commands.front() == ":t")
     {
+        command.consumed = true;
         Entity focusedView = Entity::find<Focus>()->focused;
         Prefabs::createTab("test", focusedView);
     }
     if (command.commands.front() == ":view" || command.commands.front() == ":v")
     {
+        command.consumed = true;
         TabviewShared::show();
     }
 }

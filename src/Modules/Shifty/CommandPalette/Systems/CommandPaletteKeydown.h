@@ -5,7 +5,7 @@
 
 class CommandPaletteKeydown : System<OnKeyPress>
 {
-    void process(const OnKeyPress&) override;
+    void process(OnKeyPress&) override;
 };
 
 

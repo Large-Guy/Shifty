@@ -11,7 +11,7 @@
 #include "UI/Components/Focus.h"
 #include "UI/Components/Layout.h"
 
-void TabviewKeydown::process(const OnKeyPress& event)
+void TabviewKeydown::process(OnKeyPress& event)
 {
     if (Entity::find<Focus>()->focused == Entity::null || !Entity::find<Focus>()->focused.has<Layout>())
         return;

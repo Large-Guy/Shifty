@@ -24,7 +24,7 @@ void TextDraw::Command::execute(SDL_Renderer* renderer)
     //SDL_RenderTexture(renderer, text->texture, &src, &dest);
 }
 
-void TextDraw::process(const OnDraw& onDraw)
+void TextDraw::process(OnDraw& onDraw)
 {
     Entity::multiEach<Text, RenderTransform>([onDraw](ComRef<Text> text, ComRef<RenderTransform> renderTransform)
     {

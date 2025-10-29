@@ -5,7 +5,7 @@
 
 class AppUpdate final : System<OnUpdate>
 {
-    void process(const OnUpdate& _update) override;
+    void process(OnUpdate& _update) override;
 };
 
 #endif //SHIFTY_APPUPDATE_H
